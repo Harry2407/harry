@@ -1,8 +1,14 @@
+import {
+	PerspectiveCamera,
+	Quaternion,
+	Vector3
+} from '../../../build/three.module.js';
+
 /**
  * peppers ghost effect based on http://www.instructables.com/id/Reflective-Prism/?ALLSTEPS
  */
 
-THREE.PeppersGhostEffect = function ( renderer ) {
+var PeppersGhostEffect = function ( renderer ) {
 
 	var scope = this;
 
@@ -12,14 +18,14 @@ THREE.PeppersGhostEffect = function ( renderer ) {
 	// Internals
 	var _halfWidth, _width, _height;
 
-	var _cameraF = new THREE.PerspectiveCamera(); //front
-	var _cameraB = new THREE.PerspectiveCamera(); //back
-	var _cameraL = new THREE.PerspectiveCamera(); //left
-	var _cameraR = new THREE.PerspectiveCamera(); //right
+	var _cameraF = new PerspectiveCamera(); //front
+	var _cameraB = new PerspectiveCamera(); //back
+	var _cameraL = new PerspectiveCamera(); //left
+	var _cameraR = new PerspectiveCamera(); //right
 
-	var _position = new THREE.Vector3();
-	var _quaternion = new THREE.Quaternion();
-	var _scale = new THREE.Vector3();
+	var _position = new Vector3();
+	var _quaternion = new Quaternion();
+	var _scale = new Vector3();
 
 	// Initialization
 	renderer.autoClear = false;
@@ -140,3 +146,5 @@ THREE.PeppersGhostEffect = function ( renderer ) {
 
 
 };
+
+export { PeppersGhostEffect };

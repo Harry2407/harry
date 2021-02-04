@@ -1,8 +1,13 @@
+import {
+	Matrix3,
+	Vector3
+} from '../../../build/three.module.js';
+
 /**
  * https://github.com/gkjohnson/ply-exporter-js
  *
  * Usage:
- *  var exporter = new THREE.PLYExporter();
+ *  var exporter = new PLYExporter();
  *
  *  // second argument is a list of options
  *  exporter.parse(mesh, data => console.log(data), { binary: true, excludeAttributes: [ 'color' ], littleEndian: true });
@@ -11,11 +16,11 @@
  * http://paulbourke.net/dataformats/ply/
  */
 
-THREE.PLYExporter = function () {};
+var PLYExporter = function () {};
 
-THREE.PLYExporter.prototype = {
+PLYExporter.prototype = {
 
-	constructor: THREE.PLYExporter,
+	constructor: PLYExporter,
 
 	parse: function ( object, onDone, options ) {
 
@@ -187,8 +192,8 @@ THREE.PLYExporter.prototype = {
 
 
 		// Generate attribute data
-		var vertex = new THREE.Vector3();
-		var normalMatrixWorld = new THREE.Matrix3();
+		var vertex = new Vector3();
+		var normalMatrixWorld = new Matrix3();
 		var result = null;
 
 		if ( options.binary === true ) {
@@ -521,3 +526,5 @@ THREE.PLYExporter.prototype = {
 	}
 
 };
+
+export { PLYExporter };

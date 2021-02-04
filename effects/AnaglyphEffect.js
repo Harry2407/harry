@@ -1,9 +1,23 @@
-THREE.AnaglyphEffect = function ( renderer, width, height ) {
+import {
+	LinearFilter,
+	Matrix3,
+	Mesh,
+	NearestFilter,
+	OrthographicCamera,
+	PlaneGeometry,
+	RGBAFormat,
+	Scene,
+	ShaderMaterial,
+	StereoCamera,
+	WebGLRenderTarget
+} from '../../../build/three.module.js';
+
+var AnaglyphEffect = function ( renderer, width, height ) {
 
 	// Matrices generated with angler.js https://github.com/tschw/angler.js/
 	// (in column-major element order, as accepted by WebGL)
 
-	this.colorMatrixLeft = new THREE.Matrix3().fromArray( [
+	this.colorMatrixLeft = new Matrix3().fromArray( [
 
 		1.0671679973602295, - 0.0016435992438346148, 0.0001777536963345483, // r out
 		- 0.028107794001698494, - 0.00019593400065787137, - 0.0002875397040043026, // g out
@@ -13,7 +27,7 @@ THREE.AnaglyphEffect = function ( renderer, width, height ) {
 
 	//		red						green 						blue  						in
 
-	this.colorMatrixRight = new THREE.Matrix3().fromArray( [
+	this.colorMatrixRight = new Matrix3().fromArray( [
 
 		- 0.0355340838432312, - 0.06440307199954987, 0.018319187685847282, // r out
 		- 0.10269022732973099, 0.8079727292060852, - 0.04835830628871918, // g out
@@ -21,21 +35,21 @@ THREE.AnaglyphEffect = function ( renderer, width, height ) {
 
 	] );
 
-	var _camera = new THREE.OrthographicCamera( - 1, 1, 1, - 1, 0, 1 );
+	var _camera = new OrthographicCamera( - 1, 1, 1, - 1, 0, 1 );
 
-	var _scene = new THREE.Scene();
+	var _scene = new Scene();
 
-	var _stereo = new THREE.StereoCamera();
+	var _stereo = new StereoCamera();
 
-	var _params = { minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter, format: THREE.RGBAFormat };
+	var _params = { minFilter: LinearFilter, magFilter: NearestFilter, format: RGBAFormat };
 
 	if ( width === undefined ) width = 512;
 	if ( height === undefined ) height = 512;
 
-	var _renderTargetL = new THREE.WebGLRenderTarget( width, height, _params );
-	var _renderTargetR = new THREE.WebGLRenderTarget( width, height, _params );
+	var _renderTargetL = new WebGLRenderTarget( width, height, _params );
+	var _renderTargetR = new WebGLRenderTarget( width, height, _params );
 
-	var _material = new THREE.ShaderMaterial( {
+	var _material = new ShaderMaterial( {
 
 		uniforms: {
 
@@ -107,7 +121,7 @@ THREE.AnaglyphEffect = function ( renderer, width, height ) {
 
 	} );
 
-	var _mesh = new THREE.Mesh( new THREE.PlaneGeometry( 2, 2 ), _material );
+	var _mesh = new Mesh( new PlaneGeometry( 2, 2 ), _material );
 	_scene.add( _mesh );
 
 	this.setSize = function ( width, height ) {
@@ -156,3 +170,5 @@ THREE.AnaglyphEffect = function ( renderer, width, height ) {
 	};
 
 };
+
+export { AnaglyphEffect };

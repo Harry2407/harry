@@ -1,17 +1,21 @@
+import {
+	Vector3
+} from '../../../build/three.module.js';
+
 /**
  * Usage:
- *  var exporter = new THREE.STLExporter();
+ *  var exporter = new STLExporter();
  *
  *  // second argument is a list of options
  *  var data = exporter.parse( mesh, { binary: true } );
  *
  */
 
-THREE.STLExporter = function () {};
+var STLExporter = function () {};
 
-THREE.STLExporter.prototype = {
+STLExporter.prototype = {
 
-	constructor: THREE.STLExporter,
+	constructor: STLExporter,
 
 	parse: function ( scene, options ) {
 
@@ -67,12 +71,12 @@ THREE.STLExporter.prototype = {
 
 		}
 
-		var vA = new THREE.Vector3();
-		var vB = new THREE.Vector3();
-		var vC = new THREE.Vector3();
-		var cb = new THREE.Vector3();
-		var ab = new THREE.Vector3();
-		var normal = new THREE.Vector3();
+		var vA = new Vector3();
+		var vB = new Vector3();
+		var vC = new Vector3();
+		var cb = new Vector3();
+		var ab = new Vector3();
+		var normal = new Vector3();
 
 		for ( var i = 0, il = objects.length; i < il; i ++ ) {
 
@@ -201,3 +205,5 @@ THREE.STLExporter.prototype = {
 	}
 
 };
+
+export { STLExporter };

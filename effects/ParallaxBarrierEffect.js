@@ -1,17 +1,30 @@
-THREE.ParallaxBarrierEffect = function ( renderer ) {
+import {
+	LinearFilter,
+	Mesh,
+	NearestFilter,
+	OrthographicCamera,
+	PlaneGeometry,
+	RGBAFormat,
+	Scene,
+	ShaderMaterial,
+	StereoCamera,
+	WebGLRenderTarget
+} from '../../../build/three.module.js';
 
-	var _camera = new THREE.OrthographicCamera( - 1, 1, 1, - 1, 0, 1 );
+var ParallaxBarrierEffect = function ( renderer ) {
 
-	var _scene = new THREE.Scene();
+	var _camera = new OrthographicCamera( - 1, 1, 1, - 1, 0, 1 );
 
-	var _stereo = new THREE.StereoCamera();
+	var _scene = new Scene();
 
-	var _params = { minFilter: THREE.LinearFilter, magFilter: THREE.NearestFilter, format: THREE.RGBAFormat };
+	var _stereo = new StereoCamera();
 
-	var _renderTargetL = new THREE.WebGLRenderTarget( 512, 512, _params );
-	var _renderTargetR = new THREE.WebGLRenderTarget( 512, 512, _params );
+	var _params = { minFilter: LinearFilter, magFilter: NearestFilter, format: RGBAFormat };
 
-	var _material = new THREE.ShaderMaterial( {
+	var _renderTargetL = new WebGLRenderTarget( 512, 512, _params );
+	var _renderTargetR = new WebGLRenderTarget( 512, 512, _params );
+
+	var _material = new ShaderMaterial( {
 
 		uniforms: {
 
@@ -59,7 +72,7 @@ THREE.ParallaxBarrierEffect = function ( renderer ) {
 
 	} );
 
-	var mesh = new THREE.Mesh( new THREE.PlaneGeometry( 2, 2 ), _material );
+	var mesh = new Mesh( new PlaneGeometry( 2, 2 ), _material );
 	_scene.add( mesh );
 
 	this.setSize = function ( width, height ) {
@@ -95,3 +108,5 @@ THREE.ParallaxBarrierEffect = function ( renderer ) {
 	};
 
 };
+
+export { ParallaxBarrierEffect };

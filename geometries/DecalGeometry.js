@@ -1,3 +1,10 @@
+import {
+	BufferGeometry,
+	Float32BufferAttribute,
+	Matrix4,
+	Vector3
+} from '../../../build/three.module.js';
+
 /**
  * You can use this geometry to create a decal mesh, that serves different kinds of purposes.
  * e.g. adding unique details to models, performing dynamic visual environmental changes or covering seams.
@@ -13,9 +20,9 @@
  *
  */
 
-THREE.DecalGeometry = function ( mesh, position, orientation, size ) {
+var DecalGeometry = function ( mesh, position, orientation, size ) {
 
-	THREE.BufferGeometry.call( this );
+	BufferGeometry.call( this );
 
 	// buffers
 
@@ -25,15 +32,15 @@ THREE.DecalGeometry = function ( mesh, position, orientation, size ) {
 
 	// helpers
 
-	var plane = new THREE.Vector3();
+	var plane = new Vector3();
 
 	// this matrix represents the transformation of the decal projector
 
-	var projectorMatrix = new THREE.Matrix4();
+	var projectorMatrix = new Matrix4();
 	projectorMatrix.makeRotationFromEuler( orientation );
 	projectorMatrix.setPosition( position );
 
-	var projectorMatrixInverse = new THREE.Matrix4();
+	var projectorMatrixInverse = new Matrix4();
 	projectorMatrixInverse.copy( projectorMatrix ).invert();
 
 	// generate buffers
@@ -42,9 +49,9 @@ THREE.DecalGeometry = function ( mesh, position, orientation, size ) {
 
 	// build geometry
 
-	this.setAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
-	this.setAttribute( 'normal', new THREE.Float32BufferAttribute( normals, 3 ) );
-	this.setAttribute( 'uv', new THREE.Float32BufferAttribute( uvs, 2 ) );
+	this.setAttribute( 'position', new Float32BufferAttribute( vertices, 3 ) );
+	this.setAttribute( 'normal', new Float32BufferAttribute( normals, 3 ) );
+	this.setAttribute( 'uv', new Float32BufferAttribute( uvs, 2 ) );
 
 	function generate() {
 
@@ -52,14 +59,14 @@ THREE.DecalGeometry = function ( mesh, position, orientation, size ) {
 
 		var decalVertices = [];
 
-		var vertex = new THREE.Vector3();
-		var normal = new THREE.Vector3();
+		var vertex = new Vector3();
+		var normal = new Vector3();
 
 		// handle different geometry types
 
 		if ( mesh.geometry.isGeometry === true ) {
 
-			console.error( 'THREE.DecalGeometry no longer supports THREE.Geometry. Use THREE.BufferGeometry instead.' );
+			console.error( 'THREE.DecalGeometry no longer supports THREE.Geometry. Use BufferGeometry instead.' );
 			return;
 
 		}
@@ -148,7 +155,7 @@ THREE.DecalGeometry = function ( mesh, position, orientation, size ) {
 
 		normal.transformDirection( mesh.matrixWorld );
 
-		decalVertices.push( new THREE.DecalVertex( vertex.clone(), normal.clone() ) );
+		decalVertices.push( new DecalVertex( vertex.clone(), normal.clone() ) );
 
 	}
 
@@ -307,13 +314,13 @@ THREE.DecalGeometry = function ( mesh, position, orientation, size ) {
 
 		var s0 = d0 / ( d0 - d1 );
 
-		var v = new THREE.DecalVertex(
-			new THREE.Vector3(
+		var v = new DecalVertex(
+			new Vector3(
 				v0.position.x + s0 * ( v1.position.x - v0.position.x ),
 				v0.position.y + s0 * ( v1.position.y - v0.position.y ),
 				v0.position.z + s0 * ( v1.position.z - v0.position.z )
 			),
-			new THREE.Vector3(
+			new Vector3(
 				v0.normal.x + s0 * ( v1.normal.x - v0.normal.x ),
 				v0.normal.y + s0 * ( v1.normal.y - v0.normal.y ),
 				v0.normal.z + s0 * ( v1.normal.z - v0.normal.z )
@@ -329,20 +336,22 @@ THREE.DecalGeometry = function ( mesh, position, orientation, size ) {
 
 };
 
-THREE.DecalGeometry.prototype = Object.create( THREE.BufferGeometry.prototype );
-THREE.DecalGeometry.prototype.constructor = THREE.DecalGeometry;
+DecalGeometry.prototype = Object.create( BufferGeometry.prototype );
+DecalGeometry.prototype.constructor = DecalGeometry;
 
 // helper
 
-THREE.DecalVertex = function ( position, normal ) {
+var DecalVertex = function ( position, normal ) {
 
 	this.position = position;
 	this.normal = normal;
 
 };
 
-THREE.DecalVertex.prototype.clone = function () {
+DecalVertex.prototype.clone = function () {
 
 	return new this.constructor( this.position.clone(), this.normal.clone() );
 
 };
+
+export { DecalGeometry, DecalVertex };

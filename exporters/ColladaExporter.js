@@ -1,8 +1,15 @@
+import {
+	Color,
+	DoubleSide,
+	Matrix4,
+	MeshBasicMaterial
+} from '../../../build/three.module.js';
+
 /**
  * https://github.com/gkjohnson/collada-exporter-js
  *
  * Usage:
- *  var exporter = new THREE.ColladaExporter();
+ *  var exporter = new ColladaExporter();
  *
  *  var data = exporter.parse(mesh);
  *
@@ -10,11 +17,11 @@
  *  https://www.khronos.org/collada/
  */
 
-THREE.ColladaExporter = function () {};
+var ColladaExporter = function () {};
 
-THREE.ColladaExporter.prototype = {
+ColladaExporter.prototype = {
 
-	constructor: THREE.ColladaExporter,
+	constructor: ColladaExporter,
 
 	parse: function ( object, onDone, options ) {
 
@@ -184,7 +191,7 @@ THREE.ColladaExporter.prototype = {
 			// before saving the transform
 			o.updateMatrix();
 
-			transMat = transMat || new THREE.Matrix4();
+			transMat = transMat || new Matrix4();
 			transMat.copy( o.matrix );
 			transMat.transpose();
 			return `<matrix>${ transMat.toArray().join( ' ' ) }</matrix>`;
@@ -383,9 +390,9 @@ THREE.ColladaExporter.prototype = {
 
 				}
 
-				var emissive = m.emissive ? m.emissive : new THREE.Color( 0, 0, 0 );
-				var diffuse = m.color ? m.color : new THREE.Color( 0, 0, 0 );
-				var specular = m.specular ? m.specular : new THREE.Color( 1, 1, 1 );
+				var emissive = m.emissive ? m.emissive : new Color( 0, 0, 0 );
+				var diffuse = m.color ? m.color : new Color( 0, 0, 0 );
+				var specular = m.specular ? m.specular : new Color( 1, 1, 1 );
 				var shininess = m.shininess || 0;
 				var reflectivity = m.reflectivity || 0;
 
@@ -515,7 +522,7 @@ THREE.ColladaExporter.prototype = {
 					techniqueNode +
 
 					(
-						m.side === THREE.DoubleSide ?
+						m.side === DoubleSide ?
 							'<extra><technique profile="THREEJS"><double_sided sid="double_sided" type="int">1</double_sided></technique></extra>' :
 							''
 					) +
@@ -559,7 +566,7 @@ THREE.ColladaExporter.prototype = {
 				// get a list of materials to bind to the sub groups of the geometry.
 				// If the amount of subgroups is greater than the materials, than reuse
 				// the materials.
-				var mat = o.material || new THREE.MeshBasicMaterial();
+				var mat = o.material || new MeshBasicMaterial();
 				var materials = Array.isArray( mat ) ? mat : [ mat ];
 
 				if ( geometry.groups.length > materials.length ) {
@@ -661,3 +668,5 @@ THREE.ColladaExporter.prototype = {
 	}
 
 };
+
+export { ColladaExporter };

@@ -1,3 +1,11 @@
+import {
+	BackSide,
+	Color,
+	ShaderMaterial,
+	UniformsLib,
+	UniformsUtils
+} from '../../../build/three.module.js';
+
 /**
  * Reference: https://en.wikipedia.org/wiki/Cel_shading
  *
@@ -5,7 +13,7 @@
  *
  * 1. Traditional
  *
- * var effect = new THREE.OutlineEffect( renderer );
+ * var effect = new OutlineEffect( renderer );
  *
  * function render() {
  *
@@ -15,7 +23,7 @@
  *
  * 2. VR compatible
  *
- * var effect = new THREE.OutlineEffect( renderer );
+ * var effect = new OutlineEffect( renderer );
  * var renderingOutline = false;
  *
  * scene.onAfterRender = function () {
@@ -37,7 +45,7 @@
  * }
  *
  * // How to set default outline parameters
- * new THREE.OutlineEffect( renderer, {
+ * new OutlineEffect( renderer, {
  * 	defaultThickness: 0.01,
  * 	defaultColor: [ 0, 0, 0 ],
  * 	defaultAlpha: 0.8,
@@ -54,14 +62,14 @@
  * };
  */
 
-THREE.OutlineEffect = function ( renderer, parameters ) {
+var OutlineEffect = function ( renderer, parameters ) {
 
 	parameters = parameters || {};
 
 	this.enabled = true;
 
 	var defaultThickness = parameters.defaultThickness !== undefined ? parameters.defaultThickness : 0.003;
-	var defaultColor = new THREE.Color().fromArray( parameters.defaultColor !== undefined ? parameters.defaultColor : [ 0, 0, 0 ] );
+	var defaultColor = new Color().fromArray( parameters.defaultColor !== undefined ? parameters.defaultColor : [ 0, 0, 0 ] );
 	var defaultAlpha = parameters.defaultAlpha !== undefined ? parameters.defaultAlpha : 1.0;
 	var defaultKeepAlive = parameters.defaultKeepAlive !== undefined ? parameters.defaultKeepAlive : false;
 
@@ -127,7 +135,7 @@ THREE.OutlineEffect = function ( renderer, parameters ) {
 		'	#include <displacementmap_vertex>',
 		'	#include <project_vertex>',
 
-		'	vec3 outlineNormal = - objectNormal;', // the outline material is always rendered with THREE.BackSide
+		'	vec3 outlineNormal = - objectNormal;', // the outline material is always rendered with BackSide
 
 		'	gl_Position = calculateOutline( gl_Position, outlineNormal, vec4( transformed, 1.0 ) );',
 
@@ -167,16 +175,16 @@ THREE.OutlineEffect = function ( renderer, parameters ) {
 
 	function createMaterial() {
 
-		return new THREE.ShaderMaterial( {
+		return new ShaderMaterial( {
 			type: 'OutlineEffect',
-			uniforms: THREE.UniformsUtils.merge( [
-				THREE.UniformsLib[ 'fog' ],
-				THREE.UniformsLib[ 'displacementmap' ],
+			uniforms: UniformsUtils.merge( [
+				UniformsLib[ 'fog' ],
+				UniformsLib[ 'displacementmap' ],
 				uniformsOutline
 			] ),
 			vertexShader: vertexShader,
 			fragmentShader: fragmentShader,
-			side: THREE.BackSide
+			side: BackSide
 		} );
 
 	}
@@ -494,9 +502,9 @@ THREE.OutlineEffect = function ( renderer, parameters ) {
 	 * See #9918
 	 *
 	 * The following property copies and wrapper methods enable
-	 * THREE.OutlineEffect to be called from other *Effect, like
+	 * OutlineEffect to be called from other *Effect, like
 	 *
-	 * effect = new THREE.StereoEffect( new THREE.OutlineEffect( renderer ) );
+	 * effect = new StereoEffect( new OutlineEffect( renderer ) );
 	 *
 	 * function render () {
 	 *
@@ -563,3 +571,5 @@ THREE.OutlineEffect = function ( renderer, parameters ) {
 	};
 
 };
+
+export { OutlineEffect };

@@ -1,6 +1,11 @@
-THREE.BoxLineGeometry = function ( width, height, depth, widthSegments, heightSegments, depthSegments ) {
+import {
+	BufferGeometry,
+	Float32BufferAttribute
+} from '../../../build/three.module.js';
 
-	THREE.BufferGeometry.call( this );
+var BoxLineGeometry = function ( width, height, depth, widthSegments, heightSegments, depthSegments ) {
+
+	BufferGeometry.call( this );
 
 	width = width || 1;
 	height = height || 1;
@@ -55,9 +60,11 @@ THREE.BoxLineGeometry = function ( width, height, depth, widthSegments, heightSe
 
 	}
 
-	this.setAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
+	this.setAttribute( 'position', new Float32BufferAttribute( vertices, 3 ) );
 
 };
 
-THREE.BoxLineGeometry.prototype = Object.create( THREE.BufferGeometry.prototype );
-THREE.BoxLineGeometry.prototype.constructor = THREE.BoxLineGeometry;
+BoxLineGeometry.prototype = Object.create( BufferGeometry.prototype );
+BoxLineGeometry.prototype.constructor = BoxLineGeometry;
+
+export { BoxLineGeometry };

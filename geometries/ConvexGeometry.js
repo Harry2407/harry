@@ -1,21 +1,27 @@
+import {
+	BufferGeometry,
+	Float32BufferAttribute
+} from '../../../build/three.module.js';
+import { ConvexHull } from '../math/ConvexHull.js';
+
 // ConvexGeometry
 
-THREE.ConvexGeometry = function ( points ) {
+var ConvexGeometry = function ( points ) {
 
-	THREE.BufferGeometry.call( this );
+	BufferGeometry.call( this );
 
 	// buffers
 
 	var vertices = [];
 	var normals = [];
 
-	if ( THREE.ConvexHull === undefined ) {
+	if ( ConvexHull === undefined ) {
 
-		console.error( 'THREE.ConvexBufferGeometry: ConvexBufferGeometry relies on THREE.ConvexHull' );
+		console.error( 'THREE.ConvexBufferGeometry: ConvexBufferGeometry relies on ConvexHull' );
 
 	}
 
-	var convexHull = new THREE.ConvexHull().setFromPoints( points );
+	var convexHull = new ConvexHull().setFromPoints( points );
 
 	// generate vertices and normals
 
@@ -43,10 +49,12 @@ THREE.ConvexGeometry = function ( points ) {
 
 	// build geometry
 
-	this.setAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
-	this.setAttribute( 'normal', new THREE.Float32BufferAttribute( normals, 3 ) );
+	this.setAttribute( 'position', new Float32BufferAttribute( vertices, 3 ) );
+	this.setAttribute( 'normal', new Float32BufferAttribute( normals, 3 ) );
 
 };
 
-THREE.ConvexGeometry.prototype = Object.create( THREE.BufferGeometry.prototype );
-THREE.ConvexGeometry.prototype.constructor = THREE.ConvexGeometry;
+ConvexGeometry.prototype = Object.create( BufferGeometry.prototype );
+ConvexGeometry.prototype.constructor = ConvexGeometry;
+
+export { ConvexGeometry };
