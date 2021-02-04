@@ -1,10 +1,16 @@
+import {
+	Matrix4,
+	Mesh,
+	MeshBasicMaterial
+} from '../../../build/three.module.js';
+
 /**
  * A shadow Mesh that follows a shadow-casting Mesh in the scene, but is confined to a single plane.
  */
 
-THREE.ShadowMesh = function ( mesh ) {
+var ShadowMesh = function ( mesh ) {
 
-	var shadowMaterial = new THREE.MeshBasicMaterial( {
+	var shadowMaterial = new MeshBasicMaterial( {
 
 		color: 0x000000,
 		transparent: true,
@@ -13,7 +19,7 @@ THREE.ShadowMesh = function ( mesh ) {
 
 	} );
 
-	THREE.Mesh.call( this, mesh.geometry, shadowMaterial );
+	Mesh.call( this, mesh.geometry, shadowMaterial );
 
 	this.meshMatrix = mesh.matrixWorld;
 
@@ -22,12 +28,12 @@ THREE.ShadowMesh = function ( mesh ) {
 
 };
 
-THREE.ShadowMesh.prototype = Object.create( THREE.Mesh.prototype );
-THREE.ShadowMesh.prototype.constructor = THREE.ShadowMesh;
+ShadowMesh.prototype = Object.create( Mesh.prototype );
+ShadowMesh.prototype.constructor = ShadowMesh;
 
-THREE.ShadowMesh.prototype.update = function () {
+ShadowMesh.prototype.update = function () {
 
-	var shadowMatrix = new THREE.Matrix4();
+	var shadowMatrix = new Matrix4();
 
 	return function ( plane, lightPosition4D ) {
 
@@ -65,3 +71,5 @@ THREE.ShadowMesh.prototype.update = function () {
 	};
 
 }();
+
+export { ShadowMesh };

@@ -1,3 +1,12 @@
+import {
+	BackSide,
+	BoxGeometry,
+	Mesh,
+	ShaderMaterial,
+	UniformsUtils,
+	Vector3
+} from '../../../build/three.module.js';
+
 /**
  * Based on "A Practical Analytic Model for Daylight"
  * aka The Preetham Model, the de facto standard analytic skydome model
@@ -12,34 +21,34 @@
  * Three.js integration by zz85 http://twitter.com/blurspline
 */
 
-THREE.Sky = function () {
+var Sky = function () {
 
-	var shader = THREE.Sky.SkyShader;
+	var shader = Sky.SkyShader;
 
-	var material = new THREE.ShaderMaterial( {
+	var material = new ShaderMaterial( {
 		name: 'SkyShader',
 		fragmentShader: shader.fragmentShader,
 		vertexShader: shader.vertexShader,
-		uniforms: THREE.UniformsUtils.clone( shader.uniforms ),
-		side: THREE.BackSide,
+		uniforms: UniformsUtils.clone( shader.uniforms ),
+		side: BackSide,
 		depthWrite: false
 	} );
 
-	THREE.Mesh.call( this, new THREE.BoxGeometry( 1, 1, 1 ), material );
+	Mesh.call( this, new BoxGeometry( 1, 1, 1 ), material );
 
 };
 
-THREE.Sky.prototype = Object.create( THREE.Mesh.prototype );
+Sky.prototype = Object.create( Mesh.prototype );
 
-THREE.Sky.SkyShader = {
+Sky.SkyShader = {
 
 	uniforms: {
 		'turbidity': { value: 2 },
 		'rayleigh': { value: 1 },
 		'mieCoefficient': { value: 0.005 },
 		'mieDirectionalG': { value: 0.8 },
-		'sunPosition': { value: new THREE.Vector3() },
-		'up': { value: new THREE.Vector3( 0, 1, 0 ) }
+		'sunPosition': { value: new Vector3() },
+		'up': { value: new Vector3( 0, 1, 0 ) }
 	},
 
 	vertexShader: [
@@ -204,3 +213,5 @@ THREE.Sky.SkyShader = {
 	].join( '\n' )
 
 };
+
+export { Sky };

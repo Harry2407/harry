@@ -1,3 +1,23 @@
+import {
+	Color,
+	FrontSide,
+	LinearEncoding,
+	LinearFilter,
+	MathUtils,
+	Matrix4,
+	Mesh,
+	NoToneMapping,
+	PerspectiveCamera,
+	Plane,
+	RGBFormat,
+	ShaderMaterial,
+	UniformsLib,
+	UniformsUtils,
+	Vector3,
+	Vector4,
+	WebGLRenderTarget
+} from '../../../build/three.module.js';
+
 /**
  * Work based on :
  * http://slayvin.net : Flat mirror for three.js
@@ -5,9 +25,9 @@
  * http://29a.ch/ && http://29a.ch/slides/2012/webglwater/ : Water shader explanations in WebGL
  */
 
-THREE.Water = function ( geometry, options ) {
+var Water = function ( geometry, options ) {
 
-	THREE.Mesh.call( this, geometry );
+	Mesh.call( this, geometry );
 
 	var scope = this;
 
@@ -20,41 +40,41 @@ THREE.Water = function ( geometry, options ) {
 	var alpha = options.alpha !== undefined ? options.alpha : 1.0;
 	var time = options.time !== undefined ? options.time : 0.0;
 	var normalSampler = options.waterNormals !== undefined ? options.waterNormals : null;
-	var sunDirection = options.sunDirection !== undefined ? options.sunDirection : new THREE.Vector3( 0.70707, 0.70707, 0.0 );
-	var sunColor = new THREE.Color( options.sunColor !== undefined ? options.sunColor : 0xffffff );
-	var waterColor = new THREE.Color( options.waterColor !== undefined ? options.waterColor : 0x7F7F7F );
-	var eye = options.eye !== undefined ? options.eye : new THREE.Vector3( 0, 0, 0 );
+	var sunDirection = options.sunDirection !== undefined ? options.sunDirection : new Vector3( 0.70707, 0.70707, 0.0 );
+	var sunColor = new Color( options.sunColor !== undefined ? options.sunColor : 0xffffff );
+	var waterColor = new Color( options.waterColor !== undefined ? options.waterColor : 0x7F7F7F );
+	var eye = options.eye !== undefined ? options.eye : new Vector3( 0, 0, 0 );
 	var distortionScale = options.distortionScale !== undefined ? options.distortionScale : 20.0;
-	var side = options.side !== undefined ? options.side : THREE.FrontSide;
+	var side = options.side !== undefined ? options.side : FrontSide;
 	var fog = options.fog !== undefined ? options.fog : false;
 
 	//
 
-	var mirrorPlane = new THREE.Plane();
-	var normal = new THREE.Vector3();
-	var mirrorWorldPosition = new THREE.Vector3();
-	var cameraWorldPosition = new THREE.Vector3();
-	var rotationMatrix = new THREE.Matrix4();
-	var lookAtPosition = new THREE.Vector3( 0, 0, - 1 );
-	var clipPlane = new THREE.Vector4();
+	var mirrorPlane = new Plane();
+	var normal = new Vector3();
+	var mirrorWorldPosition = new Vector3();
+	var cameraWorldPosition = new Vector3();
+	var rotationMatrix = new Matrix4();
+	var lookAtPosition = new Vector3( 0, 0, - 1 );
+	var clipPlane = new Vector4();
 
-	var view = new THREE.Vector3();
-	var target = new THREE.Vector3();
-	var q = new THREE.Vector4();
+	var view = new Vector3();
+	var target = new Vector3();
+	var q = new Vector4();
 
-	var textureMatrix = new THREE.Matrix4();
+	var textureMatrix = new Matrix4();
 
-	var mirrorCamera = new THREE.PerspectiveCamera();
+	var mirrorCamera = new PerspectiveCamera();
 
 	var parameters = {
-		minFilter: THREE.LinearFilter,
-		magFilter: THREE.LinearFilter,
-		format: THREE.RGBFormat
+		minFilter: LinearFilter,
+		magFilter: LinearFilter,
+		format: RGBFormat
 	};
 
-	var renderTarget = new THREE.WebGLRenderTarget( textureWidth, textureHeight, parameters );
+	var renderTarget = new WebGLRenderTarget( textureWidth, textureHeight, parameters );
 
-	if ( ! THREE.MathUtils.isPowerOfTwo( textureWidth ) || ! THREE.MathUtils.isPowerOfTwo( textureHeight ) ) {
+	if ( ! MathUtils.isPowerOfTwo( textureWidth ) || ! MathUtils.isPowerOfTwo( textureHeight ) ) {
 
 		renderTarget.texture.generateMipmaps = false;
 
@@ -62,9 +82,9 @@ THREE.Water = function ( geometry, options ) {
 
 	var mirrorShader = {
 
-		uniforms: THREE.UniformsUtils.merge( [
-			THREE.UniformsLib[ 'fog' ],
-			THREE.UniformsLib[ 'lights' ],
+		uniforms: UniformsUtils.merge( [
+			UniformsLib[ 'fog' ],
+			UniformsLib[ 'lights' ],
 			{
 				'normalSampler': { value: null },
 				'mirrorSampler': { value: null },
@@ -72,11 +92,11 @@ THREE.Water = function ( geometry, options ) {
 				'time': { value: 0.0 },
 				'size': { value: 1.0 },
 				'distortionScale': { value: 20.0 },
-				'textureMatrix': { value: new THREE.Matrix4() },
-				'sunColor': { value: new THREE.Color( 0x7F7F7F ) },
-				'sunDirection': { value: new THREE.Vector3( 0.70707, 0.70707, 0 ) },
-				'eye': { value: new THREE.Vector3() },
-				'waterColor': { value: new THREE.Color( 0x555555 ) }
+				'textureMatrix': { value: new Matrix4() },
+				'sunColor': { value: new Color( 0x7F7F7F ) },
+				'sunDirection': { value: new Vector3( 0.70707, 0.70707, 0 ) },
+				'eye': { value: new Vector3() },
+				'waterColor': { value: new Color( 0x555555 ) }
 			}
 		] ),
 
@@ -183,10 +203,10 @@ THREE.Water = function ( geometry, options ) {
 
 	};
 
-	var material = new THREE.ShaderMaterial( {
+	var material = new ShaderMaterial( {
 		fragmentShader: mirrorShader.fragmentShader,
 		vertexShader: mirrorShader.vertexShader,
-		uniforms: THREE.UniformsUtils.clone( mirrorShader.uniforms ),
+		uniforms: UniformsUtils.clone( mirrorShader.uniforms ),
 		lights: true,
 		side: side,
 		fog: fog
@@ -283,7 +303,7 @@ THREE.Water = function ( geometry, options ) {
 
 		// Render
 
-		if ( renderer.outputEncoding !== THREE.LinearEncoding ) {
+		if ( renderer.outputEncoding !== LinearEncoding ) {
 
 			console.warn( 'THREE.Water: WebGLRenderer must use LinearEncoding as outputEncoding.' );
 			scope.onBeforeRender = function () {};
@@ -292,7 +312,7 @@ THREE.Water = function ( geometry, options ) {
 
 		}
 
-		if ( renderer.toneMapping !== THREE.NoToneMapping ) {
+		if ( renderer.toneMapping !== NoToneMapping ) {
 
 			console.warn( 'THREE.Water: WebGLRenderer must use NoToneMapping as toneMapping.' );
 			scope.onBeforeRender = function () {};
@@ -339,5 +359,7 @@ THREE.Water = function ( geometry, options ) {
 
 };
 
-THREE.Water.prototype = Object.create( THREE.Mesh.prototype );
-THREE.Water.prototype.constructor = THREE.Water;
+Water.prototype = Object.create( Mesh.prototype );
+Water.prototype.constructor = Water;
+
+export { Water };
