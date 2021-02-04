@@ -1,19 +1,27 @@
+import {
+	BufferGeometry,
+	Color,
+	Float32BufferAttribute,
+	Vector2,
+	Vector3
+} from '../../../build/three.module.js';
+
 /**
  * Break faces with edges longer than maxEdgeLength
  */
 
-THREE.TessellateModifier = function ( maxEdgeLength = 0.1, maxIterations = 6 ) {
+var TessellateModifier = function ( maxEdgeLength = 0.1, maxIterations = 6 ) {
 
 	this.maxEdgeLength = maxEdgeLength;
 	this.maxIterations = maxIterations;
 
 };
 
-THREE.TessellateModifier.prototype.modify = function ( geometry ) {
+TessellateModifier.prototype.modify = function ( geometry ) {
 
 	if ( geometry.isGeometry === true ) {
 
-		console.error( 'THREE.TessellateModifier no longer supports THREE.Geometry. Use THREE.BufferGeometry instead.' );
+		console.error( 'THREE.TessellateModifier no longer supports Geometry. Use BufferGeometry instead.' );
 		return geometry;
 
 	}
@@ -29,34 +37,34 @@ THREE.TessellateModifier.prototype.modify = function ( geometry ) {
 	const maxIterations = this.maxIterations;
 	const maxEdgeLengthSquared = this.maxEdgeLength * this.maxEdgeLength;
 
-	const va = new THREE.Vector3();
-	const vb = new THREE.Vector3();
-	const vc = new THREE.Vector3();
-	const vm = new THREE.Vector3();
+	const va = new Vector3();
+	const vb = new Vector3();
+	const vc = new Vector3();
+	const vm = new Vector3();
 	const vs = [ va, vb, vc, vm ];
 
-	const na = new THREE.Vector3();
-	const nb = new THREE.Vector3();
-	const nc = new THREE.Vector3();
-	const nm = new THREE.Vector3();
+	const na = new Vector3();
+	const nb = new Vector3();
+	const nc = new Vector3();
+	const nm = new Vector3();
 	const ns = [ na, nb, nc, nm ];
 
-	const ca = new THREE.Color();
-	const cb = new THREE.Color();
-	const cc = new THREE.Color();
-	const cm = new THREE.Color();
+	const ca = new Color();
+	const cb = new Color();
+	const cc = new Color();
+	const cm = new Color();
 	const cs = [ ca, cb, cc, cm ];
 
-	const ua = new THREE.Vector2();
-	const ub = new THREE.Vector2();
-	const uc = new THREE.Vector2();
-	const um = new THREE.Vector2();
+	const ua = new Vector2();
+	const ub = new Vector2();
+	const uc = new Vector2();
+	const um = new Vector2();
 	const us = [ ua, ub, uc, um ];
 
-	const u2a = new THREE.Vector2();
-	const u2b = new THREE.Vector2();
-	const u2c = new THREE.Vector2();
-	const u2m = new THREE.Vector2();
+	const u2a = new Vector2();
+	const u2b = new Vector2();
+	const u2c = new Vector2();
+	const u2m = new Vector2();
 	const u2s = [ u2a, u2b, u2c, u2m ];
 
 	const attributes = geometry.attributes;
@@ -267,34 +275,36 @@ THREE.TessellateModifier.prototype.modify = function ( geometry ) {
 
 	}
 
-	const geometry2 = new THREE.BufferGeometry();
+	const geometry2 = new BufferGeometry();
 
-	geometry2.setAttribute( 'position', new THREE.Float32BufferAttribute( positions2, 3 ) );
+	geometry2.setAttribute( 'position', new Float32BufferAttribute( positions2, 3 ) );
 
 	if ( hasNormals ) {
 
-		geometry2.setAttribute( 'normal', new THREE.Float32BufferAttribute( normals2, 3 ) );
+		geometry2.setAttribute( 'normal', new Float32BufferAttribute( normals2, 3 ) );
 
 	}
 
 	if ( hasColors ) {
 
-		geometry2.setAttribute( 'color', new THREE.Float32BufferAttribute( colors2, 3 ) );
+		geometry2.setAttribute( 'color', new Float32BufferAttribute( colors2, 3 ) );
 
 	}
 
 	if ( hasUVs ) {
 
-		geometry2.setAttribute( 'uv', new THREE.Float32BufferAttribute( uvs2, 2 ) );
+		geometry2.setAttribute( 'uv', new Float32BufferAttribute( uvs2, 2 ) );
 
 	}
 
 	if ( hasUV2s ) {
 
-		geometry2.setAttribute( 'uv2', new THREE.Float32BufferAttribute( uv2s2, 2 ) );
+		geometry2.setAttribute( 'uv2', new Float32BufferAttribute( uv2s2, 2 ) );
 
 	}
 
 	return geometry2;
 
 };
+
+export { TessellateModifier };

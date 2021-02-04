@@ -1,8 +1,15 @@
-THREE.EdgeSplitModifier = function () {
+import {
+	BufferAttribute,
+	BufferGeometry,
+	Vector3
+} from '../../../build/three.module.js';
+import { BufferGeometryUtils } from '../utils/BufferGeometryUtils.js';
 
-	var A = new THREE.Vector3();
-	var B = new THREE.Vector3();
-	var C = new THREE.Vector3();
+var EdgeSplitModifier = function () {
+
+	var A = new Vector3();
+	var B = new Vector3();
+	var C = new Vector3();
 
 	var positions, normals;
 	var indexes;
@@ -155,7 +162,7 @@ THREE.EdgeSplitModifier = function () {
 
 		if ( geometry.isGeometry === true ) {
 
-			console.error( 'THREE.EdgeSplitModifier no longer supports THREE.Geometry. Use THREE.BufferGeometry instead.' );
+			console.error( 'THREE.EdgeSplitModifier no longer supports THREE.Geometry. Use BufferGeometry instead.' );
 			return;
 
 		}
@@ -181,13 +188,13 @@ THREE.EdgeSplitModifier = function () {
 
 		if ( geometry.index == null ) {
 
-			if ( THREE.BufferGeometryUtils === undefined ) {
+			if ( BufferGeometryUtils === undefined ) {
 
-				throw 'THREE.EdgeSplitModifier relies on THREE.BufferGeometryUtils';
+				throw 'THREE.EdgeSplitModifier relies on BufferGeometryUtils';
 
 			}
 
-			geometry = THREE.BufferGeometryUtils.mergeVertices( geometry );
+			geometry = BufferGeometryUtils.mergeVertices( geometry );
 
 		}
 
@@ -211,7 +218,7 @@ THREE.EdgeSplitModifier = function () {
 			const oldAttribute = geometry.attributes[ name ];
 			const newArray = new oldAttribute.array.constructor( ( indexes.length + splitIndexes.length ) * oldAttribute.itemSize );
 			newArray.set( oldAttribute.array );
-			newAttributes[ name ] = new THREE.BufferAttribute( newArray, oldAttribute.itemSize, oldAttribute.normalized );
+			newAttributes[ name ] = new BufferAttribute( newArray, oldAttribute.itemSize, oldAttribute.normalized );
 
 		}
 
@@ -242,8 +249,8 @@ THREE.EdgeSplitModifier = function () {
 
 		}
 
-		geometry = new THREE.BufferGeometry();
-		geometry.setIndex( new THREE.BufferAttribute( newIndexes, 1 ) );
+		geometry = new BufferGeometry();
+		geometry.setIndex( new BufferAttribute( newIndexes, 1 ) );
 
 		for ( const name of Object.keys( newAttributes ) ) {
 
@@ -283,3 +290,5 @@ THREE.EdgeSplitModifier = function () {
 	};
 
 };
+
+export { EdgeSplitModifier };

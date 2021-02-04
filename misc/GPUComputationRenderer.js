@@ -1,3 +1,17 @@
+import {
+	Camera,
+	ClampToEdgeWrapping,
+	DataTexture,
+	FloatType,
+	Mesh,
+	NearestFilter,
+	PlaneGeometry,
+	RGBAFormat,
+	Scene,
+	ShaderMaterial,
+	WebGLRenderTarget
+} from '../../../build/three.module.js';
+
 /**
  * GPUComputationRenderer, based on SimulationRenderer by zz85
  *
@@ -26,7 +40,7 @@
  * // Initialization...
  *
  * // Create computation renderer
- * var gpuCompute = new THREE.GPUComputationRenderer( 1024, 1024, renderer );
+ * var gpuCompute = new GPUComputationRenderer( 1024, 1024, renderer );
  *
  * // Create initial state float textures
  * var pos0 = gpuCompute.createTexture();
@@ -95,17 +109,17 @@
  * @param {WebGLRenderer} renderer The renderer
   */
 
-THREE.GPUComputationRenderer = function ( sizeX, sizeY, renderer ) {
+var GPUComputationRenderer = function ( sizeX, sizeY, renderer ) {
 
 	this.variables = [];
 
 	this.currentTextureIndex = 0;
 
-	var dataType = THREE.FloatType;
+	var dataType = FloatType;
 
-	var scene = new THREE.Scene();
+	var scene = new Scene();
 
-	var camera = new THREE.Camera();
+	var camera = new Camera();
 	camera.position.z = 1;
 
 	var passThruUniforms = {
@@ -114,7 +128,7 @@ THREE.GPUComputationRenderer = function ( sizeX, sizeY, renderer ) {
 
 	var passThruShader = createShaderMaterial( getPassThroughFragmentShader(), passThruUniforms );
 
-	var mesh = new THREE.Mesh( new THREE.PlaneGeometry( 2, 2 ), passThruShader );
+	var mesh = new Mesh( new PlaneGeometry( 2, 2 ), passThruShader );
 	scene.add( mesh );
 
 
@@ -137,8 +151,8 @@ THREE.GPUComputationRenderer = function ( sizeX, sizeY, renderer ) {
 			renderTargets: [],
 			wrapS: null,
 			wrapT: null,
-			minFilter: THREE.NearestFilter,
-			magFilter: THREE.NearestFilter
+			minFilter: NearestFilter,
+			magFilter: NearestFilter
 		};
 
 		this.variables.push( variable );
@@ -285,7 +299,7 @@ THREE.GPUComputationRenderer = function ( sizeX, sizeY, renderer ) {
 
 		uniforms = uniforms || {};
 
-		var material = new THREE.ShaderMaterial( {
+		var material = new ShaderMaterial( {
 			uniforms: uniforms,
 			vertexShader: getPassThroughVertexShader(),
 			fragmentShader: computeFragmentShader
@@ -304,18 +318,18 @@ THREE.GPUComputationRenderer = function ( sizeX, sizeY, renderer ) {
 		sizeXTexture = sizeXTexture || sizeX;
 		sizeYTexture = sizeYTexture || sizeY;
 
-		wrapS = wrapS || THREE.ClampToEdgeWrapping;
-		wrapT = wrapT || THREE.ClampToEdgeWrapping;
+		wrapS = wrapS || ClampToEdgeWrapping;
+		wrapT = wrapT || ClampToEdgeWrapping;
 
-		minFilter = minFilter || THREE.NearestFilter;
-		magFilter = magFilter || THREE.NearestFilter;
+		minFilter = minFilter || NearestFilter;
+		magFilter = magFilter || NearestFilter;
 
-		var renderTarget = new THREE.WebGLRenderTarget( sizeXTexture, sizeYTexture, {
+		var renderTarget = new WebGLRenderTarget( sizeXTexture, sizeYTexture, {
 			wrapS: wrapS,
 			wrapT: wrapT,
 			minFilter: minFilter,
 			magFilter: magFilter,
-			format: THREE.RGBAFormat,
+			format: RGBAFormat,
 			type: dataType,
 			depthBuffer: false
 		} );
@@ -327,7 +341,7 @@ THREE.GPUComputationRenderer = function ( sizeX, sizeY, renderer ) {
 	this.createTexture = function () {
 
 		var data = new Float32Array( sizeX * sizeY * 4 );
-		return new THREE.DataTexture( data, sizeX, sizeY, THREE.RGBAFormat, THREE.FloatType );
+		return new DataTexture( data, sizeX, sizeY, RGBAFormat, FloatType );
 
 	};
 
@@ -385,3 +399,5 @@ THREE.GPUComputationRenderer = function ( sizeX, sizeY, renderer ) {
 	}
 
 };
+
+export { GPUComputationRenderer };

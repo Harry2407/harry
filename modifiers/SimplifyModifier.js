@@ -1,3 +1,10 @@
+import {
+	BufferGeometry,
+	Float32BufferAttribute,
+	Vector3
+} from '../../../build/three.module.js';
+import { BufferGeometryUtils } from '../utils/BufferGeometryUtils.js';
+
 /**
  *	Simplification Geometry Modifier
  *    - based on code and technique
@@ -6,11 +13,11 @@
  *    - http://www.melax.com/polychop/
  */
 
-THREE.SimplifyModifier = function () {
+var SimplifyModifier = function () {
 
-	if ( THREE.BufferGeometryUtils === undefined ) {
+	if ( BufferGeometryUtils === undefined ) {
 
-		throw 'THREE.SimplifyModifier relies on THREE.BufferGeometryUtils';
+		throw 'THREE.SimplifyModifier relies on BufferGeometryUtils';
 
 	}
 
@@ -18,7 +25,7 @@ THREE.SimplifyModifier = function () {
 
 ( function () {
 
-	var cb = new THREE.Vector3(), ab = new THREE.Vector3();
+	var cb = new Vector3(), ab = new Vector3();
 
 	function pushIfUnique( array, object ) {
 
@@ -276,7 +283,7 @@ THREE.SimplifyModifier = function () {
 		this.v2 = v2;
 		this.v3 = v3;
 
-		this.normal = new THREE.Vector3();
+		this.normal = new Vector3();
 
 		this.computeNormal();
 
@@ -385,11 +392,11 @@ THREE.SimplifyModifier = function () {
 
 	};
 
-	THREE.SimplifyModifier.prototype.modify = function ( geometry, count ) {
+	SimplifyModifier.prototype.modify = function ( geometry, count ) {
 
 		if ( geometry.isGeometry === true ) {
 
-			console.error( 'THREE.SimplifyModifier no longer supports THREE.Geometry. Use THREE.BufferGeometry instead.' );
+			console.error( 'THREE.SimplifyModifier no longer supports Geometry. Use BufferGeometry instead.' );
 			return;
 
 		}
@@ -405,7 +412,7 @@ THREE.SimplifyModifier = function () {
 
 		}
 
-		geometry = THREE.BufferGeometryUtils.mergeVertices( geometry );
+		geometry = BufferGeometryUtils.mergeVertices( geometry );
 
 		//
 		// put data of original geometry in different data structures
@@ -420,7 +427,7 @@ THREE.SimplifyModifier = function () {
 
 		for ( var i = 0; i < positionAttribute.count; i ++ ) {
 
-			var v = new THREE.Vector3().fromBufferAttribute( positionAttribute, i );
+			var v = new Vector3().fromBufferAttribute( positionAttribute, i );
 
 			var vertex = new Vertex( v, i );
 			vertices.push( vertex );
@@ -488,7 +495,7 @@ THREE.SimplifyModifier = function () {
 
 		//
 
-		var simplifiedGeometry = new THREE.BufferGeometry();
+		var simplifiedGeometry = new BufferGeometry();
 		var position = [];
 		var index = [];
 
@@ -517,7 +524,7 @@ THREE.SimplifyModifier = function () {
 
 		//
 
-		simplifiedGeometry.setAttribute( 'position', new THREE.Float32BufferAttribute( position, 3 ) );
+		simplifiedGeometry.setAttribute( 'position', new Float32BufferAttribute( position, 3 ) );
 		simplifiedGeometry.setIndex( index );
 
 		return simplifiedGeometry;
@@ -525,3 +532,5 @@ THREE.SimplifyModifier = function () {
 	};
 
 } )();
+
+export { SimplifyModifier };

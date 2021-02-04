@@ -1,6 +1,11 @@
-THREE.MorphBlendMesh = function ( geometry, material ) {
+import {
+	MathUtils,
+	Mesh
+} from '../../../build/three.module.js';
 
-	THREE.Mesh.call( this, geometry, material );
+var MorphBlendMesh = function ( geometry, material ) {
+
+	Mesh.call( this, geometry, material );
 
 	this.animationsMap = {};
 	this.animationsList = [];
@@ -22,9 +27,9 @@ THREE.MorphBlendMesh = function ( geometry, material ) {
 
 };
 
-THREE.MorphBlendMesh.prototype = Object.assign( Object.create( THREE.Mesh.prototype ), {
+MorphBlendMesh.prototype = Object.assign( Object.create( Mesh.prototype ), {
 
-	constructor: THREE.MorphBlendMesh,
+	constructor: MorphBlendMesh,
 
 	createAnimation: function ( name, start, end, fps ) {
 
@@ -278,7 +283,7 @@ THREE.MorphBlendMesh.prototype = Object.assign( Object.create( THREE.Mesh.protot
 
 			}
 
-			var keyframe = animation.start + THREE.MathUtils.clamp( Math.floor( animation.time / frameTime ), 0, animation.length - 1 );
+			var keyframe = animation.start + MathUtils.clamp( Math.floor( animation.time / frameTime ), 0, animation.length - 1 );
 			var weight = animation.weight;
 
 			if ( keyframe !== animation.currentFrame ) {
@@ -313,3 +318,5 @@ THREE.MorphBlendMesh.prototype = Object.assign( Object.create( THREE.Mesh.protot
 	}
 
 } );
+
+export { MorphBlendMesh };

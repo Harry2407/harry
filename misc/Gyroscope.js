@@ -1,21 +1,27 @@
-THREE.Gyroscope = function () {
+import {
+	Object3D,
+	Quaternion,
+	Vector3
+} from '../../../build/three.module.js';
 
-	THREE.Object3D.call( this );
+var Gyroscope = function () {
+
+	Object3D.call( this );
 
 };
 
-THREE.Gyroscope.prototype = Object.create( THREE.Object3D.prototype );
-THREE.Gyroscope.prototype.constructor = THREE.Gyroscope;
+Gyroscope.prototype = Object.create( Object3D.prototype );
+Gyroscope.prototype.constructor = Gyroscope;
 
-THREE.Gyroscope.prototype.updateMatrixWorld = ( function () {
+Gyroscope.prototype.updateMatrixWorld = ( function () {
 
-	var translationObject = new THREE.Vector3();
-	var quaternionObject = new THREE.Quaternion();
-	var scaleObject = new THREE.Vector3();
+	var translationObject = new Vector3();
+	var quaternionObject = new Quaternion();
+	var scaleObject = new Vector3();
 
-	var translationWorld = new THREE.Vector3();
-	var quaternionWorld = new THREE.Quaternion();
-	var scaleWorld = new THREE.Vector3();
+	var translationWorld = new Vector3();
+	var quaternionWorld = new Quaternion();
+	var scaleWorld = new Vector3();
 
 	return function updateMatrixWorld( force ) {
 
@@ -59,3 +65,5 @@ THREE.Gyroscope.prototype.updateMatrixWorld = ( function () {
 	};
 
 }() );
+
+export { Gyroscope };
