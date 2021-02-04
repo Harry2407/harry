@@ -1,4 +1,42 @@
-THREE.VRMLLoader = ( function () {
+import {
+	BackSide,
+	BoxGeometry,
+	BufferAttribute,
+	BufferGeometry,
+	ClampToEdgeWrapping,
+	Color,
+	ConeGeometry,
+	CylinderGeometry,
+	DataTexture,
+	DoubleSide,
+	FileLoader,
+	Float32BufferAttribute,
+	FrontSide,
+	Group,
+	LineBasicMaterial,
+	LineSegments,
+	Loader,
+	LoaderUtils,
+	Mesh,
+	MeshBasicMaterial,
+	MeshPhongMaterial,
+	Object3D,
+	Points,
+	PointsMaterial,
+	Quaternion,
+	RGBAFormat,
+	RGBFormat,
+	RepeatWrapping,
+	Scene,
+	ShapeUtils,
+	SphereGeometry,
+	TextureLoader,
+	Vector2,
+	Vector3
+} from '../../../build/three.module.js';
+import { chevrotain } from '../libs/chevrotain.module.min.js';
+
+var VRMLLoader = ( function () {
 
 	// dependency check
 
@@ -12,11 +50,11 @@ THREE.VRMLLoader = ( function () {
 
 	function VRMLLoader( manager ) {
 
-		THREE.Loader.call( this, manager );
+		Loader.call( this, manager );
 
 	}
 
-	VRMLLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype ), {
+	VRMLLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 		constructor: VRMLLoader,
 
@@ -24,9 +62,9 @@ THREE.VRMLLoader = ( function () {
 
 			var scope = this;
 
-			var path = ( scope.path === '' ) ? THREE.LoaderUtils.extractUrlBase( url ) : scope.path;
+			var path = ( scope.path === '' ) ? LoaderUtils.extractUrlBase( url ) : scope.path;
 
-			var loader = new THREE.FileLoader( scope.manager );
+			var loader = new FileLoader( scope.manager );
 			loader.setPath( scope.path );
 			loader.setRequestHeader( scope.requestHeader );
 			loader.setWithCredentials( scope.withCredentials );
@@ -508,7 +546,7 @@ THREE.VRMLLoader = ( function () {
 				// console.log( JSON.stringify( tree, null, 2 ) );
 
 				var nodes = tree.nodes;
-				var scene = new THREE.Scene();
+				var scene = new Scene();
 
 				// first iteration: build nodemap based on DEF statements
 
@@ -527,7 +565,7 @@ THREE.VRMLLoader = ( function () {
 					var node = nodes[ i ];
 					var object = getNode( node );
 
-					if ( object instanceof THREE.Object3D ) scene.add( object );
+					if ( object instanceof Object3D ) scene.add( object );
 
 					if ( node.name === 'WorldInfo' ) scene.userData.worldInfo = object;
 
@@ -729,7 +767,7 @@ THREE.VRMLLoader = ( function () {
 
 			function buildGroupingNode( node ) {
 
-				var object = new THREE.Group();
+				var object = new Group();
 
 				//
 
@@ -764,7 +802,7 @@ THREE.VRMLLoader = ( function () {
 							break;
 
 						case 'rotation':
-							var axis = new THREE.Vector3( fieldValues[ 0 ], fieldValues[ 1 ], fieldValues[ 2 ] );
+							var axis = new Vector3( fieldValues[ 0 ], fieldValues[ 1 ], fieldValues[ 2 ] );
 							var angle = fieldValues[ 3 ];
 							object.quaternion.setFromAxisAngle( axis, angle );
 							break;
@@ -799,7 +837,7 @@ THREE.VRMLLoader = ( function () {
 
 			function buildBackgroundNode( node ) {
 
-				var group = new THREE.Group();
+				var group = new Group();
 
 				var groundAngle, groundColor;
 				var skyAngle, skyColor;
@@ -868,8 +906,8 @@ THREE.VRMLLoader = ( function () {
 
 				if ( skyColor ) {
 
-					var skyGeometry = new THREE.SphereGeometry( radius, 32, 16 );
-					var skyMaterial = new THREE.MeshBasicMaterial( { fog: false, side: THREE.BackSide, depthWrite: false, depthTest: false } );
+					var skyGeometry = new SphereGeometry( radius, 32, 16 );
+					var skyMaterial = new MeshBasicMaterial( { fog: false, side: BackSide, depthWrite: false, depthTest: false } );
 
 					if ( skyColor.length > 3 ) {
 
@@ -882,7 +920,7 @@ THREE.VRMLLoader = ( function () {
 
 					}
 
-					var sky = new THREE.Mesh( skyGeometry, skyMaterial );
+					var sky = new Mesh( skyGeometry, skyMaterial );
 					group.add( sky );
 
 				}
@@ -893,12 +931,12 @@ THREE.VRMLLoader = ( function () {
 
 					if ( groundColor.length > 0 ) {
 
-						var groundGeometry = new THREE.SphereGeometry( radius, 32, 16, 0, 2 * Math.PI, 0.5 * Math.PI, 1.5 * Math.PI );
-						var groundMaterial = new THREE.MeshBasicMaterial( { fog: false, side: THREE.BackSide, vertexColors: true, depthWrite: false, depthTest: false } );
+						var groundGeometry = new SphereGeometry( radius, 32, 16, 0, 2 * Math.PI, 0.5 * Math.PI, 1.5 * Math.PI );
+						var groundMaterial = new MeshBasicMaterial( { fog: false, side: BackSide, vertexColors: true, depthWrite: false, depthTest: false } );
 
 						paintFaces( groundGeometry, radius, groundAngle, toColorArray( groundColor ), false );
 
-						var ground = new THREE.Mesh( groundGeometry, groundMaterial );
+						var ground = new Mesh( groundGeometry, groundMaterial );
 						group.add( ground );
 
 					}
@@ -919,7 +957,7 @@ THREE.VRMLLoader = ( function () {
 
 				// if the appearance field is NULL or unspecified, lighting is off and the unlit object color is (0, 0, 0)
 
-				var material = new THREE.MeshBasicMaterial( { color: 0x000000 } );
+				var material = new MeshBasicMaterial( { color: 0x000000 } );
 				var geometry;
 
 				for ( var i = 0, l = fields.length; i < l; i ++ ) {
@@ -966,7 +1004,7 @@ THREE.VRMLLoader = ( function () {
 
 					if ( type === 'points' ) { // points
 
-						var pointsMaterial = new THREE.PointsMaterial( { color: 0xffffff } );
+						var pointsMaterial = new PointsMaterial( { color: 0xffffff } );
 
 						if ( geometry.attributes.color !== undefined ) {
 
@@ -984,11 +1022,11 @@ THREE.VRMLLoader = ( function () {
 
 						}
 
-						object = new THREE.Points( geometry, pointsMaterial );
+						object = new Points( geometry, pointsMaterial );
 
 					} else if ( type === 'line' ) { // lines
 
-						var lineMaterial = new THREE.LineBasicMaterial( { color: 0xffffff } );
+						var lineMaterial = new LineBasicMaterial( { color: 0xffffff } );
 
 						if ( geometry.attributes.color !== undefined ) {
 
@@ -1006,7 +1044,7 @@ THREE.VRMLLoader = ( function () {
 
 						}
 
-						object = new THREE.LineSegments( geometry, lineMaterial );
+						object = new LineSegments( geometry, lineMaterial );
 
 					} else { // consider meshes
 
@@ -1014,7 +1052,7 @@ THREE.VRMLLoader = ( function () {
 
 						if ( geometry._solid !== undefined ) {
 
-							material.side = ( geometry._solid ) ? THREE.FrontSide : THREE.DoubleSide;
+							material.side = ( geometry._solid ) ? FrontSide : DoubleSide;
 
 						}
 
@@ -1026,13 +1064,13 @@ THREE.VRMLLoader = ( function () {
 
 						}
 
-						object = new THREE.Mesh( geometry, material );
+						object = new Mesh( geometry, material );
 
 					}
 
 				} else {
 
-					object = new THREE.Object3D();
+					object = new Object3D();
 
 					// if the geometry field is NULL or no vertices are defined the object is not drawn
 
@@ -1046,7 +1084,7 @@ THREE.VRMLLoader = ( function () {
 
 			function buildAppearanceNode( node ) {
 
-				var material = new THREE.MeshPhongMaterial();
+				var material = new MeshPhongMaterial();
 				var transformData;
 
 				var fields = node.fields;
@@ -1075,7 +1113,7 @@ THREE.VRMLLoader = ( function () {
 
 								// if the material field is NULL or unspecified, lighting is off and the unlit object color is (0, 0, 0)
 
-								material = new THREE.MeshBasicMaterial( { color: 0x000000 } );
+								material = new MeshBasicMaterial( { color: 0x000000 } );
 
 							}
 
@@ -1183,11 +1221,11 @@ THREE.VRMLLoader = ( function () {
 							break;
 
 						case 'diffuseColor':
-							materialData.diffuseColor = new THREE.Color( fieldValues[ 0 ], fieldValues[ 1 ], fieldValues[ 2 ] );
+							materialData.diffuseColor = new Color( fieldValues[ 0 ], fieldValues[ 1 ], fieldValues[ 2 ] );
 							break;
 
 						case 'emissiveColor':
-							materialData.emissiveColor = new THREE.Color( fieldValues[ 0 ], fieldValues[ 1 ], fieldValues[ 2 ] );
+							materialData.emissiveColor = new Color( fieldValues[ 0 ], fieldValues[ 1 ], fieldValues[ 2 ] );
 							break;
 
 						case 'shininess':
@@ -1195,7 +1233,7 @@ THREE.VRMLLoader = ( function () {
 							break;
 
 						case 'specularColor':
-							materialData.emissiveColor = new THREE.Color( fieldValues[ 0 ], fieldValues[ 1 ], fieldValues[ 2 ] );
+							materialData.emissiveColor = new Color( fieldValues[ 0 ], fieldValues[ 1 ], fieldValues[ 2 ] );
 							break;
 
 						case 'transparency':
@@ -1289,8 +1327,8 @@ THREE.VRMLLoader = ( function () {
 			function buildPixelTextureNode( node ) {
 
 				var texture;
-				var wrapS = THREE.RepeatWrapping;
-				var wrapT = THREE.RepeatWrapping;
+				var wrapS = RepeatWrapping;
+				var wrapT = RepeatWrapping;
 
 				var fields = node.fields;
 
@@ -1340,16 +1378,16 @@ THREE.VRMLLoader = ( function () {
 
 							}
 
-							texture = new THREE.DataTexture( data, width, height, ( useAlpha === true ) ? THREE.RGBAFormat : THREE.RGBFormat );
+							texture = new DataTexture( data, width, height, ( useAlpha === true ) ? RGBAFormat : RGBFormat );
 							texture.__type = textureType; // needed for material modifications
 							break;
 
 						case 'repeatS':
-							if ( fieldValues[ 0 ] === false ) wrapS = THREE.ClampToEdgeWrapping;
+							if ( fieldValues[ 0 ] === false ) wrapS = ClampToEdgeWrapping;
 							break;
 
 						case 'repeatT':
-							if ( fieldValues[ 0 ] === false ) wrapT = THREE.ClampToEdgeWrapping;
+							if ( fieldValues[ 0 ] === false ) wrapT = ClampToEdgeWrapping;
 							break;
 
 						default:
@@ -1374,8 +1412,8 @@ THREE.VRMLLoader = ( function () {
 			function buildImageTextureNode( node ) {
 
 				var texture;
-				var wrapS = THREE.RepeatWrapping;
-				var wrapT = THREE.RepeatWrapping;
+				var wrapS = RepeatWrapping;
+				var wrapT = RepeatWrapping;
 
 				var fields = node.fields;
 
@@ -1393,11 +1431,11 @@ THREE.VRMLLoader = ( function () {
 							break;
 
 						case 'repeatS':
-							if ( fieldValues[ 0 ] === false ) wrapS = THREE.ClampToEdgeWrapping;
+							if ( fieldValues[ 0 ] === false ) wrapS = ClampToEdgeWrapping;
 							break;
 
 						case 'repeatT':
-							if ( fieldValues[ 0 ] === false ) wrapT = THREE.ClampToEdgeWrapping;
+							if ( fieldValues[ 0 ] === false ) wrapT = ClampToEdgeWrapping;
 							break;
 
 						default:
@@ -1422,10 +1460,10 @@ THREE.VRMLLoader = ( function () {
 			function buildTextureTransformNode( node ) {
 
 				var transformData = {
-					center: new THREE.Vector2(),
-					rotation: new THREE.Vector2(),
-					scale: new THREE.Vector2(),
-					translation: new THREE.Vector2()
+					center: new Vector2(),
+					rotation: new Vector2(),
+					scale: new Vector2(),
+					translation: new Vector2()
 				};
 
 				var fields = node.fields;
@@ -1619,7 +1657,7 @@ THREE.VRMLLoader = ( function () {
 
 					console.warn( 'THREE.VRMLLoader: Missing coordIndex.' );
 
-					return new THREE.BufferGeometry(); // handle VRML files with incomplete geometry definition
+					return new BufferGeometry(); // handle VRML files with incomplete geometry definition
 
 				}
 
@@ -1645,7 +1683,7 @@ THREE.VRMLLoader = ( function () {
 
 							// if the colorIndex field is empty, then the coordIndex field is used to choose colors from the Color node
 
-							colorAttribute = toNonIndexedAttribute( triangulatedCoordIndex, new THREE.Float32BufferAttribute( color, 3 ) );
+							colorAttribute = toNonIndexedAttribute( triangulatedCoordIndex, new Float32BufferAttribute( color, 3 ) );
 
 						}
 
@@ -1690,7 +1728,7 @@ THREE.VRMLLoader = ( function () {
 
 							// if the normalIndex field is empty, then the coordIndex field is used to choose normals from the Normal node
 
-							normalAttribute = toNonIndexedAttribute( triangulatedCoordIndex, new THREE.Float32BufferAttribute( normal, 3 ) );
+							normalAttribute = toNonIndexedAttribute( triangulatedCoordIndex, new Float32BufferAttribute( normal, 3 ) );
 
 						}
 
@@ -1741,14 +1779,14 @@ THREE.VRMLLoader = ( function () {
 
 						// if the texCoordIndex field is empty, then the coordIndex array is used to choose texture coordinates from the TextureCoordinate node
 
-						uvAttribute = toNonIndexedAttribute( triangulatedCoordIndex, new THREE.Float32BufferAttribute( texCoord, 2 ) );
+						uvAttribute = toNonIndexedAttribute( triangulatedCoordIndex, new Float32BufferAttribute( texCoord, 2 ) );
 
 					}
 
 				}
 
-				var geometry = new THREE.BufferGeometry();
-				positionAttribute = toNonIndexedAttribute( triangulatedCoordIndex, new THREE.Float32BufferAttribute( coord, 3 ) );
+				var geometry = new BufferGeometry();
+				positionAttribute = toNonIndexedAttribute( triangulatedCoordIndex, new Float32BufferAttribute( coord, 3 ) );
 
 				geometry.setAttribute( 'position', positionAttribute );
 				geometry.setAttribute( 'normal', normalAttribute );
@@ -1846,7 +1884,7 @@ THREE.VRMLLoader = ( function () {
 
 							// if the colorIndex field is empty, then the colors are applied to each polyline of the IndexedLineSet in order.
 
-							colorAttribute = toNonIndexedAttribute( expandedLineIndex, new THREE.Float32BufferAttribute( color, 3 ) );
+							colorAttribute = toNonIndexedAttribute( expandedLineIndex, new Float32BufferAttribute( color, 3 ) );
 
 						}
 
@@ -1876,9 +1914,9 @@ THREE.VRMLLoader = ( function () {
 
 				//
 
-				var geometry = new THREE.BufferGeometry();
+				var geometry = new BufferGeometry();
 
-				var positionAttribute = toNonIndexedAttribute( expandedLineIndex, new THREE.Float32BufferAttribute( coord, 3 ) );
+				var positionAttribute = toNonIndexedAttribute( expandedLineIndex, new Float32BufferAttribute( coord, 3 ) );
 				geometry.setAttribute( 'position', positionAttribute );
 
 				if ( colorAttribute ) geometry.setAttribute( 'color', colorAttribute );
@@ -1935,10 +1973,10 @@ THREE.VRMLLoader = ( function () {
 
 				}
 
-				var geometry = new THREE.BufferGeometry();
+				var geometry = new BufferGeometry();
 
-				geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( coord, 3 ) );
-				if ( color ) geometry.setAttribute( 'color', new THREE.Float32BufferAttribute( color, 3 ) );
+				geometry.setAttribute( 'position', new Float32BufferAttribute( coord, 3 ) );
+				if ( color ) geometry.setAttribute( 'color', new Float32BufferAttribute( color, 3 ) );
 
 				geometry._type = 'points';
 
@@ -1948,7 +1986,7 @@ THREE.VRMLLoader = ( function () {
 
 			function buildBoxNode( node ) {
 
-				var size = new THREE.Vector3( 2, 2, 2 );
+				var size = new Vector3( 2, 2, 2 );
 
 				var fields = node.fields;
 
@@ -1974,7 +2012,7 @@ THREE.VRMLLoader = ( function () {
 
 				}
 
-				var geometry = new THREE.BoxGeometry( size.x, size.y, size.z );
+				var geometry = new BoxGeometry( size.x, size.y, size.z );
 
 				return geometry;
 
@@ -2018,7 +2056,7 @@ THREE.VRMLLoader = ( function () {
 
 				}
 
-				var geometry = new THREE.ConeGeometry( radius, height, 16, 1, openEnded );
+				var geometry = new ConeGeometry( radius, height, 16, 1, openEnded );
 
 				return geometry;
 
@@ -2066,7 +2104,7 @@ THREE.VRMLLoader = ( function () {
 
 				}
 
-				var geometry = new THREE.CylinderGeometry( radius, radius, height, 16, 1 );
+				var geometry = new CylinderGeometry( radius, radius, height, 16, 1 );
 
 				return geometry;
 
@@ -2098,7 +2136,7 @@ THREE.VRMLLoader = ( function () {
 
 				}
 
-				var geometry = new THREE.SphereGeometry( radius, 16, 16 );
+				var geometry = new SphereGeometry( radius, 16, 16 );
 
 				return geometry;
 
@@ -2314,8 +2352,8 @@ THREE.VRMLLoader = ( function () {
 
 				//
 
-				var positionAttribute = toNonIndexedAttribute( indices, new THREE.Float32BufferAttribute( vertices, 3 ) );
-				var uvAttribute = toNonIndexedAttribute( indices, new THREE.Float32BufferAttribute( uvs, 2 ) );
+				var positionAttribute = toNonIndexedAttribute( indices, new Float32BufferAttribute( vertices, 3 ) );
+				var uvAttribute = toNonIndexedAttribute( indices, new Float32BufferAttribute( uvs, 2 ) );
 				var colorAttribute;
 				var normalAttribute;
 
@@ -2344,11 +2382,11 @@ THREE.VRMLLoader = ( function () {
 
 						}
 
-						colorAttribute = new THREE.Float32BufferAttribute( colors, 3 );
+						colorAttribute = new Float32BufferAttribute( colors, 3 );
 
 					} else {
 
-						colorAttribute = toNonIndexedAttribute( indices, new THREE.Float32BufferAttribute( colors, 3 ) );
+						colorAttribute = toNonIndexedAttribute( indices, new Float32BufferAttribute( colors, 3 ) );
 
 					}
 
@@ -2379,11 +2417,11 @@ THREE.VRMLLoader = ( function () {
 
 						}
 
-						normalAttribute = new THREE.Float32BufferAttribute( normals, 3 );
+						normalAttribute = new Float32BufferAttribute( normals, 3 );
 
 					} else {
 
-						normalAttribute = toNonIndexedAttribute( indices, new THREE.Float32BufferAttribute( normals, 3 ) );
+						normalAttribute = toNonIndexedAttribute( indices, new Float32BufferAttribute( normals, 3 ) );
 
 					}
 
@@ -2395,7 +2433,7 @@ THREE.VRMLLoader = ( function () {
 
 				// build geometry
 
-				var geometry = new THREE.BufferGeometry();
+				var geometry = new BufferGeometry();
 				geometry.setAttribute( 'position', positionAttribute );
 				geometry.setAttribute( 'normal', normalAttribute );
 				geometry.setAttribute( 'uv', uvAttribute );
@@ -2487,12 +2525,12 @@ THREE.VRMLLoader = ( function () {
 				// vertices
 
 				var vertices = [];
-				var spineVector = new THREE.Vector3();
-				var scaling = new THREE.Vector3();
+				var spineVector = new Vector3();
+				var scaling = new Vector3();
 
-				var axis = new THREE.Vector3();
-				var vertex = new THREE.Vector3();
-				var quaternion = new THREE.Quaternion();
+				var axis = new Vector3();
+				var vertex = new Vector3();
+				var quaternion = new Quaternion();
 
 				for ( var i = 0, j = 0, o = 0, il = spine.length; i < il; i += 3, j += 2, o += 4 ) {
 
@@ -2579,11 +2617,11 @@ THREE.VRMLLoader = ( function () {
 
 					for ( var i = 0, l = crossSection.length; i < l; i += 2 ) {
 
-						contour.push( new THREE.Vector2( crossSection[ i ], crossSection[ i + 1 ] ) );
+						contour.push( new Vector2( crossSection[ i ], crossSection[ i + 1 ] ) );
 
 					}
 
-					var faces = THREE.ShapeUtils.triangulateShape( contour, [] );
+					var faces = ShapeUtils.triangulateShape( contour, [] );
 					var capIndices = [];
 
 					for ( var i = 0, l = faces.length; i < l; i ++ ) {
@@ -2638,10 +2676,10 @@ THREE.VRMLLoader = ( function () {
 
 				}
 
-				var positionAttribute = toNonIndexedAttribute( indices, new THREE.Float32BufferAttribute( vertices, 3 ) );
+				var positionAttribute = toNonIndexedAttribute( indices, new Float32BufferAttribute( vertices, 3 ) );
 				var normalAttribute = computeNormalAttribute( indices, vertices, creaseAngle );
 
-				var geometry = new THREE.BufferGeometry();
+				var geometry = new BufferGeometry();
 				geometry.setAttribute( 'position', positionAttribute );
 				geometry.setAttribute( 'normal', normalAttribute );
 				// no uvs yet
@@ -2676,7 +2714,7 @@ THREE.VRMLLoader = ( function () {
 
 					var object = getNode( children[ i ] );
 
-					if ( object instanceof THREE.Object3D ) owner.add( object );
+					if ( object instanceof Object3D ) owner.add( object );
 
 				}
 
@@ -2823,13 +2861,13 @@ THREE.VRMLLoader = ( function () {
 
 			}
 
-			var vA = new THREE.Vector3();
-			var vB = new THREE.Vector3();
-			var vC = new THREE.Vector3();
+			var vA = new Vector3();
+			var vB = new Vector3();
+			var vC = new Vector3();
 
-			var uvA = new THREE.Vector2();
-			var uvB = new THREE.Vector2();
-			var uvC = new THREE.Vector2();
+			var uvA = new Vector2();
+			var uvB = new Vector2();
+			var uvC = new Vector2();
 
 			function computeAttributeFromIndexedData( coordIndex, index, data, itemSize ) {
 
@@ -2867,7 +2905,7 @@ THREE.VRMLLoader = ( function () {
 
 				}
 
-				return new THREE.Float32BufferAttribute( array, itemSize );
+				return new Float32BufferAttribute( array, itemSize );
 
 			}
 
@@ -2885,7 +2923,7 @@ THREE.VRMLLoader = ( function () {
 
 				}
 
-				return new THREE.Float32BufferAttribute( array, 3 );
+				return new Float32BufferAttribute( array, 3 );
 
 			}
 
@@ -2902,7 +2940,7 @@ THREE.VRMLLoader = ( function () {
 
 				}
 
-				return new THREE.Float32BufferAttribute( array, 3 );
+				return new Float32BufferAttribute( array, 3 );
 
 			}
 
@@ -2927,12 +2965,12 @@ THREE.VRMLLoader = ( function () {
 
 				}
 
-				return new THREE.Float32BufferAttribute( array2, itemSize );
+				return new Float32BufferAttribute( array2, itemSize );
 
 			}
 
-			var ab = new THREE.Vector3();
-			var cb = new THREE.Vector3();
+			var ab = new Vector3();
+			var cb = new Vector3();
 
 			function computeNormalAttribute( index, coord, creaseAngle ) {
 
@@ -2995,13 +3033,13 @@ THREE.VRMLLoader = ( function () {
 
 				}
 
-				return new THREE.Float32BufferAttribute( normals, 3 );
+				return new Float32BufferAttribute( normals, 3 );
 
 			}
 
 			function weightedNormal( normals, vector, creaseAngle ) {
 
-				var normal = new THREE.Vector3();
+				var normal = new Vector3();
 
 				if ( creaseAngle === 0 ) {
 
@@ -3031,7 +3069,7 @@ THREE.VRMLLoader = ( function () {
 
 				for ( var i = 0, l = colors.length; i < l; i += 3 ) {
 
-					array.push( new THREE.Color( colors[ i ], colors[ i + 1 ], colors[ i + 2 ] ) );
+					array.push( new Color( colors[ i ], colors[ i + 1 ], colors[ i + 2 ] ) );
 
 				}
 
@@ -3073,7 +3111,7 @@ THREE.VRMLLoader = ( function () {
 					var angle = ( i === 0 ) ? 0 : angles[ i - 1 ];
 					angle = ( topDown === true ) ? angle : ( startAngle - angle );
 
-					var point = new THREE.Vector3();
+					var point = new Vector3();
 					point.setFromSphericalCoords( radius, angle, 0 );
 
 					thresholds.push( point );
@@ -3084,10 +3122,10 @@ THREE.VRMLLoader = ( function () {
 
 				var indices = geometry.index;
 				var positionAttribute = geometry.attributes.position;
-				var colorAttribute = new THREE.BufferAttribute( new Float32Array( geometry.attributes.position.count * 3 ), 3 );
+				var colorAttribute = new BufferAttribute( new Float32Array( geometry.attributes.position.count * 3 ), 3 );
 
-				var position = new THREE.Vector3();
-				var color = new THREE.Color();
+				var position = new Vector3();
+				var color = new Color();
 
 				for ( var i = 0; i < indices.count; i ++ ) {
 
@@ -3148,7 +3186,7 @@ THREE.VRMLLoader = ( function () {
 
 			//
 
-			var textureLoader = new THREE.TextureLoader( this.manager );
+			var textureLoader = new TextureLoader( this.manager );
 			textureLoader.setPath( this.resourcePath || path ).setCrossOrigin( this.crossOrigin );
 
 			// check version (only 2.0 is supported)
@@ -3438,7 +3476,7 @@ THREE.VRMLLoader = ( function () {
 		this.a = a;
 		this.b = b;
 		this.c = c;
-		this.normal = new THREE.Vector3();
+		this.normal = new Vector3();
 
 	}
 
@@ -3452,3 +3490,5 @@ THREE.VRMLLoader = ( function () {
 	return VRMLLoader;
 
 } )();
+
+export { VRMLLoader };

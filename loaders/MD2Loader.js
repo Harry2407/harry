@@ -1,18 +1,27 @@
-THREE.MD2Loader = function ( manager ) {
+import {
+	AnimationClip,
+	BufferGeometry,
+	FileLoader,
+	Float32BufferAttribute,
+	Loader,
+	Vector3
+} from '../../../build/three.module.js';
 
-	THREE.Loader.call( this, manager );
+var MD2Loader = function ( manager ) {
+
+	Loader.call( this, manager );
 
 };
 
-THREE.MD2Loader.prototype = Object.assign( Object.create( THREE.Loader.prototype ), {
+MD2Loader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
-	constructor: THREE.MD2Loader,
+	constructor: MD2Loader,
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
 		var scope = this;
 
-		var loader = new THREE.FileLoader( scope.manager );
+		var loader = new FileLoader( scope.manager );
 		loader.setPath( scope.path );
 		loader.setResponseType( 'arraybuffer' );
 		loader.setRequestHeader( scope.requestHeader );
@@ -166,7 +175,7 @@ THREE.MD2Loader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 			//
 
-			var geometry = new THREE.BufferGeometry();
+			var geometry = new BufferGeometry();
 
 			// uvs
 
@@ -211,8 +220,8 @@ THREE.MD2Loader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 			// frames
 
-			var translation = new THREE.Vector3();
-			var scale = new THREE.Vector3();
+			var translation = new Vector3();
+			var scale = new Vector3();
 			var string = [];
 
 			var frames = [];
@@ -314,9 +323,9 @@ THREE.MD2Loader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 			}
 
-			geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( positions, 3 ) );
-			geometry.setAttribute( 'normal', new THREE.Float32BufferAttribute( normals, 3 ) );
-			geometry.setAttribute( 'uv', new THREE.Float32BufferAttribute( uvs, 2 ) );
+			geometry.setAttribute( 'position', new Float32BufferAttribute( positions, 3 ) );
+			geometry.setAttribute( 'normal', new Float32BufferAttribute( normals, 3 ) );
+			geometry.setAttribute( 'uv', new Float32BufferAttribute( uvs, 2 ) );
 
 			// animation
 
@@ -345,7 +354,7 @@ THREE.MD2Loader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 					}
 
-					var positionAttribute = new THREE.Float32BufferAttribute( positions, 3 );
+					var positionAttribute = new Float32BufferAttribute( positions, 3 );
 					positionAttribute.name = attributeName;
 
 					morphPositions.push( positionAttribute );
@@ -369,7 +378,7 @@ THREE.MD2Loader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 					}
 
-					var normalAttribute = new THREE.Float32BufferAttribute( normals, 3 );
+					var normalAttribute = new Float32BufferAttribute( normals, 3 );
 					normalAttribute.name = attributeName;
 
 					morphNormals.push( normalAttribute );
@@ -382,7 +391,7 @@ THREE.MD2Loader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 			geometry.morphAttributes.normal = morphNormals;
 			geometry.morphTargetsRelative = false;
 
-			geometry.animations = THREE.AnimationClip.CreateClipsFromMorphTargetSequences( frames, 10 );
+			geometry.animations = AnimationClip.CreateClipsFromMorphTargetSequences( frames, 10 );
 
 			return geometry;
 
@@ -391,3 +400,5 @@ THREE.MD2Loader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 	} )()
 
 } );
+
+export { MD2Loader };

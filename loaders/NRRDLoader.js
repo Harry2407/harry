@@ -1,18 +1,27 @@
-THREE.NRRDLoader = function ( manager ) {
+import {
+	FileLoader,
+	Loader,
+	Matrix4,
+	Vector3
+} from '../../../build/three.module.js';
+import * as fflate from '../libs/fflate.module.min.js';
+import { Volume } from '../misc/Volume.js';
 
-	THREE.Loader.call( this, manager );
+var NRRDLoader = function ( manager ) {
+
+	Loader.call( this, manager );
 
 };
 
-THREE.NRRDLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype ), {
+NRRDLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
-	constructor: THREE.NRRDLoader,
+	constructor: NRRDLoader,
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
 		var scope = this;
 
-		var loader = new THREE.FileLoader( scope.manager );
+		var loader = new FileLoader( scope.manager );
 		loader.setPath( scope.path );
 		loader.setResponseType( 'arraybuffer' );
 		loader.setRequestHeader( scope.requestHeader );
@@ -171,7 +180,7 @@ THREE.NRRDLoader.prototype = Object.assign( Object.create( THREE.Loader.prototyp
 
 					field = m[ 1 ].trim();
 					data = m[ 2 ].trim();
-					fn = THREE.NRRDLoader.prototype.fieldFunctions[ field ];
+					fn = NRRDLoader.prototype.fieldFunctions[ field ];
 					if ( fn ) {
 
 						fn.call( headerObject, data );
@@ -201,7 +210,7 @@ THREE.NRRDLoader.prototype = Object.assign( Object.create( THREE.Loader.prototyp
 			if ( ! headerObject.vectors ) {
 
 				//if no space direction is set, let's use the identity
-				headerObject.vectors = [ new THREE.Vector3( 1, 0, 0 ), new THREE.Vector3( 0, 1, 0 ), new THREE.Vector3( 0, 0, 1 ) ];
+				headerObject.vectors = [ new Vector3( 1, 0, 0 ), new Vector3( 0, 1, 0 ), new Vector3( 0, 0, 1 ) ];
 				//apply spacing if defined
 				if ( headerObject.spacings ) {
 
@@ -337,7 +346,7 @@ THREE.NRRDLoader.prototype = Object.assign( Object.create( THREE.Loader.prototyp
 		// .. let's use the underlying array buffer
 		_data = _data.buffer;
 
-		var volume = new THREE.Volume();
+		var volume = new Volume();
 		volume.header = headerObject;
 		//
 		// parse the (unzipped) data to a datastream of the correct type
@@ -357,17 +366,17 @@ THREE.NRRDLoader.prototype = Object.assign( Object.create( THREE.Loader.prototyp
 		volume.yLength = volume.dimensions[ 1 ];
 		volume.zLength = volume.dimensions[ 2 ];
 		// spacing
-		var spacingX = ( new THREE.Vector3( headerObject.vectors[ 0 ][ 0 ], headerObject.vectors[ 0 ][ 1 ],
+		var spacingX = ( new Vector3( headerObject.vectors[ 0 ][ 0 ], headerObject.vectors[ 0 ][ 1 ],
 			headerObject.vectors[ 0 ][ 2 ] ) ).length();
-		var spacingY = ( new THREE.Vector3( headerObject.vectors[ 1 ][ 0 ], headerObject.vectors[ 1 ][ 1 ],
+		var spacingY = ( new Vector3( headerObject.vectors[ 1 ][ 0 ], headerObject.vectors[ 1 ][ 1 ],
 			headerObject.vectors[ 1 ][ 2 ] ) ).length();
-		var spacingZ = ( new THREE.Vector3( headerObject.vectors[ 2 ][ 0 ], headerObject.vectors[ 2 ][ 1 ],
+		var spacingZ = ( new Vector3( headerObject.vectors[ 2 ][ 0 ], headerObject.vectors[ 2 ][ 1 ],
 			headerObject.vectors[ 2 ][ 2 ] ) ).length();
 		volume.spacing = [ spacingX, spacingY, spacingZ ];
 
 
 		// Create IJKtoRAS matrix
-		volume.matrix = new THREE.Matrix4();
+		volume.matrix = new Matrix4();
 
 		var _spaceX = 1;
 		var _spaceY = 1;
@@ -405,9 +414,9 @@ THREE.NRRDLoader.prototype = Object.assign( Object.create( THREE.Loader.prototyp
 
 		}
 
-		volume.inverseMatrix = new THREE.Matrix4();
+		volume.inverseMatrix = new Matrix4();
 		volume.inverseMatrix.copy( volume.matrix ).invert();
-		volume.RASDimensions = ( new THREE.Vector3( volume.xLength, volume.yLength, volume.zLength ) ).applyMatrix4( volume.matrix ).round().toArray().map( Math.abs );
+		volume.RASDimensions = ( new Vector3( volume.xLength, volume.yLength, volume.zLength ) ).applyMatrix4( volume.matrix ).round().toArray().map( Math.abs );
 
 		// .. and set the default threshold
 		// only if the threshold was not already set
@@ -626,3 +635,5 @@ THREE.NRRDLoader.prototype = Object.assign( Object.create( THREE.Loader.prototyp
 	}
 
 } );
+
+export { NRRDLoader };

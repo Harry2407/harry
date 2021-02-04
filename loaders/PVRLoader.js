@@ -1,18 +1,26 @@
+import {
+	CompressedTextureLoader,
+	RGBA_PVRTC_2BPPV1_Format,
+	RGBA_PVRTC_4BPPV1_Format,
+	RGB_PVRTC_2BPPV1_Format,
+	RGB_PVRTC_4BPPV1_Format
+} from '../../../build/three.module.js';
+
 /*
  *	 PVR v2 (legacy) parser
  *   TODO : Add Support for PVR v3 format
  *   TODO : implement loadMipmaps option
  */
 
-THREE.PVRLoader = function ( manager ) {
+var PVRLoader = function ( manager ) {
 
-	THREE.CompressedTextureLoader.call( this, manager );
+	CompressedTextureLoader.call( this, manager );
 
 };
 
-THREE.PVRLoader.prototype = Object.assign( Object.create( THREE.CompressedTextureLoader.prototype ), {
+PVRLoader.prototype = Object.assign( Object.create( CompressedTextureLoader.prototype ), {
 
-	constructor: THREE.PVRLoader,
+	constructor: PVRLoader,
 
 	parse: function ( buffer, loadMipmaps ) {
 
@@ -29,13 +37,13 @@ THREE.PVRLoader.prototype = Object.assign( Object.create( THREE.CompressedTextur
 
 			// PVR v3
 
-			return THREE.PVRLoader._parseV3( pvrDatas );
+			return PVRLoader._parseV3( pvrDatas );
 
 		} else if ( header[ 11 ] === 0x21525650 ) {
 
 			// PVR v2
 
-			return THREE.PVRLoader._parseV2( pvrDatas );
+			return PVRLoader._parseV2( pvrDatas );
 
 		} else {
 
@@ -47,7 +55,7 @@ THREE.PVRLoader.prototype = Object.assign( Object.create( THREE.CompressedTextur
 
 } );
 
-THREE.PVRLoader._parseV3 = function ( pvrDatas ) {
+PVRLoader._parseV3 = function ( pvrDatas ) {
 
 	var header = pvrDatas.header;
 	var bpp, format;
@@ -65,22 +73,22 @@ THREE.PVRLoader._parseV3 = function ( pvrDatas ) {
 
 		case 0 : // PVRTC 2bpp RGB
 			bpp = 2;
-			format = THREE.RGB_PVRTC_2BPPV1_Format;
+			format = RGB_PVRTC_2BPPV1_Format;
 			break;
 
 		case 1 : // PVRTC 2bpp RGBA
 			bpp = 2;
-			format = THREE.RGBA_PVRTC_2BPPV1_Format;
+			format = RGBA_PVRTC_2BPPV1_Format;
 			break;
 
 		case 2 : // PVRTC 4bpp RGB
 			bpp = 4;
-			format = THREE.RGB_PVRTC_4BPPV1_Format;
+			format = RGB_PVRTC_4BPPV1_Format;
 			break;
 
 		case 3 : // PVRTC 4bpp RGBA
 			bpp = 4;
-			format = THREE.RGBA_PVRTC_4BPPV1_Format;
+			format = RGBA_PVRTC_4BPPV1_Format;
 			break;
 
 		default :
@@ -97,11 +105,11 @@ THREE.PVRLoader._parseV3 = function ( pvrDatas ) {
 	pvrDatas.numMipmaps = numMipmaps;
 	pvrDatas.isCubemap 	= ( numFaces === 6 );
 
-	return THREE.PVRLoader._extract( pvrDatas );
+	return PVRLoader._extract( pvrDatas );
 
 };
 
-THREE.PVRLoader._parseV2 = function ( pvrDatas ) {
+PVRLoader._parseV2 = function ( pvrDatas ) {
 
 	var header = pvrDatas.header;
 
@@ -131,12 +139,12 @@ THREE.PVRLoader._parseV2 = function ( pvrDatas ) {
 
 	if ( formatFlags === PVRTC_4 ) {
 
-		format = _hasAlpha ? THREE.RGBA_PVRTC_4BPPV1_Format : THREE.RGB_PVRTC_4BPPV1_Format;
+		format = _hasAlpha ? RGBA_PVRTC_4BPPV1_Format : RGB_PVRTC_4BPPV1_Format;
 		bpp = 4;
 
 	} else if ( formatFlags === PVRTC_2 ) {
 
-		format = _hasAlpha ? THREE.RGBA_PVRTC_2BPPV1_Format : THREE.RGB_PVRTC_2BPPV1_Format;
+		format = _hasAlpha ? RGBA_PVRTC_2BPPV1_Format : RGB_PVRTC_2BPPV1_Format;
 		bpp = 2;
 
 	} else {
@@ -157,12 +165,12 @@ THREE.PVRLoader._parseV2 = function ( pvrDatas ) {
 	// it juste a pvr containing 6 surface (no explicit cubemap type)
 	pvrDatas.isCubemap 	= ( numSurfs === 6 );
 
-	return THREE.PVRLoader._extract( pvrDatas );
+	return PVRLoader._extract( pvrDatas );
 
 };
 
 
-THREE.PVRLoader._extract = function ( pvrDatas ) {
+PVRLoader._extract = function ( pvrDatas ) {
 
 	var pvr = {
 		mipmaps: [],
@@ -240,3 +248,5 @@ THREE.PVRLoader._extract = function ( pvrDatas ) {
 	return pvr;
 
 };
+
+export { PVRLoader };

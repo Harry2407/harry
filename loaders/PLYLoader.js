@@ -1,3 +1,11 @@
+import {
+	BufferGeometry,
+	FileLoader,
+	Float32BufferAttribute,
+	Loader,
+	LoaderUtils
+} from '../../../build/three.module.js';
+
 /**
  * Description: A THREE loader for PLY ASCII files (known as the Polygon
  * File Format or the Stanford Triangle Format).
@@ -5,7 +13,7 @@
  * Limitations: ASCII decoding assumes file is UTF-8.
  *
  * Usage:
- *	var loader = new THREE.PLYLoader();
+ *	var loader = new PLYLoader();
  *	loader.load('./models/ply/ascii/dolphins.ply', function (geometry) {
  *
  *		scene.add( new THREE.Mesh( geometry ) );
@@ -25,23 +33,23 @@
  */
 
 
-THREE.PLYLoader = function ( manager ) {
+var PLYLoader = function ( manager ) {
 
-	THREE.Loader.call( this, manager );
+	Loader.call( this, manager );
 
 	this.propertyNameMapping = {};
 
 };
 
-THREE.PLYLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype ), {
+PLYLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
-	constructor: THREE.PLYLoader,
+	constructor: PLYLoader,
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
 		var scope = this;
 
-		var loader = new THREE.FileLoader( this.manager );
+		var loader = new FileLoader( this.manager );
 		loader.setPath( this.path );
 		loader.setResponseType( 'arraybuffer' );
 		loader.setRequestHeader( this.requestHeader );
@@ -311,7 +319,7 @@ THREE.PLYLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 		function postProcess( buffer ) {
 
-			var geometry = new THREE.BufferGeometry();
+			var geometry = new BufferGeometry();
 
 			// mandatory buffer data
 
@@ -321,32 +329,32 @@ THREE.PLYLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 			}
 
-			geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( buffer.vertices, 3 ) );
+			geometry.setAttribute( 'position', new Float32BufferAttribute( buffer.vertices, 3 ) );
 
 			// optional buffer data
 
 			if ( buffer.normals.length > 0 ) {
 
-				geometry.setAttribute( 'normal', new THREE.Float32BufferAttribute( buffer.normals, 3 ) );
+				geometry.setAttribute( 'normal', new Float32BufferAttribute( buffer.normals, 3 ) );
 
 			}
 
 			if ( buffer.uvs.length > 0 ) {
 
-				geometry.setAttribute( 'uv', new THREE.Float32BufferAttribute( buffer.uvs, 2 ) );
+				geometry.setAttribute( 'uv', new Float32BufferAttribute( buffer.uvs, 2 ) );
 
 			}
 
 			if ( buffer.colors.length > 0 ) {
 
-				geometry.setAttribute( 'color', new THREE.Float32BufferAttribute( buffer.colors, 3 ) );
+				geometry.setAttribute( 'color', new Float32BufferAttribute( buffer.colors, 3 ) );
 
 			}
 
 			if ( buffer.faceVertexUvs.length > 0 ) {
 
 				geometry = geometry.toNonIndexed();
-				geometry.setAttribute( 'uv', new THREE.Float32BufferAttribute( buffer.faceVertexUvs, 2 ) );
+				geometry.setAttribute( 'uv', new Float32BufferAttribute( buffer.faceVertexUvs, 2 ) );
 
 			}
 
@@ -505,7 +513,7 @@ THREE.PLYLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 		if ( data instanceof ArrayBuffer ) {
 
-			var text = THREE.LoaderUtils.decodeText( new Uint8Array( data ) );
+			var text = LoaderUtils.decodeText( new Uint8Array( data ) );
 			var header = parseHeader( text );
 
 			geometry = header.format === 'ascii' ? parseASCII( text, header ) : parseBinary( data, header );
@@ -521,3 +529,5 @@ THREE.PLYLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 	}
 
 } );
+
+export { PLYLoader };

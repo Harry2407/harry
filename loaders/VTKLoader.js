@@ -1,18 +1,28 @@
-THREE.VTKLoader = function ( manager ) {
+import {
+	BufferAttribute,
+	BufferGeometry,
+	FileLoader,
+	Float32BufferAttribute,
+	Loader,
+	LoaderUtils
+} from '../../../build/three.module.js';
+import * as fflate from '../libs/fflate.module.min.js';
 
-	THREE.Loader.call( this, manager );
+var VTKLoader = function ( manager ) {
+
+	Loader.call( this, manager );
 
 };
 
-THREE.VTKLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype ), {
+VTKLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
-	constructor: THREE.VTKLoader,
+	constructor: VTKLoader,
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
 		var scope = this;
 
-		var loader = new THREE.FileLoader( scope.manager );
+		var loader = new FileLoader( scope.manager );
 		loader.setPath( scope.path );
 		loader.setResponseType( 'arraybuffer' );
 		loader.setRequestHeader( scope.requestHeader );
@@ -277,13 +287,13 @@ THREE.VTKLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 			}
 
-			var geometry = new THREE.BufferGeometry();
+			var geometry = new BufferGeometry();
 			geometry.setIndex( indices );
-			geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( positions, 3 ) );
+			geometry.setAttribute( 'position', new Float32BufferAttribute( positions, 3 ) );
 
 			if ( normals.length === positions.length ) {
 
-				geometry.setAttribute( 'normal', new THREE.Float32BufferAttribute( normals, 3 ) );
+				geometry.setAttribute( 'normal', new Float32BufferAttribute( normals, 3 ) );
 
 			}
 
@@ -293,7 +303,7 @@ THREE.VTKLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 				if ( colors.length === positions.length ) {
 
-					geometry.setAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ) );
+					geometry.setAttribute( 'color', new Float32BufferAttribute( colors, 3 ) );
 
 				}
 
@@ -320,7 +330,7 @@ THREE.VTKLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 					}
 
-					geometry.setAttribute( 'color', new THREE.Float32BufferAttribute( newColors, 3 ) );
+					geometry.setAttribute( 'color', new Float32BufferAttribute( newColors, 3 ) );
 
 				}
 
@@ -527,13 +537,13 @@ THREE.VTKLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 			}
 
-			var geometry = new THREE.BufferGeometry();
-			geometry.setIndex( new THREE.BufferAttribute( indices, 1 ) );
-			geometry.setAttribute( 'position', new THREE.BufferAttribute( points, 3 ) );
+			var geometry = new BufferGeometry();
+			geometry.setIndex( new BufferAttribute( indices, 1 ) );
+			geometry.setAttribute( 'position', new BufferAttribute( points, 3 ) );
 
 			if ( normals.length === points.length ) {
 
-				geometry.setAttribute( 'normal', new THREE.BufferAttribute( normals, 3 ) );
+				geometry.setAttribute( 'normal', new BufferAttribute( normals, 3 ) );
 
 			}
 
@@ -1130,13 +1140,13 @@ THREE.VTKLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 				}
 
-				var geometry = new THREE.BufferGeometry();
-				geometry.setIndex( new THREE.BufferAttribute( indices, 1 ) );
-				geometry.setAttribute( 'position', new THREE.BufferAttribute( points, 3 ) );
+				var geometry = new BufferGeometry();
+				geometry.setIndex( new BufferAttribute( indices, 1 ) );
+				geometry.setAttribute( 'position', new BufferAttribute( points, 3 ) );
 
 				if ( normals.length === points.length ) {
 
-					geometry.setAttribute( 'normal', new THREE.BufferAttribute( normals, 3 ) );
+					geometry.setAttribute( 'normal', new BufferAttribute( normals, 3 ) );
 
 				}
 
@@ -1151,15 +1161,15 @@ THREE.VTKLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 		}
 
 		// get the 5 first lines of the files to check if there is the key word binary
-		var meta = THREE.LoaderUtils.decodeText( new Uint8Array( data, 0, 250 ) ).split( '\n' );
+		var meta = LoaderUtils.decodeText( new Uint8Array( data, 0, 250 ) ).split( '\n' );
 
 		if ( meta[ 0 ].indexOf( 'xml' ) !== - 1 ) {
 
-			return parseXML( THREE.LoaderUtils.decodeText( data ) );
+			return parseXML( LoaderUtils.decodeText( data ) );
 
 		} else if ( meta[ 2 ].includes( 'ASCII' ) ) {
 
-			return parseASCII( THREE.LoaderUtils.decodeText( data ) );
+			return parseASCII( LoaderUtils.decodeText( data ) );
 
 		} else {
 
@@ -1170,3 +1180,5 @@ THREE.VTKLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 	}
 
 } );
+
+export { VTKLoader };

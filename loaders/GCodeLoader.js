@@ -1,29 +1,40 @@
+import {
+	BufferGeometry,
+	Euler,
+	FileLoader,
+	Float32BufferAttribute,
+	Group,
+	LineBasicMaterial,
+	LineSegments,
+	Loader
+} from '../../../build/three.module.js';
+
 /**
- * THREE.GCodeLoader is used to load gcode files usually used for 3D printing or CNC applications.
+ * GCodeLoader is used to load gcode files usually used for 3D printing or CNC applications.
  *
  * Gcode files are composed by commands used by machines to create objects.
  *
- * @class THREE.GCodeLoader
+ * @class GCodeLoader
  * @param {Manager} manager Loading manager.
  */
 
-THREE.GCodeLoader = function ( manager ) {
+var GCodeLoader = function ( manager ) {
 
-	THREE.Loader.call( this, manager );
+	Loader.call( this, manager );
 
 	this.splitLayer = false;
 
 };
 
-THREE.GCodeLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype ), {
+GCodeLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
-	constructor: THREE.GCodeLoader,
+	constructor: GCodeLoader,
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
 		var scope = this;
 
-		var loader = new THREE.FileLoader( scope.manager );
+		var loader = new FileLoader( scope.manager );
 		loader.setPath( scope.path );
 		loader.setRequestHeader( scope.requestHeader );
 		loader.setWithCredentials( scope.withCredentials );
@@ -60,10 +71,10 @@ THREE.GCodeLoader.prototype = Object.assign( Object.create( THREE.Loader.prototy
 
 		var currentLayer = undefined;
 
-		var pathMaterial = new THREE.LineBasicMaterial( { color: 0xFF0000 } );
+		var pathMaterial = new LineBasicMaterial( { color: 0xFF0000 } );
 		pathMaterial.name = 'path';
 
-		var extrudingMaterial = new THREE.LineBasicMaterial( { color: 0x00FF00 } );
+		var extrudingMaterial = new LineBasicMaterial( { color: 0x00FF00 } );
 		extrudingMaterial.name = 'extruded';
 
 		function newLayer( line ) {
@@ -192,16 +203,16 @@ THREE.GCodeLoader.prototype = Object.assign( Object.create( THREE.Loader.prototy
 
 		function addObject( vertex, extruding ) {
 
-			var geometry = new THREE.BufferGeometry();
-			geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( vertex, 3 ) );
+			var geometry = new BufferGeometry();
+			geometry.setAttribute( 'position', new Float32BufferAttribute( vertex, 3 ) );
 
-			var segments = new THREE.LineSegments( geometry, extruding ? extrudingMaterial : pathMaterial );
+			var segments = new LineSegments( geometry, extruding ? extrudingMaterial : pathMaterial );
 			segments.name = 'layer' + i;
 			object.add( segments );
 
 		}
 
-		var object = new THREE.Group();
+		var object = new Group();
 		object.name = 'gcode';
 
 		if ( this.splitLayer ) {
@@ -243,10 +254,12 @@ THREE.GCodeLoader.prototype = Object.assign( Object.create( THREE.Loader.prototy
 
 		}
 
-		object.quaternion.setFromEuler( new THREE.Euler( - Math.PI / 2, 0, 0 ) );
+		object.quaternion.setFromEuler( new Euler( - Math.PI / 2, 0, 0 ) );
 
 		return object;
 
 	}
 
 } );
+
+export { GCodeLoader };

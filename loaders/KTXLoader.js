@@ -1,3 +1,7 @@
+import {
+	CompressedTextureLoader
+} from '../../../build/three.module.js';
+
 /**
  * for description see https://www.khronos.org/opengles/sdk/tools/KTX/
  * for file layout see https://www.khronos.org/opengles/sdk/tools/KTX/file_format_spec/
@@ -6,15 +10,15 @@
  */
 
 
-THREE.KTXLoader = function ( manager ) {
+var KTXLoader = function ( manager ) {
 
-	THREE.CompressedTextureLoader.call( this, manager );
+	CompressedTextureLoader.call( this, manager );
 
 };
 
-THREE.KTXLoader.prototype = Object.assign( Object.create( THREE.CompressedTextureLoader.prototype ), {
+KTXLoader.prototype = Object.assign( Object.create( CompressedTextureLoader.prototype ), {
 
-	constructor: THREE.KTXLoader,
+	constructor: KTXLoader,
 
 	parse: function ( buffer, loadMipmaps ) {
 
@@ -126,7 +130,7 @@ var KhronosTextureContainer = ( function () {
 
 	}
 
-	// return mipmaps for THREE.js
+	// return mipmaps for js
 	KhronosTextureContainer.prototype.mipmaps = function ( loadMipmaps ) {
 
 		var mipmaps = [];
@@ -172,3 +176,5 @@ var KhronosTextureContainer = ( function () {
 	return KhronosTextureContainer;
 
 }() );
+
+export { KTXLoader };

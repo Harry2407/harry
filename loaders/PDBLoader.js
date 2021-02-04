@@ -1,18 +1,25 @@
-THREE.PDBLoader = function ( manager ) {
+import {
+	BufferGeometry,
+	FileLoader,
+	Float32BufferAttribute,
+	Loader
+} from '../../../build/three.module.js';
 
-	THREE.Loader.call( this, manager );
+var PDBLoader = function ( manager ) {
+
+	Loader.call( this, manager );
 
 };
 
-THREE.PDBLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype ), {
+PDBLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
-	constructor: THREE.PDBLoader,
+	constructor: PDBLoader,
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
 		var scope = this;
 
-		var loader = new THREE.FileLoader( scope.manager );
+		var loader = new FileLoader( scope.manager );
 		loader.setPath( scope.path );
 		loader.setRequestHeader( scope.requestHeader );
 		loader.setWithCredentials( scope.withCredentials );
@@ -93,8 +100,8 @@ THREE.PDBLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 		function buildGeometry() {
 
 			var build = {
-				geometryAtoms: new THREE.BufferGeometry(),
-				geometryBonds: new THREE.BufferGeometry(),
+				geometryAtoms: new BufferGeometry(),
+				geometryBonds: new BufferGeometry(),
 				json: {
 					atoms: atoms
 				}
@@ -158,10 +165,10 @@ THREE.PDBLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 			// build geometry
 
-			geometryAtoms.setAttribute( 'position', new THREE.Float32BufferAttribute( verticesAtoms, 3 ) );
-			geometryAtoms.setAttribute( 'color', new THREE.Float32BufferAttribute( colorsAtoms, 3 ) );
+			geometryAtoms.setAttribute( 'position', new Float32BufferAttribute( verticesAtoms, 3 ) );
+			geometryAtoms.setAttribute( 'color', new Float32BufferAttribute( colorsAtoms, 3 ) );
 
-			geometryBonds.setAttribute( 'position', new THREE.Float32BufferAttribute( verticesBonds, 3 ) );
+			geometryBonds.setAttribute( 'position', new Float32BufferAttribute( verticesBonds, 3 ) );
 
 			return build;
 
@@ -223,3 +230,5 @@ THREE.PDBLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 	}
 
 } );
+
+export { PDBLoader };

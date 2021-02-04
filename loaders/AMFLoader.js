@@ -1,3 +1,16 @@
+import {
+	BufferGeometry,
+	Color,
+	FileLoader,
+	Float32BufferAttribute,
+	Group,
+	Loader,
+	LoaderUtils,
+	Mesh,
+	MeshPhongMaterial
+} from '../../../build/three.module.js';
+import * as fflate from '../libs/fflate.module.min.js';
+
 /**
  * Description: Early release of an AMF Loader following the pattern of the
  * example loaders in the three.js project.
@@ -16,21 +29,21 @@
  *
  */
 
-THREE.AMFLoader = function ( manager ) {
+var AMFLoader = function ( manager ) {
 
-	THREE.Loader.call( this, manager );
+	Loader.call( this, manager );
 
 };
 
-THREE.AMFLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype ), {
+AMFLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
-	constructor: THREE.AMFLoader,
+	constructor: AMFLoader,
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
 		var scope = this;
 
-		var loader = new THREE.FileLoader( scope.manager );
+		var loader = new FileLoader( scope.manager );
 		loader.setPath( scope.path );
 		loader.setResponseType( 'arraybuffer' );
 		loader.setRequestHeader( scope.requestHeader );
@@ -105,7 +118,7 @@ THREE.AMFLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 			}
 
-			var fileText = THREE.LoaderUtils.decodeText( view );
+			var fileText = LoaderUtils.decodeText( view );
 			var xmlData = new DOMParser().parseFromString( fileText, 'application/xml' );
 
 			if ( xmlData.documentElement.nodeName.toLowerCase() !== 'amf' ) {
@@ -177,9 +190,9 @@ THREE.AMFLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 			}
 
-			loadedMaterial = new THREE.MeshPhongMaterial( {
+			loadedMaterial = new MeshPhongMaterial( {
 				flatShading: true,
-				color: new THREE.Color( color.r, color.g, color.b ),
+				color: new Color( color.r, color.g, color.b ),
 				name: matName
 			} );
 
@@ -423,8 +436,8 @@ THREE.AMFLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 		}
 
-		var sceneObject = new THREE.Group();
-		var defaultMaterial = new THREE.MeshPhongMaterial( { color: 0xaaaaff, flatShading: true } );
+		var sceneObject = new Group();
+		var defaultMaterial = new MeshPhongMaterial( { color: 0xaaaaff, flatShading: true } );
 
 		sceneObject.name = amfName;
 		sceneObject.userData.author = amfAuthor;
@@ -434,19 +447,19 @@ THREE.AMFLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 			var part = amfObjects[ id ];
 			var meshes = part.meshes;
-			var newObject = new THREE.Group();
+			var newObject = new Group();
 			newObject.name = part.name || '';
 
 			for ( i = 0; i < meshes.length; i ++ ) {
 
 				var objDefaultMaterial = defaultMaterial;
 				var mesh = meshes[ i ];
-				var vertices = new THREE.Float32BufferAttribute( mesh.vertices, 3 );
+				var vertices = new Float32BufferAttribute( mesh.vertices, 3 );
 				var normals = null;
 
 				if ( mesh.normals.length ) {
 
-					normals = new THREE.Float32BufferAttribute( mesh.normals, 3 );
+					normals = new Float32BufferAttribute( mesh.normals, 3 );
 
 				}
 
@@ -455,7 +468,7 @@ THREE.AMFLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 					var color = mesh.color;
 
 					objDefaultMaterial = defaultMaterial.clone();
-					objDefaultMaterial.color = new THREE.Color( color.r, color.g, color.b );
+					objDefaultMaterial.color = new Color( color.r, color.g, color.b );
 
 					if ( color.a !== 1.0 ) {
 
@@ -471,7 +484,7 @@ THREE.AMFLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 				for ( j = 0; j < volumes.length; j ++ ) {
 
 					var volume = volumes[ j ];
-					var newGeometry = new THREE.BufferGeometry();
+					var newGeometry = new BufferGeometry();
 					var material = objDefaultMaterial;
 
 					newGeometry.setIndex( volume.triangles );
@@ -490,7 +503,7 @@ THREE.AMFLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 					}
 
 					newGeometry.scale( amfScale, amfScale, amfScale );
-					newObject.add( new THREE.Mesh( newGeometry, material.clone() ) );
+					newObject.add( new Mesh( newGeometry, material.clone() ) );
 
 				}
 
@@ -505,3 +518,5 @@ THREE.AMFLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 	}
 
 } );
+
+export { AMFLoader };

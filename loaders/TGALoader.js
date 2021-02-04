@@ -1,20 +1,26 @@
-THREE.TGALoader = function ( manager ) {
+import {
+	FileLoader,
+	Loader,
+	Texture
+} from '../../../build/three.module.js';
 
-	THREE.Loader.call( this, manager );
+var TGALoader = function ( manager ) {
+
+	Loader.call( this, manager );
 
 };
 
-THREE.TGALoader.prototype = Object.assign( Object.create( THREE.Loader.prototype ), {
+TGALoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
-	constructor: THREE.TGALoader,
+	constructor: TGALoader,
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
 		var scope = this;
 
-		var texture = new THREE.Texture();
+		var texture = new Texture();
 
-		var loader = new THREE.FileLoader( this.manager );
+		var loader = new FileLoader( this.manager );
 		loader.setResponseType( 'arraybuffer' );
 		loader.setPath( this.path );
 		loader.setWithCredentials( this.withCredentials );
@@ -540,3 +546,5 @@ THREE.TGALoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 	}
 
 } );
+
+export { TGALoader };

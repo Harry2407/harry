@@ -1,3 +1,19 @@
+import {
+	DataTextureLoader,
+	DataUtils,
+	FloatType,
+	HalfFloatType,
+	LinearEncoding,
+	LinearFilter,
+	NearestFilter,
+	RGBAFormat,
+	RGBEEncoding,
+	RGBEFormat,
+	RGBFormat,
+	UnsignedByteType
+} from '../../../build/three.module.js';
+import * as fflate from '../libs/fflate.module.min.js';
+
 /**
  * OpenEXR loader currently supports uncompressed, ZIP(S), RLE, PIZ and DWA/B compression.
  * Supports reading as UnsignedByte, HalfFloat and Float type data texture.
@@ -71,17 +87,17 @@
 
 // // End of OpenEXR license -------------------------------------------------
 
-THREE.EXRLoader = function ( manager ) {
+var EXRLoader = function ( manager ) {
 
-	THREE.DataTextureLoader.call( this, manager );
+	DataTextureLoader.call( this, manager );
 
-	this.type = THREE.FloatType;
+	this.type = FloatType;
 
 };
 
-THREE.EXRLoader.prototype = Object.assign( Object.create( THREE.DataTextureLoader.prototype ), {
+EXRLoader.prototype = Object.assign( Object.create( DataTextureLoader.prototype ), {
 
-	constructor: THREE.EXRLoader,
+	constructor: EXRLoader,
 
 	parse: function ( buffer ) {
 
@@ -1231,7 +1247,7 @@ THREE.EXRLoader.prototype = Object.assign( Object.create( THREE.DataTextureLoade
 
 			for ( var i = 0; i < 64; ++ i ) {
 
-				dst[ idx + i ] = THREE.DataUtils.toHalfFloat( toLinear( src[ i ] ) );
+				dst[ idx + i ] = DataUtils.toHalfFloat( toLinear( src[ i ] ) );
 
 			}
 
@@ -1813,7 +1829,7 @@ THREE.EXRLoader.prototype = Object.assign( Object.create( THREE.DataTextureLoade
 
 		function decodeFloat32( dataView, offset ) {
 
-			return THREE.DataUtils.toHalfFloat( parseFloat32( dataView, offset ) );
+			return DataUtils.toHalfFloat( parseFloat32( dataView, offset ) );
 
 		}
 
@@ -2138,14 +2154,14 @@ THREE.EXRLoader.prototype = Object.assign( Object.create( THREE.DataTextureLoade
 
 			switch ( this.type ) {
 
-				case THREE.UnsignedByteType:
-				case THREE.FloatType:
+				case UnsignedByteType:
+				case FloatType:
 
 					getValue = parseFloat16;
 					size_t = INT16_SIZE;
 					break;
 
-				case THREE.HalfFloatType:
+				case HalfFloatType:
 
 					getValue = parseUint16;
 					size_t = INT16_SIZE;
@@ -2157,14 +2173,14 @@ THREE.EXRLoader.prototype = Object.assign( Object.create( THREE.DataTextureLoade
 
 			switch ( this.type ) {
 
-				case THREE.UnsignedByteType:
-				case THREE.FloatType:
+				case UnsignedByteType:
+				case FloatType:
 
 					getValue = parseFloat32;
 					size_t = FLOAT32_SIZE;
 					break;
 
-				case THREE.HalfFloatType:
+				case HalfFloatType:
 
 					getValue = decodeFloat32;
 					size_t = FLOAT32_SIZE;
@@ -2197,8 +2213,8 @@ THREE.EXRLoader.prototype = Object.assign( Object.create( THREE.DataTextureLoade
 		// Fill initially with 1s for the alpha value if the texture is not RGBA, RGB values will be overwritten
 		switch ( this.type ) {
 
-			case THREE.UnsignedByteType:
-			case THREE.FloatType:
+			case UnsignedByteType:
+			case FloatType:
 
 				var byteArray = new Float32Array( size );
 
@@ -2210,7 +2226,7 @@ THREE.EXRLoader.prototype = Object.assign( Object.create( THREE.DataTextureLoade
 
 				break;
 
-			case THREE.HalfFloatType:
+			case HalfFloatType:
 
 				var byteArray = new Uint16Array( size );
 
@@ -2296,7 +2312,7 @@ THREE.EXRLoader.prototype = Object.assign( Object.create( THREE.DataTextureLoade
 
 		}
 
-		if ( this.type === THREE.UnsignedByteType ) {
+		if ( this.type === UnsignedByteType ) {
 
 			let v, i;
 			const size = byteArray.length;
@@ -2339,7 +2355,7 @@ THREE.EXRLoader.prototype = Object.assign( Object.create( THREE.DataTextureLoade
 
 		}
 
-		const format = ( this.type === THREE.UnsignedByteType ) ? THREE.RGBEFormat : ( numChannels === 4 ) ? THREE.RGBAFormat : THREE.RGBFormat;
+		const format = ( this.type === UnsignedByteType ) ? RGBEFormat : ( numChannels === 4 ) ? RGBAFormat : RGBFormat;
 
 		return {
 			header: EXRHeader,
@@ -2365,21 +2381,21 @@ THREE.EXRLoader.prototype = Object.assign( Object.create( THREE.DataTextureLoade
 
 			switch ( texture.type ) {
 
-				case THREE.UnsignedByteType:
+				case UnsignedByteType:
 
-					texture.encoding = THREE.RGBEEncoding;
-					texture.minFilter = THREE.NearestFilter;
-					texture.magFilter = THREE.NearestFilter;
+					texture.encoding = RGBEEncoding;
+					texture.minFilter = NearestFilter;
+					texture.magFilter = NearestFilter;
 					texture.generateMipmaps = false;
 					texture.flipY = false;
 					break;
 
-				case THREE.FloatType:
-				case THREE.HalfFloatType:
+				case FloatType:
+				case HalfFloatType:
 
-					texture.encoding = THREE.LinearEncoding;
-					texture.minFilter = THREE.LinearFilter;
-					texture.magFilter = THREE.LinearFilter;
+					texture.encoding = LinearEncoding;
+					texture.minFilter = LinearFilter;
+					texture.magFilter = LinearFilter;
 					texture.generateMipmaps = false;
 					texture.flipY = false;
 					break;
@@ -2390,8 +2406,10 @@ THREE.EXRLoader.prototype = Object.assign( Object.create( THREE.DataTextureLoade
 
 		}
 
-		return THREE.DataTextureLoader.prototype.load.call( this, url, onLoadCallback, onProgress, onError );
+		return DataTextureLoader.prototype.load.call( this, url, onLoadCallback, onProgress, onError );
 
 	}
 
 } );
+
+export { EXRLoader };

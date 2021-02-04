@@ -1,21 +1,31 @@
-THREE.PCDLoader = function ( manager ) {
+import {
+	BufferGeometry,
+	FileLoader,
+	Float32BufferAttribute,
+	Loader,
+	LoaderUtils,
+	Points,
+	PointsMaterial
+} from '../../../build/three.module.js';
 
-	THREE.Loader.call( this, manager );
+var PCDLoader = function ( manager ) {
+
+	Loader.call( this, manager );
 
 	this.littleEndian = true;
 
 };
 
 
-THREE.PCDLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype ), {
+PCDLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
-	constructor: THREE.PCDLoader,
+	constructor: PCDLoader,
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
 		var scope = this;
 
-		var loader = new THREE.FileLoader( scope.manager );
+		var loader = new FileLoader( scope.manager );
 		loader.setPath( scope.path );
 		loader.setResponseType( 'arraybuffer' );
 		loader.setRequestHeader( scope.requestHeader );
@@ -212,7 +222,7 @@ THREE.PCDLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 		}
 
-		var textData = THREE.LoaderUtils.decodeText( new Uint8Array( data ) );
+		var textData = LoaderUtils.decodeText( new Uint8Array( data ) );
 
 		// parse header (always ascii format)
 
@@ -353,17 +363,17 @@ THREE.PCDLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 		// build geometry
 
-		var geometry = new THREE.BufferGeometry();
+		var geometry = new BufferGeometry();
 
-		if ( position.length > 0 ) geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( position, 3 ) );
-		if ( normal.length > 0 ) geometry.setAttribute( 'normal', new THREE.Float32BufferAttribute( normal, 3 ) );
-		if ( color.length > 0 ) geometry.setAttribute( 'color', new THREE.Float32BufferAttribute( color, 3 ) );
+		if ( position.length > 0 ) geometry.setAttribute( 'position', new Float32BufferAttribute( position, 3 ) );
+		if ( normal.length > 0 ) geometry.setAttribute( 'normal', new Float32BufferAttribute( normal, 3 ) );
+		if ( color.length > 0 ) geometry.setAttribute( 'color', new Float32BufferAttribute( color, 3 ) );
 
 		geometry.computeBoundingSphere();
 
 		// build material
 
-		var material = new THREE.PointsMaterial( { size: 0.005 } );
+		var material = new PointsMaterial( { size: 0.005 } );
 
 		if ( color.length > 0 ) {
 
@@ -377,7 +387,7 @@ THREE.PCDLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 
 		// build point cloud
 
-		var mesh = new THREE.Points( geometry, material );
+		var mesh = new Points( geometry, material );
 		var name = url.split( '' ).reverse().join( '' );
 		name = /([^\/]*)/.exec( name );
 		name = name[ 1 ].split( '' ).reverse().join( '' );
@@ -388,3 +398,5 @@ THREE.PCDLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype
 	}
 
 } );
+
+export { PCDLoader };

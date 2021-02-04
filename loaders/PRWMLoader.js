@@ -1,8 +1,15 @@
+import {
+	BufferAttribute,
+	BufferGeometry,
+	FileLoader,
+	Loader
+} from '../../../build/three.module.js';
+
 /**
  * See https://github.com/kchapelier/PRWM for more informations about this file format
  */
 
-THREE.PRWMLoader = ( function () {
+var PRWMLoader = ( function () {
 
 	var bigEndianPlatform = null;
 
@@ -223,11 +230,11 @@ THREE.PRWMLoader = ( function () {
 
 	function PRWMLoader( manager ) {
 
-		THREE.Loader.call( this, manager );
+		Loader.call( this, manager );
 
 	}
 
-	PRWMLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype ), {
+	PRWMLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 		constructor: PRWMLoader,
 
@@ -235,7 +242,7 @@ THREE.PRWMLoader = ( function () {
 
 			var scope = this;
 
-			var loader = new THREE.FileLoader( scope.manager );
+			var loader = new FileLoader( scope.manager );
 			loader.setPath( scope.path );
 			loader.setResponseType( 'arraybuffer' );
 			loader.setRequestHeader( scope.requestHeader );
@@ -273,20 +280,20 @@ THREE.PRWMLoader = ( function () {
 
 			var data = decodePrwm( arrayBuffer ),
 				attributesKey = Object.keys( data.attributes ),
-				bufferGeometry = new THREE.BufferGeometry(),
+				bufferGeometry = new BufferGeometry(),
 				attribute,
 				i;
 
 			for ( i = 0; i < attributesKey.length; i ++ ) {
 
 				attribute = data.attributes[ attributesKey[ i ] ];
-				bufferGeometry.setAttribute( attributesKey[ i ], new THREE.BufferAttribute( attribute.values, attribute.cardinality, attribute.normalized ) );
+				bufferGeometry.setAttribute( attributesKey[ i ], new BufferAttribute( attribute.values, attribute.cardinality, attribute.normalized ) );
 
 			}
 
 			if ( data.indices !== null ) {
 
-				bufferGeometry.setIndex( new THREE.BufferAttribute( data.indices, 1 ) );
+				bufferGeometry.setIndex( new BufferAttribute( data.indices, 1 ) );
 
 			}
 
@@ -305,3 +312,5 @@ THREE.PRWMLoader = ( function () {
 	return PRWMLoader;
 
 } )();
+
+export { PRWMLoader };
