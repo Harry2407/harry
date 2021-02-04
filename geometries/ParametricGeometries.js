@@ -1,15 +1,8 @@
-import {
-	BufferGeometry,
-	Curve,
-	ParametricGeometry,
-	Vector3
-} from '../../../build/three.module.js';
-
 /**
  * Experimenting of primitive geometry creation using Surface Parametric equations
  */
 
-var ParametricGeometries = {
+THREE.ParametricGeometries = {
 
 	klein: function ( v, u, target ) {
 
@@ -100,7 +93,7 @@ var ParametricGeometries = {
  *
  *********************************************/
 
-ParametricGeometries.TubeGeometry = function ( path, segments, radius, segmentsRadius, closed ) {
+THREE.ParametricGeometries.TubeGeometry = function ( path, segments, radius, segmentsRadius, closed ) {
 
 	this.path = path;
 	this.segments = segments || 64;
@@ -121,7 +114,7 @@ ParametricGeometries.TubeGeometry = function ( path, segments, radius, segmentsR
 	this.normals = normals;
 	this.binormals = binormals;
 
-	var position = new Vector3();
+	var position = new THREE.Vector3();
 
 	var ParametricTube = function ( u, v, target ) {
 
@@ -146,12 +139,12 @@ ParametricGeometries.TubeGeometry = function ( path, segments, radius, segmentsR
 
 	};
 
-	ParametricGeometry.call( this, ParametricTube, segments, segmentsRadius );
+	THREE.ParametricGeometry.call( this, ParametricTube, segments, segmentsRadius );
 
 };
 
-ParametricGeometries.TubeGeometry.prototype = Object.create( BufferGeometry.prototype );
-ParametricGeometries.TubeGeometry.prototype.constructor = ParametricGeometries.TubeGeometry;
+THREE.ParametricGeometries.TubeGeometry.prototype = Object.create( THREE.BufferGeometry.prototype );
+THREE.ParametricGeometries.TubeGeometry.prototype.constructor = THREE.ParametricGeometries.TubeGeometry;
 
 
 /*********************************************
@@ -159,7 +152,7 @@ ParametricGeometries.TubeGeometry.prototype.constructor = ParametricGeometries.T
   * Parametric Replacement for TorusKnotGeometry
   *
   *********************************************/
-ParametricGeometries.TorusKnotGeometry = function ( radius, tube, segmentsT, segmentsR, p, q ) {
+THREE.ParametricGeometries.TorusKnotGeometry = function ( radius, tube, segmentsT, segmentsR, p, q ) {
 
 	this.radius = radius || 200;
 	this.tube = tube || 40;
@@ -170,16 +163,16 @@ ParametricGeometries.TorusKnotGeometry = function ( radius, tube, segmentsT, seg
 
 	function TorusKnotCurve() {
 
-		Curve.call( this );
+		THREE.Curve.call( this );
 
 	}
 
-	TorusKnotCurve.prototype = Object.create( Curve.prototype );
+	TorusKnotCurve.prototype = Object.create( THREE.Curve.prototype );
 	TorusKnotCurve.prototype.constructor = TorusKnotCurve;
 
 	TorusKnotCurve.prototype.getPoint = function ( t, optionalTarget ) {
 
-		var point = optionalTarget || new Vector3();
+		var point = optionalTarget || new THREE.Vector3();
 
 		t *= Math.PI * 2;
 
@@ -197,12 +190,12 @@ ParametricGeometries.TorusKnotGeometry = function ( radius, tube, segmentsT, seg
 	var radiusSegments = segmentsR;
 	var extrudePath = new TorusKnotCurve();
 
-	ParametricGeometries.TubeGeometry.call( this, extrudePath, segments, tube, radiusSegments, true, false );
+	THREE.ParametricGeometries.TubeGeometry.call( this, extrudePath, segments, tube, radiusSegments, true, false );
 
 };
 
-ParametricGeometries.TorusKnotGeometry.prototype = Object.create( BufferGeometry.prototype );
-ParametricGeometries.TorusKnotGeometry.prototype.constructor = ParametricGeometries.TorusKnotGeometry;
+THREE.ParametricGeometries.TorusKnotGeometry.prototype = Object.create( THREE.BufferGeometry.prototype );
+THREE.ParametricGeometries.TorusKnotGeometry.prototype.constructor = THREE.ParametricGeometries.TorusKnotGeometry;
 
 
 /*********************************************
@@ -210,7 +203,7 @@ ParametricGeometries.TorusKnotGeometry.prototype.constructor = ParametricGeometr
   * Parametric Replacement for SphereGeometry
   *
   *********************************************/
-ParametricGeometries.SphereGeometry = function ( size, u, v ) {
+THREE.ParametricGeometries.SphereGeometry = function ( size, u, v ) {
 
 	function sphere( u, v, target ) {
 
@@ -225,12 +218,12 @@ ParametricGeometries.SphereGeometry = function ( size, u, v ) {
 
 	}
 
-	ParametricGeometry.call( this, sphere, u, v );
+	THREE.ParametricGeometry.call( this, sphere, u, v );
 
 };
 
-ParametricGeometries.SphereGeometry.prototype = Object.create( BufferGeometry.prototype );
-ParametricGeometries.SphereGeometry.prototype.constructor = ParametricGeometries.SphereGeometry;
+THREE.ParametricGeometries.SphereGeometry.prototype = Object.create( THREE.BufferGeometry.prototype );
+THREE.ParametricGeometries.SphereGeometry.prototype.constructor = THREE.ParametricGeometries.SphereGeometry;
 
 
 /*********************************************
@@ -239,7 +232,7 @@ ParametricGeometries.SphereGeometry.prototype.constructor = ParametricGeometries
   *
   *********************************************/
 
-ParametricGeometries.PlaneGeometry = function ( width, depth, segmentsWidth, segmentsDepth ) {
+THREE.ParametricGeometries.PlaneGeometry = function ( width, depth, segmentsWidth, segmentsDepth ) {
 
 	function plane( u, v, target ) {
 
@@ -251,11 +244,9 @@ ParametricGeometries.PlaneGeometry = function ( width, depth, segmentsWidth, seg
 
 	}
 
-	ParametricGeometry.call( this, plane, segmentsWidth, segmentsDepth );
+	THREE.ParametricGeometry.call( this, plane, segmentsWidth, segmentsDepth );
 
 };
 
-ParametricGeometries.PlaneGeometry.prototype = Object.create( BufferGeometry.prototype );
-ParametricGeometries.PlaneGeometry.prototype.constructor = ParametricGeometries.PlaneGeometry;
-
-export { ParametricGeometries };
+THREE.ParametricGeometries.PlaneGeometry.prototype = Object.create( THREE.BufferGeometry.prototype );
+THREE.ParametricGeometries.PlaneGeometry.prototype.constructor = THREE.ParametricGeometries.PlaneGeometry;

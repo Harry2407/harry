@@ -1,28 +1,19 @@
-import {
-	Color,
-	LightProbe,
-	LinearEncoding,
-	SphericalHarmonics3,
-	Vector3,
-	sRGBEncoding
-} from '../../../build/three.module.js';
-
-var LightProbeGenerator = {
+THREE.LightProbeGenerator = {
 
 	// https://www.ppsloan.org/publications/StupidSH36.pdf
 	fromCubeTexture: function ( cubeTexture ) {
 
 		var norm, lengthSq, weight, totalWeight = 0;
 
-		var coord = new Vector3();
+		var coord = new THREE.Vector3();
 
-		var dir = new Vector3();
+		var dir = new THREE.Vector3();
 
-		var color = new Color();
+		var color = new THREE.Color();
 
 		var shBasis = [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
 
-		var sh = new SphericalHarmonics3();
+		var sh = new THREE.SphericalHarmonics3();
 		var shCoefficients = sh.coefficients;
 
 		for ( var faceIndex = 0; faceIndex < 6; faceIndex ++ ) {
@@ -93,7 +84,7 @@ var LightProbeGenerator = {
 				dir.copy( coord ).normalize();
 
 				// evaluate SH basis functions in direction dir
-				SphericalHarmonics3.getBasisAt( dir, shBasis );
+				THREE.SphericalHarmonics3.getBasisAt( dir, shBasis );
 
 				// accummuulate
 				for ( var j = 0; j < 9; j ++ ) {
@@ -119,7 +110,7 @@ var LightProbeGenerator = {
 
 		}
 
-		return new LightProbe( sh );
+		return new THREE.LightProbe( sh );
 
 	},
 
@@ -128,15 +119,15 @@ var LightProbeGenerator = {
 		// The renderTarget must be set to RGBA in order to make readRenderTargetPixels works
 		var norm, lengthSq, weight, totalWeight = 0;
 
-		var coord = new Vector3();
+		var coord = new THREE.Vector3();
 
-		var dir = new Vector3();
+		var dir = new THREE.Vector3();
 
-		var color = new Color();
+		var color = new THREE.Color();
 
 		var shBasis = [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ];
 
-		var sh = new SphericalHarmonics3();
+		var sh = new THREE.SphericalHarmonics3();
 		var shCoefficients = sh.coefficients;
 
 		for ( var faceIndex = 0; faceIndex < 6; faceIndex ++ ) {
@@ -191,7 +182,7 @@ var LightProbeGenerator = {
 				dir.copy( coord ).normalize();
 
 				// evaluate SH basis functions in direction dir
-				SphericalHarmonics3.getBasisAt( dir, shBasis );
+				THREE.SphericalHarmonics3.getBasisAt( dir, shBasis );
 
 				// accummuulate
 				for ( var j = 0; j < 9; j ++ ) {
@@ -217,7 +208,7 @@ var LightProbeGenerator = {
 
 		}
 
-		return new LightProbe( sh );
+		return new THREE.LightProbe( sh );
 
 	}
 
@@ -227,12 +218,12 @@ var convertColorToLinear = function ( color, encoding ) {
 
 	switch ( encoding ) {
 
-		case sRGBEncoding:
+		case THREE.sRGBEncoding:
 
 			color.convertSRGBToLinear();
 			break;
 
-		case LinearEncoding:
+		case THREE.LinearEncoding:
 
 			break;
 
@@ -246,5 +237,3 @@ var convertColorToLinear = function ( color, encoding ) {
 	return color;
 
 };
-
-export { LightProbeGenerator };

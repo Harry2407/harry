@@ -1,18 +1,3 @@
-import {
-	BufferAttribute,
-	BufferGeometry,
-	Color,
-	Line,
-	LineBasicMaterial,
-	Matrix4,
-	Mesh,
-	MeshBasicMaterial,
-	Object3D,
-	Quaternion,
-	SphereGeometry,
-	Vector3
-} from '../../../build/three.module.js';
-
 /**
  * CCD Algorithm
  *  - https://sites.google.com/site/auraliusproject/ccd-algorithm
@@ -26,14 +11,14 @@ import {
  * iks = [ {
  *	target: 1,
  *	effector: 2,
- *	links: [ { index: 5, limitation: new Vector3( 1, 0, 0 ) }, { index: 4, enabled: false }, { index : 3 } ],
+ *	links: [ { index: 5, limitation: new THREE.Vector3( 1, 0, 0 ) }, { index: 4, enabled: false }, { index : 3 } ],
  *	iteration: 10,
  *	minAngle: 0.0,
  *	maxAngle: 1.0,
  * } ];
  */
 
-var CCDIKSolver = ( function () {
+THREE.CCDIKSolver = ( function () {
 
 	/**
 	 * @param {THREE.SkinnedMesh} mesh
@@ -55,20 +40,20 @@ var CCDIKSolver = ( function () {
 		/**
 		 * Update IK bones.
 		 *
-		 * @return {CCDIKSolver}
+		 * @return {THREE.CCDIKSolver}
 		 */
 		update: function () {
 
-			var q = new Quaternion();
-			var targetPos = new Vector3();
-			var targetVec = new Vector3();
-			var effectorPos = new Vector3();
-			var effectorVec = new Vector3();
-			var linkPos = new Vector3();
-			var invLinkQ = new Quaternion();
-			var linkScale = new Vector3();
-			var axis = new Vector3();
-			var vector = new Vector3();
+			var q = new THREE.Quaternion();
+			var targetPos = new THREE.Vector3();
+			var targetVec = new THREE.Vector3();
+			var effectorPos = new THREE.Vector3();
+			var effectorVec = new THREE.Vector3();
+			var linkPos = new THREE.Vector3();
+			var invLinkQ = new THREE.Quaternion();
+			var linkScale = new THREE.Vector3();
+			var axis = new THREE.Vector3();
+			var vector = new THREE.Vector3();
 
 			return function update() {
 
@@ -264,7 +249,7 @@ var CCDIKSolver = ( function () {
 	 */
 	function CCDIKHelper( mesh, iks ) {
 
-		Object3D.call( this );
+		THREE.Object3D.call( this );
 
 		this.root = mesh;
 		this.iks = iks || [];
@@ -272,31 +257,31 @@ var CCDIKSolver = ( function () {
 		this.matrix.copy( mesh.matrixWorld );
 		this.matrixAutoUpdate = false;
 
-		this.sphereGeometry = new SphereGeometry( 0.25, 16, 8 );
+		this.sphereGeometry = new THREE.SphereGeometry( 0.25, 16, 8 );
 
-		this.targetSphereMaterial = new MeshBasicMaterial( {
-			color: new Color( 0xff8888 ),
+		this.targetSphereMaterial = new THREE.MeshBasicMaterial( {
+			color: new THREE.Color( 0xff8888 ),
 			depthTest: false,
 			depthWrite: false,
 			transparent: true
 		} );
 
-		this.effectorSphereMaterial = new MeshBasicMaterial( {
-			color: new Color( 0x88ff88 ),
+		this.effectorSphereMaterial = new THREE.MeshBasicMaterial( {
+			color: new THREE.Color( 0x88ff88 ),
 			depthTest: false,
 			depthWrite: false,
 			transparent: true
 		} );
 
-		this.linkSphereMaterial = new MeshBasicMaterial( {
-			color: new Color( 0x8888ff ),
+		this.linkSphereMaterial = new THREE.MeshBasicMaterial( {
+			color: new THREE.Color( 0x8888ff ),
 			depthTest: false,
 			depthWrite: false,
 			transparent: true
 		} );
 
-		this.lineMaterial = new LineBasicMaterial( {
-			color: new Color( 0xff0000 ),
+		this.lineMaterial = new THREE.LineBasicMaterial( {
+			color: new THREE.Color( 0xff0000 ),
 			depthTest: false,
 			depthWrite: false,
 			transparent: true
@@ -306,7 +291,7 @@ var CCDIKSolver = ( function () {
 
 	}
 
-	CCDIKHelper.prototype = Object.assign( Object.create( Object3D.prototype ), {
+	CCDIKHelper.prototype = Object.assign( Object.create( THREE.Object3D.prototype ), {
 
 		constructor: CCDIKHelper,
 
@@ -315,8 +300,8 @@ var CCDIKSolver = ( function () {
 		 */
 		updateMatrixWorld: function () {
 
-			var matrix = new Matrix4();
-			var vector = new Vector3();
+			var matrix = new THREE.Matrix4();
+			var vector = new THREE.Vector3();
 
 			function getPosition( bone, matrixWorldInv ) {
 
@@ -395,7 +380,7 @@ var CCDIKSolver = ( function () {
 
 				this.matrix.copy( mesh.matrixWorld );
 
-				Object3D.prototype.updateMatrixWorld.call( this, force );
+				THREE.Object3D.prototype.updateMatrixWorld.call( this, force );
 
 			};
 
@@ -410,9 +395,9 @@ var CCDIKSolver = ( function () {
 
 			function createLineGeometry( ik ) {
 
-				var geometry = new BufferGeometry();
+				var geometry = new THREE.BufferGeometry();
 				var vertices = new Float32Array( ( 2 + ik.links.length ) * 3 );
-				geometry.setAttribute( 'position', new BufferAttribute( vertices, 3 ) );
+				geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
 
 				return geometry;
 
@@ -420,25 +405,25 @@ var CCDIKSolver = ( function () {
 
 			function createTargetMesh() {
 
-				return new Mesh( scope.sphereGeometry, scope.targetSphereMaterial );
+				return new THREE.Mesh( scope.sphereGeometry, scope.targetSphereMaterial );
 
 			}
 
 			function createEffectorMesh() {
 
-				return new Mesh( scope.sphereGeometry, scope.effectorSphereMaterial );
+				return new THREE.Mesh( scope.sphereGeometry, scope.effectorSphereMaterial );
 
 			}
 
 			function createLinkMesh() {
 
-				return new Mesh( scope.sphereGeometry, scope.linkSphereMaterial );
+				return new THREE.Mesh( scope.sphereGeometry, scope.linkSphereMaterial );
 
 			}
 
 			function createLine( ik ) {
 
-				return new Line( createLineGeometry( ik ), scope.lineMaterial );
+				return new THREE.Line( createLineGeometry( ik ), scope.lineMaterial );
 
 			}
 
@@ -466,5 +451,3 @@ var CCDIKSolver = ( function () {
 	return CCDIKSolver;
 
 } )();
-
-export { CCDIKSolver };

@@ -5,7 +5,7 @@
  * 16 April 2012 - @blurspline
  */
 
-var AsciiEffect = function ( renderer, charSet, options ) {
+THREE.AsciiEffect = function ( renderer, charSet, options ) {
 
 	// its fun to create one your own!
 
@@ -286,5 +286,3 @@ var AsciiEffect = function ( renderer, charSet, options ) {
 	// end modified asciifyImage block
 
 };
-
-export { AsciiEffect };

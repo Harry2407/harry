@@ -1,16 +1,9 @@
-import {
-	Matrix4,
-	Quaternion,
-	Vector3
-} from '../../../build/three.module.js';
-import { MMDParser } from '../libs/mmdparser.module.js';
-
 /**
  * Dependencies
  *  - mmd-parser https://github.com/takahirox/mmd-parser
  */
 
-var MMDExporter = function () {
+THREE.MMDExporter = function () {
 
 	// Unicode to Shift_JIS table
 	var u2sTable;
@@ -145,10 +138,10 @@ var MMDExporter = function () {
 		var bones = skin.skeleton.bones;
 		var bones2 = getBindBones( skin );
 
-		var position = new Vector3();
-		var quaternion = new Quaternion();
-		var quaternion2 = new Quaternion();
-		var matrix = new Matrix4();
+		var position = new THREE.Vector3();
+		var quaternion = new THREE.Quaternion();
+		var quaternion2 = new THREE.Quaternion();
+		var matrix = new THREE.Matrix4();
 
 		var array = [];
 		array.push( 'Vocaloid Pose Data file' );
@@ -213,5 +206,3 @@ var MMDExporter = function () {
 	*/
 
 };
-
-export { MMDExporter };

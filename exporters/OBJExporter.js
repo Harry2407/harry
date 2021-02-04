@@ -1,15 +1,8 @@
-import {
-	Color,
-	Matrix3,
-	Vector2,
-	Vector3
-} from '../../../build/three.module.js';
+THREE.OBJExporter = function () {};
 
-var OBJExporter = function () {};
+THREE.OBJExporter.prototype = {
 
-OBJExporter.prototype = {
-
-	constructor: OBJExporter,
+	constructor: THREE.OBJExporter,
 
 	parse: function ( object ) {
 
@@ -19,10 +12,10 @@ OBJExporter.prototype = {
 		var indexVertexUvs = 0;
 		var indexNormals = 0;
 
-		var vertex = new Vector3();
-		var color = new Color();
-		var normal = new Vector3();
-		var uv = new Vector2();
+		var vertex = new THREE.Vector3();
+		var color = new THREE.Color();
+		var normal = new THREE.Vector3();
+		var uv = new THREE.Vector2();
 
 		var i, j, k, l, m, face = [];
 
@@ -34,7 +27,7 @@ OBJExporter.prototype = {
 
 			var geometry = mesh.geometry;
 
-			var normalMatrixWorld = new Matrix3();
+			var normalMatrixWorld = new THREE.Matrix3();
 
 			if ( geometry.isBufferGeometry !== true ) {
 
@@ -309,5 +302,3 @@ OBJExporter.prototype = {
 	}
 
 };
-
-export { OBJExporter };

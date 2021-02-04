@@ -14,11 +14,11 @@
 
 /* global DracoEncoderModule */
 
-var DRACOExporter = function () {};
+THREE.DRACOExporter = function () {};
 
-DRACOExporter.prototype = {
+THREE.DRACOExporter.prototype = {
 
-	constructor: DRACOExporter,
+	constructor: THREE.DRACOExporter,
 
 	parse: function ( object, options ) {
 
@@ -40,7 +40,7 @@ DRACOExporter.prototype = {
 
 				decodeSpeed: 5,
 				encodeSpeed: 5,
-				encoderMethod: DRACOExporter.MESH_EDGEBREAKER_ENCODING,
+				encoderMethod: THREE.DRACOExporter.MESH_EDGEBREAKER_ENCODING,
 				quantization: [ 16, 8, 8, 8, 8 ],
 				exportUvs: true,
 				exportNormals: true,
@@ -230,21 +230,19 @@ DRACOExporter.prototype = {
 
 // Encoder methods
 
-DRACOExporter.MESH_EDGEBREAKER_ENCODING = 1;
-DRACOExporter.MESH_SEQUENTIAL_ENCODING = 0;
+THREE.DRACOExporter.MESH_EDGEBREAKER_ENCODING = 1;
+THREE.DRACOExporter.MESH_SEQUENTIAL_ENCODING = 0;
 
 // Geometry type
 
-DRACOExporter.POINT_CLOUD = 0;
-DRACOExporter.TRIANGULAR_MESH = 1;
+THREE.DRACOExporter.POINT_CLOUD = 0;
+THREE.DRACOExporter.TRIANGULAR_MESH = 1;
 
 // Attribute type
 
-DRACOExporter.INVALID = - 1;
-DRACOExporter.POSITION = 0;
-DRACOExporter.NORMAL = 1;
-DRACOExporter.COLOR = 2;
-DRACOExporter.TEX_COORD = 3;
-DRACOExporter.GENERIC = 4;
-
-export { DRACOExporter };
+THREE.DRACOExporter.INVALID = - 1;
+THREE.DRACOExporter.POSITION = 0;
+THREE.DRACOExporter.NORMAL = 1;
+THREE.DRACOExporter.COLOR = 2;
+THREE.DRACOExporter.TEX_COORD = 3;
+THREE.DRACOExporter.GENERIC = 4;

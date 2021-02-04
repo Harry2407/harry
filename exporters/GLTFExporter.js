@@ -1,26 +1,3 @@
-import {
-	BufferAttribute,
-	ClampToEdgeWrapping,
-	DoubleSide,
-	InterpolateDiscrete,
-	InterpolateLinear,
-	LinearFilter,
-	LinearMipmapLinearFilter,
-	LinearMipmapNearestFilter,
-	MathUtils,
-	Matrix4,
-	MirroredRepeatWrapping,
-	NearestFilter,
-	NearestMipmapLinearFilter,
-	NearestMipmapNearestFilter,
-	PropertyBinding,
-	RGBAFormat,
-	RGBFormat,
-	RepeatWrapping,
-	Scene,
-	Vector3
-} from '../../../build/three.module.js';
-
 //------------------------------------------------------------------------------
 // Constants
 //------------------------------------------------------------------------------
@@ -57,16 +34,16 @@ var identityArray = [ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ];
 
 var THREE_TO_WEBGL = {};
 
-THREE_TO_WEBGL[ NearestFilter ] = WEBGL_CONSTANTS.NEAREST;
-THREE_TO_WEBGL[ NearestMipmapNearestFilter ] = WEBGL_CONSTANTS.NEAREST_MIPMAP_NEAREST;
-THREE_TO_WEBGL[ NearestMipmapLinearFilter ] = WEBGL_CONSTANTS.NEAREST_MIPMAP_LINEAR;
-THREE_TO_WEBGL[ LinearFilter ] = WEBGL_CONSTANTS.LINEAR;
-THREE_TO_WEBGL[ LinearMipmapNearestFilter ] = WEBGL_CONSTANTS.LINEAR_MIPMAP_NEAREST;
-THREE_TO_WEBGL[ LinearMipmapLinearFilter ] = WEBGL_CONSTANTS.LINEAR_MIPMAP_LINEAR;
+THREE_TO_WEBGL[ THREE.NearestFilter ] = WEBGL_CONSTANTS.NEAREST;
+THREE_TO_WEBGL[ THREE.NearestMipmapNearestFilter ] = WEBGL_CONSTANTS.NEAREST_MIPMAP_NEAREST;
+THREE_TO_WEBGL[ THREE.NearestMipmapLinearFilter ] = WEBGL_CONSTANTS.NEAREST_MIPMAP_LINEAR;
+THREE_TO_WEBGL[ THREE.LinearFilter ] = WEBGL_CONSTANTS.LINEAR;
+THREE_TO_WEBGL[ THREE.LinearMipmapNearestFilter ] = WEBGL_CONSTANTS.LINEAR_MIPMAP_NEAREST;
+THREE_TO_WEBGL[ THREE.LinearMipmapLinearFilter ] = WEBGL_CONSTANTS.LINEAR_MIPMAP_LINEAR;
 
-THREE_TO_WEBGL[ ClampToEdgeWrapping ] = WEBGL_CONSTANTS.CLAMP_TO_EDGE;
-THREE_TO_WEBGL[ RepeatWrapping ] = WEBGL_CONSTANTS.REPEAT;
-THREE_TO_WEBGL[ MirroredRepeatWrapping ] = WEBGL_CONSTANTS.MIRRORED_REPEAT;
+THREE_TO_WEBGL[ THREE.ClampToEdgeWrapping ] = WEBGL_CONSTANTS.CLAMP_TO_EDGE;
+THREE_TO_WEBGL[ THREE.RepeatWrapping ] = WEBGL_CONSTANTS.REPEAT;
+THREE_TO_WEBGL[ THREE.MirroredRepeatWrapping ] = WEBGL_CONSTANTS.MIRRORED_REPEAT;
 
 var PATH_PROPERTIES = {
 	scale: 'scale',
@@ -78,15 +55,15 @@ var PATH_PROPERTIES = {
 //------------------------------------------------------------------------------
 // GLTF Exporter
 //------------------------------------------------------------------------------
-var GLTFExporter = function () {};
+THREE.GLTFExporter = function () {};
 
-GLTFExporter.prototype = {
+THREE.GLTFExporter.prototype = {
 
-	constructor: GLTFExporter,
+	constructor: THREE.GLTFExporter,
 
 	/**
 	 * Parse scenes and generate GLTF output
-	 * @param  {Scene or [THREE.Scenes]} input   Scene or Array of THREE.Scenes
+	 * @param  {THREE.Scene or [THREE.Scenes]} input   THREE.Scene or Array of THREE.Scenes
 	 * @param  {Function} onDone  Callback on completed
 	 * @param  {Object} options options
 	 */
@@ -178,7 +155,7 @@ GLTFExporter.prototype = {
 		/**
 		 * Is identity matrix
 		 *
-		 * @param {Matrix4} matrix
+		 * @param {THREE.Matrix4} matrix
 		 * @returns {Boolean} Returns true, if parameter is identity matrix
 		 */
 		function isIdentityMatrix( matrix ) {
@@ -217,7 +194,7 @@ GLTFExporter.prototype = {
 
 		/**
 		 * Get the min and max vectors from the given attribute
-		 * @param  {BufferAttribute} attribute Attribute to find the min/max in range from start to start + count
+		 * @param  {THREE.BufferAttribute} attribute Attribute to find the min/max in range from start to start + count
 		 * @param  {Integer} start
 		 * @param  {Integer} count
 		 * @return {Object} Object containing the `min` and `max` values (As an array of attribute.itemSize components)
@@ -266,7 +243,7 @@ GLTFExporter.prototype = {
 		/**
 		 * Checks if normal attribute values are normalized.
 		 *
-		 * @param {BufferAttribute} normal
+		 * @param {THREE.BufferAttribute} normal
 		 * @returns {Boolean}
 		 *
 		 */
@@ -278,7 +255,7 @@ GLTFExporter.prototype = {
 
 			}
 
-			var v = new Vector3();
+			var v = new THREE.Vector3();
 
 			for ( var i = 0, il = normal.count; i < il; i ++ ) {
 
@@ -294,8 +271,8 @@ GLTFExporter.prototype = {
 		/**
 		 * Creates normalized normal buffer attribute.
 		 *
-		 * @param {BufferAttribute} normal
-		 * @returns {BufferAttribute}
+		 * @param {THREE.BufferAttribute} normal
+		 * @returns {THREE.BufferAttribute}
 		 *
 		 */
 		function createNormalizedNormalAttribute( normal ) {
@@ -308,7 +285,7 @@ GLTFExporter.prototype = {
 
 			var attribute = normal.clone();
 
-			var v = new Vector3();
+			var v = new THREE.Vector3();
 
 			for ( var i = 0, il = attribute.count; i < il; i ++ ) {
 
@@ -499,7 +476,7 @@ GLTFExporter.prototype = {
 
 		/**
 		 * Process and generate a BufferView
-		 * @param  {BufferAttribute} attribute
+		 * @param  {THREE.BufferAttribute} attribute
 		 * @param  {number} componentType
 		 * @param  {number} start
 		 * @param  {number} count
@@ -655,7 +632,7 @@ GLTFExporter.prototype = {
 
 		/**
 		 * Process attribute to generate an accessor
-		 * @param  {BufferAttribute} attribute Attribute to process
+		 * @param  {THREE.BufferAttribute} attribute Attribute to process
 		 * @param  {THREE.BufferGeometry} geometry (Optional) Geometry used for truncated draw range
 		 * @param  {Integer} start (Optional)
 		 * @param  {Integer} count (Optional)
@@ -770,7 +747,7 @@ GLTFExporter.prototype = {
 		/**
 		 * Process image
 		 * @param  {Image} image to process
-		 * @param  {Integer} format of the image (e.g. RGBFormat, RGBAFormat etc)
+		 * @param  {Integer} format of the image (e.g. THREE.RGBFormat, THREE.RGBAFormat etc)
 		 * @param  {Boolean} flipY before writing out the image
 		 * @return {Integer}     Index of the processed texture in the "images" array
 		 */
@@ -783,7 +760,7 @@ GLTFExporter.prototype = {
 			}
 
 			var cachedImages = cachedData.images.get( image );
-			var mimeType = format === RGBAFormat ? 'image/png' : 'image/jpeg';
+			var mimeType = format === THREE.RGBAFormat ? 'image/png' : 'image/jpeg';
 			var key = mimeType + ':flipY/' + flipY.toString();
 
 			if ( cachedImages[ key ] !== undefined ) {
@@ -825,7 +802,7 @@ GLTFExporter.prototype = {
 
 				} else {
 
-					if ( format !== RGBAFormat && format !== RGBFormat ) {
+					if ( format !== THREE.RGBAFormat && format !== THREE.RGBFormat ) {
 
 						console.error( 'GLTFExporter: Only RGB and RGBA formats are supported.' );
 
@@ -839,7 +816,7 @@ GLTFExporter.prototype = {
 
 					let data = image.data;
 
-					if ( format === RGBFormat ) {
+					if ( format === THREE.RGBFormat ) {
 
 						data = new Uint8ClampedArray( image.height * image.width * 4 );
 
@@ -1184,7 +1161,7 @@ GLTFExporter.prototype = {
 			}
 
 			// doubleSided
-			if ( material.side === DoubleSide ) {
+			if ( material.side === THREE.DoubleSide ) {
 
 				gltfMaterial.doubleSided = true;
 
@@ -1332,7 +1309,7 @@ GLTFExporter.prototype = {
 					! ( array instanceof Uint8Array ) ) {
 
 					console.warn( 'GLTFExporter: Attribute "skinIndex" converted to type UNSIGNED_SHORT.' );
-					modifiedAttribute = new BufferAttribute( new Uint16Array( array ), attribute.itemSize, attribute.normalized );
+					modifiedAttribute = new THREE.BufferAttribute( new Uint16Array( array ), attribute.itemSize, attribute.normalized );
 
 				}
 
@@ -1563,7 +1540,7 @@ GLTFExporter.prototype = {
 				gltfCamera.perspective = {
 
 					aspectRatio: camera.aspect,
-					yfov: MathUtils.degToRad( camera.fov ),
+					yfov: THREE.MathUtils.degToRad( camera.fov ),
 					zfar: camera.far <= 0 ? 0.001 : camera.far,
 					znear: camera.near < 0 ? 0 : camera.near
 
@@ -1601,7 +1578,7 @@ GLTFExporter.prototype = {
 
 			}
 
-			clip = GLTFExporter.Utils.mergeMorphTargetTracks( clip.clone(), root );
+			clip = THREE.GLTFExporter.Utils.mergeMorphTargetTracks( clip.clone(), root );
 
 			var tracks = clip.tracks;
 			var channels = [];
@@ -1610,8 +1587,8 @@ GLTFExporter.prototype = {
 			for ( var i = 0; i < tracks.length; ++ i ) {
 
 				var track = tracks[ i ];
-				var trackBinding = PropertyBinding.parseTrackName( track.name );
-				var trackNode = PropertyBinding.findNode( root, trackBinding.nodeName );
+				var trackBinding = THREE.PropertyBinding.parseTrackName( track.name );
+				var trackNode = THREE.PropertyBinding.findNode( root, trackBinding.nodeName );
 				var trackProperty = PATH_PROPERTIES[ trackBinding.propertyName ];
 
 				if ( trackBinding.objectName === 'bones' ) {
@@ -1660,7 +1637,7 @@ GLTFExporter.prototype = {
 					// but needs to be stored as VEC3 so dividing by 3 here.
 					outputItemSize /= 3;
 
-				} else if ( track.getInterpolation() === InterpolateDiscrete ) {
+				} else if ( track.getInterpolation() === THREE.InterpolateDiscrete ) {
 
 					interpolation = 'STEP';
 
@@ -1672,8 +1649,8 @@ GLTFExporter.prototype = {
 
 				samplers.push( {
 
-					input: processAccessor( new BufferAttribute( track.times, inputItemSize ) ),
-					output: processAccessor( new BufferAttribute( track.values, outputItemSize ) ),
+					input: processAccessor( new THREE.BufferAttribute( track.times, inputItemSize ) ),
+					output: processAccessor( new THREE.BufferAttribute( track.values, outputItemSize ) ),
 					interpolation: interpolation
 
 				} );
@@ -1716,7 +1693,7 @@ GLTFExporter.prototype = {
 
 			var joints = [];
 			var inverseBindMatrices = new Float32Array( skeleton.bones.length * 16 );
-			var temporaryBoneInverse = new Matrix4();
+			var temporaryBoneInverse = new THREE.Matrix4();
 
 			for ( var i = 0; i < skeleton.bones.length; ++ i ) {
 
@@ -1736,7 +1713,7 @@ GLTFExporter.prototype = {
 
 			outputJSON.skins.push( {
 
-				inverseBindMatrices: processAccessor( new BufferAttribute( inverseBindMatrices, 16 ) ),
+				inverseBindMatrices: processAccessor( new THREE.BufferAttribute( inverseBindMatrices, 16 ) ),
 				joints: joints,
 				skeleton: nodeMap.get( rootJoint )
 
@@ -1947,7 +1924,7 @@ GLTFExporter.prototype = {
 
 		/**
 		 * Process Scene
-		 * @param  {Scene} node Scene to process
+		 * @param  {THREE.Scene} node Scene to process
 		 */
 		function processScene( scene ) {
 
@@ -1999,12 +1976,12 @@ GLTFExporter.prototype = {
 		}
 
 		/**
-		 * Creates a Scene to hold a list of objects and parse it
+		 * Creates a THREE.Scene to hold a list of objects and parse it
 		 * @param  {Array} objects List of objects to process
 		 */
 		function processObjects( objects ) {
 
-			var scene = new Scene();
+			var scene = new THREE.Scene();
 			scene.name = 'AuxScene';
 
 			for ( var i = 0; i < objects.length; i ++ ) {
@@ -2027,7 +2004,7 @@ GLTFExporter.prototype = {
 
 			for ( var i = 0; i < input.length; i ++ ) {
 
-				if ( input[ i ] instanceof Scene ) {
+				if ( input[ i ] instanceof THREE.Scene ) {
 
 					processScene( input[ i ] );
 
@@ -2157,7 +2134,7 @@ GLTFExporter.prototype = {
 
 };
 
-GLTFExporter.Utils = {
+THREE.GLTFExporter.Utils = {
 
 	insertKeyframe: function ( track, time ) {
 
@@ -2252,8 +2229,8 @@ GLTFExporter.Utils = {
 		for ( var i = 0; i < sourceTracks.length; ++ i ) {
 
 			var sourceTrack = sourceTracks[ i ];
-			var sourceTrackBinding = PropertyBinding.parseTrackName( sourceTrack.name );
-			var sourceTrackNode = PropertyBinding.findNode( root, sourceTrackBinding.nodeName );
+			var sourceTrackBinding = THREE.PropertyBinding.parseTrackName( sourceTrack.name );
+			var sourceTrackNode = THREE.PropertyBinding.findNode( root, sourceTrackBinding.nodeName );
 
 			if ( sourceTrackBinding.propertyName !== 'morphTargetInfluences' || sourceTrackBinding.propertyIndex === undefined ) {
 
@@ -2277,7 +2254,7 @@ GLTFExporter.Utils = {
 				console.warn( 'THREE.GLTFExporter: Morph target interpolation mode not yet supported. Using LINEAR instead.' );
 
 				sourceTrack = sourceTrack.clone();
-				sourceTrack.setInterpolation( InterpolateLinear );
+				sourceTrack.setInterpolation( THREE.InterpolateLinear );
 
 			}
 
@@ -2349,5 +2326,3 @@ GLTFExporter.Utils = {
 	}
 
 };
-
-export { GLTFExporter };

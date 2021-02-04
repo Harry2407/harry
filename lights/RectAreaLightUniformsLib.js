@@ -1,16 +1,3 @@
-import {
-	ClampToEdgeWrapping,
-	DataTexture,
-	DataUtils,
-	FloatType,
-	HalfFloatType,
-	LinearFilter,
-	NearestFilter,
-	RGBAFormat,
-	UVMapping,
-	UniformsLib
-} from '../../../build/three.module.js';
-
 /**
  * Uniforms library for RectAreaLight shared webgl shaders
  *
@@ -28,7 +15,7 @@ import {
 // by Eric Heitz, Jonathan Dupuy, Stephen Hill and David Neubelt
 // code: https://github.com/selfshadow/ltc_code/
 
-var RectAreaLightUniformsLib = {
+THREE.RectAreaLightUniformsLib = {
 
 	init: function () {
 
@@ -43,14 +30,14 @@ var RectAreaLightUniformsLib = {
 		const ltc_float_1 = new Float32Array( LTC_MAT_1 );
 		const ltc_float_2 = new Float32Array( LTC_MAT_2 );
 
-		UniformsLib.LTC_FLOAT_1 = new DataTexture( ltc_float_1, 64, 64, RGBAFormat, FloatType, UVMapping, ClampToEdgeWrapping, ClampToEdgeWrapping, LinearFilter, NearestFilter, 1 );
-		UniformsLib.LTC_FLOAT_2 = new DataTexture( ltc_float_2, 64, 64, RGBAFormat, FloatType, UVMapping, ClampToEdgeWrapping, ClampToEdgeWrapping, LinearFilter, NearestFilter, 1 );
+		THREE.UniformsLib.LTC_FLOAT_1 = new THREE.DataTexture( ltc_float_1, 64, 64, THREE.RGBAFormat, THREE.FloatType, THREE.UVMapping, THREE.ClampToEdgeWrapping, THREE.ClampToEdgeWrapping, THREE.LinearFilter, THREE.NearestFilter, 1 );
+		THREE.UniformsLib.LTC_FLOAT_2 = new THREE.DataTexture( ltc_float_2, 64, 64, THREE.RGBAFormat, THREE.FloatType, THREE.UVMapping, THREE.ClampToEdgeWrapping, THREE.ClampToEdgeWrapping, THREE.LinearFilter, THREE.NearestFilter, 1 );
 
 		const ltc_half_1 = new Uint16Array( LTC_MAT_1.length );
 
 		LTC_MAT_1.forEach( function ( x, index ) {
 
-			ltc_half_1[ index ] = DataUtils.toHalfFloat( x );
+			ltc_half_1[ index ] = THREE.DataUtils.toHalfFloat( x );
 
 		} );
 
@@ -58,15 +45,13 @@ var RectAreaLightUniformsLib = {
 
 		LTC_MAT_2.forEach( function ( x, index ) {
 
-			ltc_half_2[ index ] = DataUtils.toHalfFloat( x );
+			ltc_half_2[ index ] = THREE.DataUtils.toHalfFloat( x );
 
 		} );
 
-		UniformsLib.LTC_HALF_1 = new DataTexture( ltc_half_1, 64, 64, RGBAFormat, HalfFloatType, UVMapping, ClampToEdgeWrapping, ClampToEdgeWrapping, LinearFilter, NearestFilter, 1 );
-		UniformsLib.LTC_HALF_2 = new DataTexture( ltc_half_2, 64, 64, RGBAFormat, HalfFloatType, UVMapping, ClampToEdgeWrapping, ClampToEdgeWrapping, LinearFilter, NearestFilter, 1 );
+		THREE.UniformsLib.LTC_HALF_1 = new THREE.DataTexture( ltc_half_1, 64, 64, THREE.RGBAFormat, THREE.HalfFloatType, THREE.UVMapping, THREE.ClampToEdgeWrapping, THREE.ClampToEdgeWrapping, THREE.LinearFilter, THREE.NearestFilter, 1 );
+		THREE.UniformsLib.LTC_HALF_2 = new THREE.DataTexture( ltc_half_2, 64, 64, THREE.RGBAFormat, THREE.HalfFloatType, THREE.UVMapping, THREE.ClampToEdgeWrapping, THREE.ClampToEdgeWrapping, THREE.LinearFilter, THREE.NearestFilter, 1 );
 
 	}
 
 };
-
-export { RectAreaLightUniformsLib };

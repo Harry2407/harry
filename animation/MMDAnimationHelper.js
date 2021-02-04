@@ -1,26 +1,17 @@
-import {
-	AnimationMixer,
-	Object3D,
-	Quaternion,
-	Vector3
-} from '../../../build/three.module.js';
-import { CCDIKSolver } from '../animation/CCDIKSolver.js';
-import { MMDPhysics } from '../animation/MMDPhysics.js';
-
 /**
  * MMDAnimationHelper handles animation of MMD assets loaded by MMDLoader
  * with MMD special features as IK, Grant, and Physics.
  *
  * Dependencies
  *  - ammo.js https://github.com/kripken/ammo.js
- *  - MMDPhysics
- *  - CCDIKSolver
+ *  - THREE.MMDPhysics
+ *  - THREE.CCDIKSolver
  *
  * TODO
  *  - more precise grant skinning support.
  */
 
-var MMDAnimationHelper = ( function () {
+THREE.MMDAnimationHelper = ( function () {
 
 	/**
 	 * @param {Object} params - (optional)
@@ -35,7 +26,7 @@ var MMDAnimationHelper = ( function () {
 		this.meshes = [];
 
 		this.camera = null;
-		this.cameraTarget = new Object3D();
+		this.cameraTarget = new THREE.Object3D();
 		this.cameraTarget.name = 'target';
 
 		this.audio = null;
@@ -84,9 +75,9 @@ var MMDAnimationHelper = ( function () {
 		 * @param {Integer} params.warmup - Only for THREE.SkinnedMesh and physics is true. Default is 60.
 		 * @param {Number} params.unitStep - Only for THREE.SkinnedMesh and physics is true. Default is 1 / 65.
 		 * @param {Integer} params.maxStepNum - Only for THREE.SkinnedMesh and physics is true. Default is 3.
-		 * @param {Vector3} params.gravity - Only for THREE.SkinnedMesh and physics is true. Default ( 0, - 9.8 * 10, 0 ).
+		 * @param {THREE.Vector3} params.gravity - Only for THREE.SkinnedMesh and physics is true. Default ( 0, - 9.8 * 10, 0 ).
 		 * @param {Number} params.delayTime - Only for THREE.Audio. Default is 0.0.
-		 * @return {MMDAnimationHelper}
+		 * @return {THREE.MMDAnimationHelper}
 		 */
 		add: function ( object, params ) {
 
@@ -124,7 +115,7 @@ var MMDAnimationHelper = ( function () {
 		 * Removes an Three.js Object from helper.
 		 *
 		 * @param {THREE.SkinnedMesh|THREE.Camera|THREE.Audio} object
-		 * @return {MMDAnimationHelper}
+		 * @return {THREE.MMDAnimationHelper}
 		 */
 		remove: function ( object ) {
 
@@ -160,7 +151,7 @@ var MMDAnimationHelper = ( function () {
 		 * Updates the animation.
 		 *
 		 * @param {Number} delta
-		 * @return {MMDAnimationHelper}
+		 * @return {THREE.MMDAnimationHelper}
 		 */
 		update: function ( delta ) {
 
@@ -189,7 +180,7 @@ var MMDAnimationHelper = ( function () {
 		 * @param {boolean} params.resetPose - Default is true.
 		 * @param {boolean} params.ik - Default is true.
 		 * @param {boolean} params.grant - Default is true.
-		 * @return {MMDAnimationHelper}
+		 * @return {THREE.MMDAnimationHelper}
 		 */
 		pose: function ( mesh, vpd, params ) {
 
@@ -208,8 +199,8 @@ var MMDAnimationHelper = ( function () {
 
 			}
 
-			var vector = new Vector3();
-			var quaternion = new Quaternion();
+			var vector = new THREE.Vector3();
+			var quaternion = new THREE.Quaternion();
 
 			for ( var i = 0, il = boneParams.length; i < il; i ++ ) {
 
@@ -247,7 +238,7 @@ var MMDAnimationHelper = ( function () {
 		 *
 		 * @param {string} key
 		 * @param {boolean} enabled
-		 * @return {MMDAnimationHelper}
+		 * @return {THREE.MMDAnimationHelper}
 		 */
 		enable: function ( key, enabled ) {
 
@@ -439,7 +430,7 @@ var MMDAnimationHelper = ( function () {
 				var animations = Array.isArray( animation )
 					? animation : [ animation ];
 
-				objects.mixer = new AnimationMixer( mesh );
+				objects.mixer = new THREE.AnimationMixer( mesh );
 
 				for ( var i = 0, il = animations.length; i < il; i ++ ) {
 
@@ -475,7 +466,7 @@ var MMDAnimationHelper = ( function () {
 
 			var objects = this.objects.get( camera );
 
-			objects.mixer = new AnimationMixer( camera );
+			objects.mixer = new THREE.AnimationMixer( camera );
 
 			for ( var i = 0, il = animations.length; i < il; i ++ ) {
 
@@ -620,25 +611,25 @@ var MMDAnimationHelper = ( function () {
 
 		_createCCDIKSolver: function ( mesh ) {
 
-			if ( CCDIKSolver === undefined ) {
+			if ( THREE.CCDIKSolver === undefined ) {
 
-				throw new Error( 'THREE.MMDAnimationHelper: Import CCDIKSolver.' );
+				throw new Error( 'THREE.MMDAnimationHelper: Import THREE.CCDIKSolver.' );
 
 			}
 
-			return new CCDIKSolver( mesh, mesh.geometry.userData.MMD.iks );
+			return new THREE.CCDIKSolver( mesh, mesh.geometry.userData.MMD.iks );
 
 		},
 
 		_createMMDPhysics: function ( mesh, params ) {
 
-			if ( MMDPhysics === undefined ) {
+			if ( THREE.MMDPhysics === undefined ) {
 
-				throw new Error( 'THREE.MMDPhysics: Import MMDPhysics.' );
+				throw new Error( 'THREE.MMDPhysics: Import THREE.MMDPhysics.' );
 
 			}
 
-			return new MMDPhysics(
+			return new THREE.MMDPhysics(
 				mesh,
 				mesh.geometry.userData.MMD.rigidBodies,
 				mesh.geometry.userData.MMD.constraints,
@@ -989,7 +980,7 @@ var MMDAnimationHelper = ( function () {
 		 */
 		update: function () {
 
-			var quaternion = new Quaternion();
+			var quaternion = new THREE.Quaternion();
 
 			return function () {
 
@@ -1044,5 +1035,3 @@ var MMDAnimationHelper = ( function () {
 	return MMDAnimationHelper;
 
 } )();
-
-export { MMDAnimationHelper };

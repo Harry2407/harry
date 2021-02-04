@@ -1,16 +1,8 @@
-import {
-	Euler,
-	EventDispatcher,
-	MathUtils,
-	Quaternion,
-	Vector3
-} from '../../../build/three.module.js';
-
 /**
  * W3C Device Orientation control (http://w3c.github.io/deviceorientation/spec-source-orientation.html)
  */
 
-var DeviceOrientationControls = function ( object ) {
+THREE.DeviceOrientationControls = function ( object ) {
 
 	var scope = this;
 	var changeEvent = { type: 'change' };
@@ -42,13 +34,13 @@ var DeviceOrientationControls = function ( object ) {
 
 	var setObjectQuaternion = function () {
 
-		var zee = new Vector3( 0, 0, 1 );
+		var zee = new THREE.Vector3( 0, 0, 1 );
 
-		var euler = new Euler();
+		var euler = new THREE.Euler();
 
-		var q0 = new Quaternion();
+		var q0 = new THREE.Quaternion();
 
-		var q1 = new Quaternion( - Math.sqrt( 0.5 ), 0, 0, Math.sqrt( 0.5 ) ); // - PI/2 around the x-axis
+		var q1 = new THREE.Quaternion( - Math.sqrt( 0.5 ), 0, 0, Math.sqrt( 0.5 ) ); // - PI/2 around the x-axis
 
 		return function ( quaternion, alpha, beta, gamma, orient ) {
 
@@ -109,7 +101,7 @@ var DeviceOrientationControls = function ( object ) {
 
 	this.update = ( function () {
 
-		var lastQuaternion = new Quaternion();
+		var lastQuaternion = new THREE.Quaternion();
 
 		return function () {
 
@@ -119,13 +111,13 @@ var DeviceOrientationControls = function ( object ) {
 
 			if ( device ) {
 
-				var alpha = device.alpha ? MathUtils.degToRad( device.alpha ) + scope.alphaOffset : 0; // Z
+				var alpha = device.alpha ? THREE.MathUtils.degToRad( device.alpha ) + scope.alphaOffset : 0; // Z
 
-				var beta = device.beta ? MathUtils.degToRad( device.beta ) : 0; // X'
+				var beta = device.beta ? THREE.MathUtils.degToRad( device.beta ) : 0; // X'
 
-				var gamma = device.gamma ? MathUtils.degToRad( device.gamma ) : 0; // Y''
+				var gamma = device.gamma ? THREE.MathUtils.degToRad( device.gamma ) : 0; // Y''
 
-				var orient = scope.screenOrientation ? MathUtils.degToRad( scope.screenOrientation ) : 0; // O
+				var orient = scope.screenOrientation ? THREE.MathUtils.degToRad( scope.screenOrientation ) : 0; // O
 
 				setObjectQuaternion( scope.object.quaternion, alpha, beta, gamma, orient );
 
@@ -153,7 +145,5 @@ var DeviceOrientationControls = function ( object ) {
 
 };
 
-DeviceOrientationControls.prototype = Object.create( EventDispatcher.prototype );
-DeviceOrientationControls.prototype.constructor = DeviceOrientationControls;
-
-export { DeviceOrientationControls };
+THREE.DeviceOrientationControls.prototype = Object.create( THREE.EventDispatcher.prototype );
+THREE.DeviceOrientationControls.prototype.constructor = THREE.DeviceOrientationControls;

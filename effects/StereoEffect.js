@@ -1,13 +1,8 @@
-import {
-	StereoCamera,
-	Vector2
-} from '../../../build/three.module.js';
+THREE.StereoEffect = function ( renderer ) {
 
-var StereoEffect = function ( renderer ) {
-
-	var _stereo = new StereoCamera();
+	var _stereo = new THREE.StereoCamera();
 	_stereo.aspect = 0.5;
-	var size = new Vector2();
+	var size = new THREE.Vector2();
 
 	this.setEyeSeparation = function ( eyeSep ) {
 
@@ -47,5 +42,3 @@ var StereoEffect = function ( renderer ) {
 	};
 
 };
-
-export { StereoEffect };
