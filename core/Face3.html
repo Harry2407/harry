@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 	<head>
 		<meta charset="utf-8" />
 		<base href="../../../" />
@@ -10,88 +10,84 @@
 		<h1>[name]</h1>
 
 		<p class="desc">
-		Triangular face used in deprecated geometry. These are created automatically for all
-		standard geometry types, however if you are building a custom geometry you will have to
-		create them manually.
+			在 deprecated geometry 中被使用到的三角形面。这些三角形面会为所有标准几何体自动创建。
+			然而，如果你正在构建一个自定义几何体，你需要手动创建这些三角形面。
 		</p>
 
-		<h2>Constructor</h2>
+		<h2>构造函数</h2>
 
 		<h3>[name]( [param:Integer a], [param:Integer b], [param:Integer c], [param:Vector3 normal], [param:Color color], [param:Integer materialIndex] )</h3>
 		<p>
-		a — Vertex A index.<br />
-		b — Vertex B index.<br />
-		c — Vertex C index.<br /><br />
+			a — 顶点 A 的索引。<br />
+			b — 顶点 B 的索引。<br />
+			c — 顶点 C 的索引。<br /><br />
 
-		normal — (optional) Face normal ([page:Vector3 Vector3]) or array of vertex normals.
-		If a single vector is passed in, this sets [page:.normal], otherwise if an array of three
-		vectors is passed in this sets [page:.vertexNormals]<br /><br />
+			normal — (可选) 面的法向量 ([page:Vector3 Vector3]) 或顶点法向量队列。
+			如果参数传入单一矢量，则用该量设置面的法向量 [page:.normal]，如果传入的是包含三个矢量的队列，
+			则用该量设置 [page:.vertexNormals]<br /><br />
 
-		color — (optional) Face [page:Color color] or array of vertex [page:Color colors].
-		If a single vector is passed in, this sets [page:.color], otherwise if an array of three
-		vectors is passed in this sets [page:.vertexColors]<br /><br />
+			color — (可选) 面的颜色值 [page:Color color] 或顶点颜色值的队列。
+			如果参数传入单一矢量，则用该量设置 [page:.color]，如果传入的是包含三个矢量的队列，
+			则用该量设置 [page:.vertexColors]<br /><br />
 
-		materialIndex — (optional) which index of an array of materials to associate
-		with the face.
+			materialIndex — (可选) 材质队列中与该面对应的材质的索引。
 		</p>
 
-		<h2>Properties</h2>
+		<h2>属性</h2>
 
 		<h3>[property:Integer a]</h3>
 		<p>
-		Vertex A index.
+			顶点 A 的索引。
 		</p>
 
 		<h3>[property:Integer b]</h3>
 		<p>
-		Vertex B index.
+			顶点 B 的索引。
 		</p>
 
 		<h3>[property:Integer c]</h3>
 		<p>
-		Vertex C index.
+			顶点 C 的索引。
 		</p>
 
 		<h3>[property:Vector3 normal]</h3>
 		<p>
-		Face normal - vector showing the direction of the Face3. If calculated automatically,
-		this is the normalized cross product of two edges of the
-		triangle. Default is *(0, 0, 0)*.
+			面的法向量 - 矢量展示 Face3 的方向。如果该量是通过调用自动计算的，
+			该值等于归一化的两条边的差积。默认值是 *(0, 0, 0)*。
 		</p>
 
 		<h3>[property:Color color]</h3>
 		<p>
-		Face color - for this to be used a material's [page:Material.vertexColors vertexColors] property
-		must be set to *true*.
+			面的颜色值 - 在被用于指定材质的 [page:Material.vertexColors vertexColors] 属性时，该值必须被设置为
+			*true*。
 		</p>
 
 		<h3>[property:Array vertexNormals]</h3>
 		<p>
-		Array of 3 [page:Vector3 vertex normals].
+			包含三个 [page:Vector3 vertex normals] 的队列。
 		</p>
 
 		<h3>[property:Array vertexColors]</h3>
 		<p>
-		Array of 3 vertex colors - for these to be used a material's [page:Material.vertexColors vertexColors] property
-		must be set to *true*.
+			包含 3 个顶点颜色值的队列 - 在被用于指定材质的 [page:Material.vertexColors vertexColors] 属性时，该值必须被设置为
+			*true*。
 		</p>
-
 
 		<h3>[property:Integer materialIndex]</h3>
 		<p>
-		Material index (points to an index in the associated array of materials). Default is *0*.
+			材质队列中与该面相关的材质的索引。默认值为 *0*。
 		</p>
 
-		<h2>Methods</h2>
+		<h2>方法</h2>
 
 		<h3>[method:Face3 clone]()</h3>
-		<p>Creates a new clone of the Face3 object.</p>
+		<p>克隆该 Face3 对象。</p>
 
 		<h3>[method:Face3 copy]( [param:Face3 face3] )</h3>
-		<p>Copy the parameters of another Face3 into this.</p>
+		<p>将参数指定的 Face3 对象的数据拷贝到当前对象。</p>
 
 
-		<h2>Source</h2>
+		<h2>源代码</h2>
 
 		<p>
 			[link:https://github.com/mrdoob/three.js/blob/master/src/[path].js src/[path].js]
