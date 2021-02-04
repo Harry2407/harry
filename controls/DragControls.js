@@ -1,13 +1,22 @@
-THREE.DragControls = function ( _objects, _camera, _domElement ) {
+import {
+	EventDispatcher,
+	Matrix4,
+	Plane,
+	Raycaster,
+	Vector2,
+	Vector3
+} from '../../../build/three.module.js';
 
-	var _plane = new THREE.Plane();
-	var _raycaster = new THREE.Raycaster();
+var DragControls = function ( _objects, _camera, _domElement ) {
 
-	var _mouse = new THREE.Vector2();
-	var _offset = new THREE.Vector3();
-	var _intersection = new THREE.Vector3();
-	var _worldPosition = new THREE.Vector3();
-	var _inverseMatrix = new THREE.Matrix4();
+	var _plane = new Plane();
+	var _raycaster = new Raycaster();
+
+	var _mouse = new Vector2();
+	var _offset = new Vector3();
+	var _intersection = new Vector3();
+	var _worldPosition = new Vector3();
+	var _inverseMatrix = new Matrix4();
 	var _intersections = [];
 
 	var _selected = null, _hovered = null;
@@ -303,5 +312,7 @@ THREE.DragControls = function ( _objects, _camera, _domElement ) {
 
 };
 
-THREE.DragControls.prototype = Object.create( THREE.EventDispatcher.prototype );
-THREE.DragControls.prototype.constructor = THREE.DragControls;
+DragControls.prototype = Object.create( EventDispatcher.prototype );
+DragControls.prototype.constructor = DragControls;
+
+export { DragControls };

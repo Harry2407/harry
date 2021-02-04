@@ -1,3 +1,8 @@
+import {
+	Vector3,
+	Vector4
+} from '../../../build/three.module.js';
+
 /**
  * NURBS utils
  *
@@ -9,7 +14,7 @@
  *	NURBS Utils
  **************************************************************/
 
-THREE.NURBSUtils = {
+var NURBSUtils = {
 
 	/*
 	Finds knot vector span.
@@ -118,7 +123,7 @@ THREE.NURBSUtils = {
 
 		var span = this.findSpan( p, u, U );
 		var N = this.calcBasisFunctions( span, u, p, U );
-		var C = new THREE.Vector4( 0, 0, 0, 0 );
+		var C = new Vector4( 0, 0, 0, 0 );
 
 		for ( var j = 0; j <= p; ++ j ) {
 
@@ -317,7 +322,7 @@ THREE.NURBSUtils = {
 
 		for ( var k = du + 1; k <= nd + 1; ++ k ) {
 
-			CK[ k ] = new THREE.Vector4( 0, 0, 0 );
+			CK[ k ] = new Vector4( 0, 0, 0 );
 
 		}
 
@@ -376,7 +381,7 @@ THREE.NURBSUtils = {
 		for ( var i = 0; i < nd; ++ i ) {
 
 			var point = Pders[ i ];
-			Aders[ i ] = new THREE.Vector3( point.x, point.y, point.z );
+			Aders[ i ] = new Vector3( point.x, point.y, point.z );
 			wders[ i ] = point.w;
 
 		}
@@ -441,7 +446,7 @@ THREE.NURBSUtils = {
 
 		for ( var l = 0; l <= q; ++ l ) {
 
-			temp[ l ] = new THREE.Vector4( 0, 0, 0, 0 );
+			temp[ l ] = new Vector4( 0, 0, 0, 0 );
 			for ( var k = 0; k <= p; ++ k ) {
 
 				var point = P[ uspan - p + k ][ vspan - q + l ].clone();
@@ -455,7 +460,7 @@ THREE.NURBSUtils = {
 
 		}
 
-		var Sw = new THREE.Vector4( 0, 0, 0, 0 );
+		var Sw = new Vector4( 0, 0, 0, 0 );
 		for ( var l = 0; l <= q; ++ l ) {
 
 			Sw.add( temp[ l ].multiplyScalar( Nv[ l ] ) );
@@ -468,3 +473,5 @@ THREE.NURBSUtils = {
 	}
 
 };
+
+export { NURBSUtils };

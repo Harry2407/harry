@@ -1,9 +1,24 @@
+import {
+	Bone,
+	BoxGeometry,
+	Color,
+	CylinderGeometry,
+	Euler,
+	Matrix4,
+	Mesh,
+	MeshBasicMaterial,
+	Object3D,
+	Quaternion,
+	SphereGeometry,
+	Vector3
+} from '../../../build/three.module.js';
+
 /**
  * Dependencies
  *  - Ammo.js https://github.com/kripken/ammo.js
  *
  * MMDPhysics calculates physics with Ammo(Bullet based JavaScript Physics engine)
- * for MMD model loaded by THREE.MMDLoader.
+ * for MMD model loaded by MMDLoader.
  *
  * TODO
  *  - Physics in Worker
@@ -11,7 +26,7 @@
 
 /* global Ammo */
 
-THREE.MMDPhysics = ( function () {
+var MMDPhysics = ( function () {
 
 	/**
 	 * @param {THREE.SkinnedMesh} mesh
@@ -20,7 +35,7 @@ THREE.MMDPhysics = ( function () {
 	 * @param {Object} params - (optional)
 	 * @param {Number} params.unitStep - Default is 1 / 65.
 	 * @param {Integer} params.maxStepNum - Default is 3.
-	 * @param {THREE.Vector3} params.gravity - Default is ( 0, - 9.8 * 10, 0 )
+	 * @param {Vector3} params.gravity - Default is ( 0, - 9.8 * 10, 0 )
 	 */
 	function MMDPhysics( mesh, rigidBodyParams, constraintParams, params ) {
 
@@ -45,7 +60,7 @@ THREE.MMDPhysics = ( function () {
 		 */
 		this.unitStep = ( params.unitStep !== undefined ) ? params.unitStep : 1 / 65;
 		this.maxStepNum = ( params.maxStepNum !== undefined ) ? params.maxStepNum : 3;
-		this.gravity = new THREE.Vector3( 0, - 9.8 * 10, 0 );
+		this.gravity = new Vector3( 0, - 9.8 * 10, 0 );
 
 		if ( params.gravity !== undefined ) this.gravity.copy( params.gravity );
 
@@ -66,7 +81,7 @@ THREE.MMDPhysics = ( function () {
 		 * Advances Physics calculation and updates bones.
 		 *
 		 * @param {Number} delta - time in second
-		 * @return {THREE.MMDPhysics}
+		 * @return {MMDPhysics}
 		 */
 		update: function ( delta ) {
 
@@ -133,7 +148,7 @@ THREE.MMDPhysics = ( function () {
 		/**
 		 * Resets rigid bodies transorm to current bone's.
 		 *
-		 * @return {THREE.MMDPhysics}
+		 * @return {MMDPhysics}
 		 */
 		reset: function () {
 
@@ -151,7 +166,7 @@ THREE.MMDPhysics = ( function () {
 		 * Warm ups Rigid bodies. Calculates cycles steps.
 		 *
 		 * @param {Integer} cycles
-		 * @return {THREE.MMDPhysics}
+		 * @return {MMDPhysics}
 		 */
 		warmup: function ( cycles ) {
 
@@ -168,7 +183,7 @@ THREE.MMDPhysics = ( function () {
 		/**
 		 * Sets gravity.
 		 *
-		 * @param {THREE.Vector3} gravity
+		 * @param {Vector3} gravity
 		 * @return {MMDPhysicsHelper}
 		 */
 		setGravity: function ( gravity ) {
@@ -359,7 +374,7 @@ THREE.MMDPhysics = ( function () {
 
 			return ( this.threeVector3s.length > 0 )
 				? this.threeVector3s.pop()
-				: new THREE.Vector3();
+				: new Vector3();
 
 		},
 
@@ -373,7 +388,7 @@ THREE.MMDPhysics = ( function () {
 
 			return ( this.threeMatrix4s.length > 0 )
 				? this.threeMatrix4s.pop()
-				: new THREE.Matrix4();
+				: new Matrix4();
 
 		},
 
@@ -387,7 +402,7 @@ THREE.MMDPhysics = ( function () {
 
 			return ( this.threeQuaternions.length > 0 )
 				? this.threeQuaternions.pop()
-				: new THREE.Quaternion();
+				: new Quaternion();
 
 		},
 
@@ -401,7 +416,7 @@ THREE.MMDPhysics = ( function () {
 
 			return ( this.threeEulers.length > 0 )
 				? this.threeEulers.pop()
-				: new THREE.Euler();
+				: new Euler();
 
 		},
 
@@ -904,7 +919,7 @@ THREE.MMDPhysics = ( function () {
 			var params = this.params;
 			var bones = this.mesh.skeleton.bones;
 			var bone = ( params.boneIndex === - 1 )
-				? new THREE.Bone()
+				? new Bone()
 				: bones[ params.boneIndex ];
 
 			var shape = generateShape( params );
@@ -1233,11 +1248,11 @@ THREE.MMDPhysics = ( function () {
 	 * Visualize Rigid bodies
 	 *
 	 * @param {THREE.SkinnedMesh} mesh
-	 * @param {THREE.Physics} physics
+	 * @param {Physics} physics
 	 */
 	function MMDPhysicsHelper( mesh, physics ) {
 
-		THREE.Object3D.call( this );
+		Object3D.call( this );
 
 		this.root = mesh;
 		this.physics = physics;
@@ -1248,8 +1263,8 @@ THREE.MMDPhysics = ( function () {
 		this.materials = [];
 
 		this.materials.push(
-			new THREE.MeshBasicMaterial( {
-				color: new THREE.Color( 0xff8888 ),
+			new MeshBasicMaterial( {
+				color: new Color( 0xff8888 ),
 				wireframe: true,
 				depthTest: false,
 				depthWrite: false,
@@ -1259,8 +1274,8 @@ THREE.MMDPhysics = ( function () {
 		);
 
 		this.materials.push(
-			new THREE.MeshBasicMaterial( {
-				color: new THREE.Color( 0x88ff88 ),
+			new MeshBasicMaterial( {
+				color: new Color( 0x88ff88 ),
 				wireframe: true,
 				depthTest: false,
 				depthWrite: false,
@@ -1270,8 +1285,8 @@ THREE.MMDPhysics = ( function () {
 		);
 
 		this.materials.push(
-			new THREE.MeshBasicMaterial( {
-				color: new THREE.Color( 0x8888ff ),
+			new MeshBasicMaterial( {
+				color: new Color( 0x8888ff ),
 				wireframe: true,
 				depthTest: false,
 				depthWrite: false,
@@ -1284,7 +1299,7 @@ THREE.MMDPhysics = ( function () {
 
 	}
 
-	MMDPhysicsHelper.prototype = Object.assign( Object.create( THREE.Object3D.prototype ), {
+	MMDPhysicsHelper.prototype = Object.assign( Object.create( Object3D.prototype ), {
 
 		constructor: MMDPhysicsHelper,
 
@@ -1293,10 +1308,10 @@ THREE.MMDPhysics = ( function () {
 		 */
 		updateMatrixWorld: function () {
 
-			var position = new THREE.Vector3();
-			var quaternion = new THREE.Quaternion();
-			var scale = new THREE.Vector3();
-			var matrixWorldInv = new THREE.Matrix4();
+			var position = new Vector3();
+			var quaternion = new Quaternion();
+			var scale = new Vector3();
+			var matrixWorldInv = new Matrix4();
 
 			return function updateMatrixWorld( force ) {
 
@@ -1341,7 +1356,7 @@ THREE.MMDPhysics = ( function () {
 					.decompose( position, quaternion, scale )
 					.compose( position, quaternion, scale.set( 1, 1, 1 ) );
 
-				THREE.Object3D.prototype.updateMatrixWorld.call( this, force );
+				Object3D.prototype.updateMatrixWorld.call( this, force );
 
 			};
 
@@ -1358,10 +1373,10 @@ THREE.MMDPhysics = ( function () {
 				switch ( param.shapeType ) {
 
 					case 0:
-						return new THREE.SphereGeometry( param.width, 16, 8 );
+						return new SphereGeometry( param.width, 16, 8 );
 
 					case 1:
-						return new THREE.BoxGeometry( param.width * 2, param.height * 2, param.depth * 2, 8, 8, 8 );
+						return new BoxGeometry( param.width * 2, param.height * 2, param.depth * 2, 8, 8, 8 );
 
 					case 2:
 						return new createCapsuleGeometry( param.width, param.height, 16, 8 );
@@ -1376,9 +1391,9 @@ THREE.MMDPhysics = ( function () {
 			// copy from http://www20.atpages.jp/katwat/three.js_r58/examples/mytest37/mytest37.js?ver=20160815
 			function createCapsuleGeometry( radius, cylinderHeight, segmentsRadius, segmentsHeight ) {
 
-				var geometry = new THREE.CylinderGeometry( radius, radius, cylinderHeight, segmentsRadius, segmentsHeight, true );
-				var upperSphere = new THREE.Mesh( new THREE.SphereGeometry( radius, segmentsRadius, segmentsHeight, 0, Math.PI * 2, 0, Math.PI / 2 ) );
-				var lowerSphere = new THREE.Mesh( new THREE.SphereGeometry( radius, segmentsRadius, segmentsHeight, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2 ) );
+				var geometry = new CylinderGeometry( radius, radius, cylinderHeight, segmentsRadius, segmentsHeight, true );
+				var upperSphere = new Mesh( new SphereGeometry( radius, segmentsRadius, segmentsHeight, 0, Math.PI * 2, 0, Math.PI / 2 ) );
+				var lowerSphere = new Mesh( new SphereGeometry( radius, segmentsRadius, segmentsHeight, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2 ) );
 
 				upperSphere.position.set( 0, cylinderHeight / 2, 0 );
 				lowerSphere.position.set( 0, - cylinderHeight / 2, 0 );
@@ -1396,7 +1411,7 @@ THREE.MMDPhysics = ( function () {
 			for ( var i = 0, il = bodies.length; i < il; i ++ ) {
 
 				var param = bodies[ i ].params;
-				this.add( new THREE.Mesh( createGeometry( param ), this.materials[ param.type ] ) );
+				this.add( new Mesh( createGeometry( param ), this.materials[ param.type ] ) );
 
 			}
 
@@ -1407,3 +1422,5 @@ THREE.MMDPhysics = ( function () {
 	return MMDPhysics;
 
 } )();
+
+export { MMDPhysics };
