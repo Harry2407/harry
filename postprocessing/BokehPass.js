@@ -1,10 +1,23 @@
+import {
+	Color,
+	MeshDepthMaterial,
+	NearestFilter,
+	NoBlending,
+	RGBADepthPacking,
+	ShaderMaterial,
+	UniformsUtils,
+	WebGLRenderTarget
+} from '../../../build/three.module.js';
+import { Pass } from '../postprocessing/Pass.js';
+import { BokehShader } from '../shaders/BokehShader.js';
+
 /**
  * Depth-of-field post-process with bokeh shader
  */
 
-THREE.BokehPass = function ( scene, camera, params ) {
+var BokehPass = function ( scene, camera, params ) {
 
-	THREE.Pass.call( this );
+	Pass.call( this );
 
 	this.scene = scene;
 	this.camera = camera;
@@ -19,29 +32,29 @@ THREE.BokehPass = function ( scene, camera, params ) {
 	var width = params.width || window.innerWidth || 1;
 	var height = params.height || window.innerHeight || 1;
 
-	this.renderTargetDepth = new THREE.WebGLRenderTarget( width, height, {
-		minFilter: THREE.NearestFilter,
-		magFilter: THREE.NearestFilter
+	this.renderTargetDepth = new WebGLRenderTarget( width, height, {
+		minFilter: NearestFilter,
+		magFilter: NearestFilter
 	} );
 
 	this.renderTargetDepth.texture.name = 'BokehPass.depth';
 
 	// depth material
 
-	this.materialDepth = new THREE.MeshDepthMaterial();
-	this.materialDepth.depthPacking = THREE.RGBADepthPacking;
-	this.materialDepth.blending = THREE.NoBlending;
+	this.materialDepth = new MeshDepthMaterial();
+	this.materialDepth.depthPacking = RGBADepthPacking;
+	this.materialDepth.blending = NoBlending;
 
 	// bokeh material
 
-	if ( THREE.BokehShader === undefined ) {
+	if ( BokehShader === undefined ) {
 
-		console.error( 'THREE.BokehPass relies on THREE.BokehShader' );
+		console.error( 'THREE.BokehPass relies on BokehShader' );
 
 	}
 
-	var bokehShader = THREE.BokehShader;
-	var bokehUniforms = THREE.UniformsUtils.clone( bokehShader.uniforms );
+	var bokehShader = BokehShader;
+	var bokehUniforms = UniformsUtils.clone( bokehShader.uniforms );
 
 	bokehUniforms[ 'tDepth' ].value = this.renderTargetDepth.texture;
 
@@ -52,7 +65,7 @@ THREE.BokehPass = function ( scene, camera, params ) {
 	bokehUniforms[ 'nearClip' ].value = camera.near;
 	bokehUniforms[ 'farClip' ].value = camera.far;
 
-	this.materialBokeh = new THREE.ShaderMaterial( {
+	this.materialBokeh = new ShaderMaterial( {
 		defines: Object.assign( {}, bokehShader.defines ),
 		uniforms: bokehUniforms,
 		vertexShader: bokehShader.vertexShader,
@@ -62,15 +75,15 @@ THREE.BokehPass = function ( scene, camera, params ) {
 	this.uniforms = bokehUniforms;
 	this.needsSwap = false;
 
-	this.fsQuad = new THREE.Pass.FullScreenQuad( this.materialBokeh );
+	this.fsQuad = new Pass.FullScreenQuad( this.materialBokeh );
 
-	this._oldClearColor = new THREE.Color();
+	this._oldClearColor = new Color();
 
 };
 
-THREE.BokehPass.prototype = Object.assign( Object.create( THREE.Pass.prototype ), {
+BokehPass.prototype = Object.assign( Object.create( Pass.prototype ), {
 
-	constructor: THREE.BokehPass,
+	constructor: BokehPass,
 
 	render: function ( renderer, writeBuffer, readBuffer/*, deltaTime, maskActive*/ ) {
 
@@ -116,3 +129,5 @@ THREE.BokehPass.prototype = Object.assign( Object.create( THREE.Pass.prototype )
 	}
 
 } );
+
+export { BokehPass };

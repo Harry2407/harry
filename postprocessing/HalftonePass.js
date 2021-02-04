@@ -1,22 +1,29 @@
+import {
+	ShaderMaterial,
+	UniformsUtils
+} from '../../../build/three.module.js';
+import { Pass } from '../postprocessing/Pass.js';
+import { HalftoneShader } from '../shaders/HalftoneShader.js';
+
 /**
- * RGB Halftone pass for three.js effects composer. Requires THREE.HalftoneShader.
+ * RGB Halftone pass for three.js effects composer. Requires HalftoneShader.
  */
 
-THREE.HalftonePass = function ( width, height, params ) {
+var HalftonePass = function ( width, height, params ) {
 
-	THREE.Pass.call( this );
+	Pass.call( this );
 
- 	if ( THREE.HalftoneShader === undefined ) {
+ 	if ( HalftoneShader === undefined ) {
 
- 		console.error( 'THREE.HalftonePass requires THREE.HalftoneShader' );
+ 		console.error( 'THREE.HalftonePass requires HalftoneShader' );
 
  	}
 
- 	this.uniforms = THREE.UniformsUtils.clone( THREE.HalftoneShader.uniforms );
- 	this.material = new THREE.ShaderMaterial( {
+ 	this.uniforms = UniformsUtils.clone( HalftoneShader.uniforms );
+ 	this.material = new ShaderMaterial( {
  		uniforms: this.uniforms,
- 		fragmentShader: THREE.HalftoneShader.fragmentShader,
- 		vertexShader: THREE.HalftoneShader.vertexShader
+ 		fragmentShader: HalftoneShader.fragmentShader,
+ 		vertexShader: HalftoneShader.vertexShader
  	} );
 
 	// set params
@@ -33,13 +40,13 @@ THREE.HalftonePass = function ( width, height, params ) {
 
 	}
 
-	this.fsQuad = new THREE.Pass.FullScreenQuad( this.material );
+	this.fsQuad = new Pass.FullScreenQuad( this.material );
 
 };
 
-THREE.HalftonePass.prototype = Object.assign( Object.create( THREE.Pass.prototype ), {
+HalftonePass.prototype = Object.assign( Object.create( Pass.prototype ), {
 
-	constructor: THREE.HalftonePass,
+	constructor: HalftonePass,
 
 	render: function ( renderer, writeBuffer, readBuffer/*, deltaTime, maskActive*/ ) {
 
@@ -67,3 +74,5 @@ THREE.HalftonePass.prototype = Object.assign( Object.create( THREE.Pass.prototyp
 
  	}
 } );
+
+export { HalftonePass };

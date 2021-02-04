@@ -1,3 +1,15 @@
+import {
+	AdditiveBlending,
+	Color,
+	LinearFilter,
+	RGBAFormat,
+	ShaderMaterial,
+	UniformsUtils,
+	WebGLRenderTarget
+} from '../../../build/three.module.js';
+import { Pass } from '../postprocessing/Pass.js';
+import { CopyShader } from '../shaders/CopyShader.js';
+
 /**
 *
 * Supersample Anti-Aliasing Render Pass
@@ -8,9 +20,9 @@
 *
 */
 
-THREE.SSAARenderPass = function ( scene, camera, clearColor, clearAlpha ) {
+var SSAARenderPass = function ( scene, camera, clearColor, clearAlpha ) {
 
-	THREE.Pass.call( this );
+	Pass.call( this );
 
 	this.scene = scene;
 	this.camera = camera;
@@ -21,31 +33,31 @@ THREE.SSAARenderPass = function ( scene, camera, clearColor, clearAlpha ) {
 	// as we need to clear the buffer in this pass, clearColor must be set to something, defaults to black.
 	this.clearColor = ( clearColor !== undefined ) ? clearColor : 0x000000;
 	this.clearAlpha = ( clearAlpha !== undefined ) ? clearAlpha : 0;
-	this._oldClearColor = new THREE.Color();
+	this._oldClearColor = new Color();
 
-	if ( THREE.CopyShader === undefined ) console.error( 'THREE.SSAARenderPass relies on THREE.CopyShader' );
+	if ( CopyShader === undefined ) console.error( 'THREE.SSAARenderPass relies on CopyShader' );
 
-	var copyShader = THREE.CopyShader;
-	this.copyUniforms = THREE.UniformsUtils.clone( copyShader.uniforms );
+	var copyShader = CopyShader;
+	this.copyUniforms = UniformsUtils.clone( copyShader.uniforms );
 
-	this.copyMaterial = new THREE.ShaderMaterial(	{
+	this.copyMaterial = new ShaderMaterial(	{
 		uniforms: this.copyUniforms,
 		vertexShader: copyShader.vertexShader,
 		fragmentShader: copyShader.fragmentShader,
 		premultipliedAlpha: true,
 		transparent: true,
-		blending: THREE.AdditiveBlending,
+		blending: AdditiveBlending,
 		depthTest: false,
 		depthWrite: false
 	} );
 
-	this.fsQuad = new THREE.Pass.FullScreenQuad( this.copyMaterial );
+	this.fsQuad = new Pass.FullScreenQuad( this.copyMaterial );
 
 };
 
-THREE.SSAARenderPass.prototype = Object.assign( Object.create( THREE.Pass.prototype ), {
+SSAARenderPass.prototype = Object.assign( Object.create( Pass.prototype ), {
 
-	constructor: THREE.SSAARenderPass,
+	constructor: SSAARenderPass,
 
 	dispose: function () {
 
@@ -68,12 +80,12 @@ THREE.SSAARenderPass.prototype = Object.assign( Object.create( THREE.Pass.protot
 
 		if ( ! this.sampleRenderTarget ) {
 
-			this.sampleRenderTarget = new THREE.WebGLRenderTarget( readBuffer.width, readBuffer.height, { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat } );
+			this.sampleRenderTarget = new WebGLRenderTarget( readBuffer.width, readBuffer.height, { minFilter: LinearFilter, magFilter: LinearFilter, format: RGBAFormat } );
 			this.sampleRenderTarget.texture.name = 'SSAARenderPass.sample';
 
 		}
 
-		var jitterOffsets = THREE.SSAARenderPass.JitterVectors[ Math.max( 0, Math.min( this.sampleLevel, 5 ) ) ];
+		var jitterOffsets = SSAARenderPass.JitterVectors[ Math.max( 0, Math.min( this.sampleLevel, 5 ) ) ];
 
 		var autoClear = renderer.autoClear;
 		renderer.autoClear = false;
@@ -147,7 +159,7 @@ THREE.SSAARenderPass.prototype = Object.assign( Object.create( THREE.Pass.protot
 // before being used, thus these integers need to be scaled by 1/16.
 //
 // Sample patterns reference: https://msdn.microsoft.com/en-us/library/windows/desktop/ff476218%28v=vs.85%29.aspx?f=255&MSPPError=-2147217396
-THREE.SSAARenderPass.JitterVectors = [
+SSAARenderPass.JitterVectors = [
 	[
 		[ 0, 0 ]
 	],
@@ -178,3 +190,5 @@ THREE.SSAARenderPass.JitterVectors = [
 		[ 2, 5 ], [ 7, 5 ], [ 5, 6 ], [ 3, 7 ]
 	]
 ];
+
+export { SSAARenderPass };
