@@ -1,4 +1,8 @@
-THREE.GeometryUtils = {
+import {
+	Vector3
+} from '../../../build/three.module.js';
+
+var GeometryUtils = {
 
 	/**
 	 * Generates 2D-Coordinates in a very fast way.
@@ -17,7 +21,7 @@ THREE.GeometryUtils = {
 	hilbert2D: function ( center, size, iterations, v0, v1, v2, v3 ) {
 
 		// Default Vars
-		var center = center !== undefined ? center : new THREE.Vector3( 0, 0, 0 ),
+		var center = center !== undefined ? center : new Vector3( 0, 0, 0 ),
 			size = size !== undefined ? size : 10,
 			half = size / 2,
 			iterations = iterations !== undefined ? iterations : 1,
@@ -28,10 +32,10 @@ THREE.GeometryUtils = {
 		;
 
 		var vec_s = [
-			new THREE.Vector3( center.x - half, center.y, center.z - half ),
-			new THREE.Vector3( center.x - half, center.y, center.z + half ),
-			new THREE.Vector3( center.x + half, center.y, center.z + half ),
-			new THREE.Vector3( center.x + half, center.y, center.z - half )
+			new Vector3( center.x - half, center.y, center.z - half ),
+			new Vector3( center.x - half, center.y, center.z + half ),
+			new Vector3( center.x + half, center.y, center.z + half ),
+			new Vector3( center.x + half, center.y, center.z - half )
 		];
 
 		var vec = [
@@ -46,10 +50,10 @@ THREE.GeometryUtils = {
 
 			var tmp = [];
 
-			Array.prototype.push.apply( tmp, THREE.GeometryUtils.hilbert2D( vec[ 0 ], half, iterations, v0, v3, v2, v1 ) );
-			Array.prototype.push.apply( tmp, THREE.GeometryUtils.hilbert2D( vec[ 1 ], half, iterations, v0, v1, v2, v3 ) );
-			Array.prototype.push.apply( tmp, THREE.GeometryUtils.hilbert2D( vec[ 2 ], half, iterations, v0, v1, v2, v3 ) );
-			Array.prototype.push.apply( tmp, THREE.GeometryUtils.hilbert2D( vec[ 3 ], half, iterations, v2, v1, v0, v3 ) );
+			Array.prototype.push.apply( tmp, GeometryUtils.hilbert2D( vec[ 0 ], half, iterations, v0, v3, v2, v1 ) );
+			Array.prototype.push.apply( tmp, GeometryUtils.hilbert2D( vec[ 1 ], half, iterations, v0, v1, v2, v3 ) );
+			Array.prototype.push.apply( tmp, GeometryUtils.hilbert2D( vec[ 2 ], half, iterations, v0, v1, v2, v3 ) );
+			Array.prototype.push.apply( tmp, GeometryUtils.hilbert2D( vec[ 3 ], half, iterations, v2, v1, v0, v3 ) );
 
 			// Return recursive call
 			return tmp;
@@ -82,7 +86,7 @@ THREE.GeometryUtils = {
 	hilbert3D: function ( center, size, iterations, v0, v1, v2, v3, v4, v5, v6, v7 ) {
 
 		// Default Vars
-		var center = center !== undefined ? center : new THREE.Vector3( 0, 0, 0 ),
+		var center = center !== undefined ? center : new Vector3( 0, 0, 0 ),
 			size = size !== undefined ? size : 10,
 			half = size / 2,
 			iterations = iterations !== undefined ? iterations : 1,
@@ -97,14 +101,14 @@ THREE.GeometryUtils = {
 		;
 
 		var vec_s = [
-			new THREE.Vector3( center.x - half, center.y + half, center.z - half ),
-			new THREE.Vector3( center.x - half, center.y + half, center.z + half ),
-			new THREE.Vector3( center.x - half, center.y - half, center.z + half ),
-			new THREE.Vector3( center.x - half, center.y - half, center.z - half ),
-			new THREE.Vector3( center.x + half, center.y - half, center.z - half ),
-			new THREE.Vector3( center.x + half, center.y - half, center.z + half ),
-			new THREE.Vector3( center.x + half, center.y + half, center.z + half ),
-			new THREE.Vector3( center.x + half, center.y + half, center.z - half )
+			new Vector3( center.x - half, center.y + half, center.z - half ),
+			new Vector3( center.x - half, center.y + half, center.z + half ),
+			new Vector3( center.x - half, center.y - half, center.z + half ),
+			new Vector3( center.x - half, center.y - half, center.z - half ),
+			new Vector3( center.x + half, center.y - half, center.z - half ),
+			new Vector3( center.x + half, center.y - half, center.z + half ),
+			new Vector3( center.x + half, center.y + half, center.z + half ),
+			new Vector3( center.x + half, center.y + half, center.z - half )
 		];
 
 		var vec = [
@@ -123,14 +127,14 @@ THREE.GeometryUtils = {
 
 			var tmp = [];
 
-			Array.prototype.push.apply( tmp, THREE.GeometryUtils.hilbert3D( vec[ 0 ], half, iterations, v0, v3, v4, v7, v6, v5, v2, v1 ) );
-			Array.prototype.push.apply( tmp, THREE.GeometryUtils.hilbert3D( vec[ 1 ], half, iterations, v0, v7, v6, v1, v2, v5, v4, v3 ) );
-			Array.prototype.push.apply( tmp, THREE.GeometryUtils.hilbert3D( vec[ 2 ], half, iterations, v0, v7, v6, v1, v2, v5, v4, v3 ) );
-			Array.prototype.push.apply( tmp, THREE.GeometryUtils.hilbert3D( vec[ 3 ], half, iterations, v2, v3, v0, v1, v6, v7, v4, v5 ) );
-			Array.prototype.push.apply( tmp, THREE.GeometryUtils.hilbert3D( vec[ 4 ], half, iterations, v2, v3, v0, v1, v6, v7, v4, v5 ) );
-			Array.prototype.push.apply( tmp, THREE.GeometryUtils.hilbert3D( vec[ 5 ], half, iterations, v4, v3, v2, v5, v6, v1, v0, v7 ) );
-			Array.prototype.push.apply( tmp, THREE.GeometryUtils.hilbert3D( vec[ 6 ], half, iterations, v4, v3, v2, v5, v6, v1, v0, v7 ) );
-			Array.prototype.push.apply( tmp, THREE.GeometryUtils.hilbert3D( vec[ 7 ], half, iterations, v6, v5, v2, v1, v0, v3, v4, v7 ) );
+			Array.prototype.push.apply( tmp, GeometryUtils.hilbert3D( vec[ 0 ], half, iterations, v0, v3, v4, v7, v6, v5, v2, v1 ) );
+			Array.prototype.push.apply( tmp, GeometryUtils.hilbert3D( vec[ 1 ], half, iterations, v0, v7, v6, v1, v2, v5, v4, v3 ) );
+			Array.prototype.push.apply( tmp, GeometryUtils.hilbert3D( vec[ 2 ], half, iterations, v0, v7, v6, v1, v2, v5, v4, v3 ) );
+			Array.prototype.push.apply( tmp, GeometryUtils.hilbert3D( vec[ 3 ], half, iterations, v2, v3, v0, v1, v6, v7, v4, v5 ) );
+			Array.prototype.push.apply( tmp, GeometryUtils.hilbert3D( vec[ 4 ], half, iterations, v2, v3, v0, v1, v6, v7, v4, v5 ) );
+			Array.prototype.push.apply( tmp, GeometryUtils.hilbert3D( vec[ 5 ], half, iterations, v4, v3, v2, v5, v6, v1, v0, v7 ) );
+			Array.prototype.push.apply( tmp, GeometryUtils.hilbert3D( vec[ 6 ], half, iterations, v4, v3, v2, v5, v6, v1, v0, v7 ) );
+			Array.prototype.push.apply( tmp, GeometryUtils.hilbert3D( vec[ 7 ], half, iterations, v6, v5, v2, v1, v0, v3, v4, v7 ) );
 
 			// Return recursive call
 			return tmp;
@@ -241,3 +245,5 @@ THREE.GeometryUtils = {
 	}
 
 };
+
+export { GeometryUtils };

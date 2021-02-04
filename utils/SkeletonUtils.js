@@ -1,13 +1,26 @@
-THREE.SkeletonUtils = {
+import {
+	AnimationClip,
+	AnimationMixer,
+	Euler,
+	Matrix4,
+	Quaternion,
+	QuaternionKeyframeTrack,
+	SkeletonHelper,
+	Vector2,
+	Vector3,
+	VectorKeyframeTrack
+} from '../../../build/three.module.js';
+
+var SkeletonUtils = {
 
 	retarget: function () {
 
-		var pos = new THREE.Vector3(),
-			quat = new THREE.Quaternion(),
-			scale = new THREE.Vector3(),
-			bindBoneMatrix = new THREE.Matrix4(),
-			relativeMatrix = new THREE.Matrix4(),
-			globalMatrix = new THREE.Matrix4();
+		var pos = new Vector3(),
+			quat = new Quaternion(),
+			scale = new Vector3(),
+			bindBoneMatrix = new Matrix4(),
+			relativeMatrix = new Matrix4(),
+			globalMatrix = new Matrix4();
 
 		return function ( target, source, options ) {
 
@@ -207,7 +220,7 @@ THREE.SkeletonUtils = {
 		var numFrames = Math.round( clip.duration * ( options.fps / 1000 ) * 1000 ),
 			delta = 1 / options.fps,
 			convertedTracks = [],
-			mixer = new THREE.AnimationMixer( source ),
+			mixer = new AnimationMixer( source ),
 			bones = this.getBones( target.skeleton ),
 			boneDatas = [],
 			positionOffset,
@@ -296,7 +309,7 @@ THREE.SkeletonUtils = {
 
 				if ( boneData.pos ) {
 
-					convertedTracks.push( new THREE.VectorKeyframeTrack(
+					convertedTracks.push( new VectorKeyframeTrack(
 						'.bones[' + boneData.bone.name + '].position',
 						boneData.pos.times,
 						boneData.pos.values
@@ -304,7 +317,7 @@ THREE.SkeletonUtils = {
 
 				}
 
-				convertedTracks.push( new THREE.QuaternionKeyframeTrack(
+				convertedTracks.push( new QuaternionKeyframeTrack(
 					'.bones[' + boneData.bone.name + '].quaternion',
 					boneData.quat.times,
 					boneData.quat.values
@@ -316,13 +329,13 @@ THREE.SkeletonUtils = {
 
 		mixer.uncacheAction( clip );
 
-		return new THREE.AnimationClip( clip.name, - 1, convertedTracks );
+		return new AnimationClip( clip.name, - 1, convertedTracks );
 
 	},
 
 	getHelperFromSkeleton: function ( skeleton ) {
 
-		var source = new THREE.SkeletonHelper( skeleton.bones[ 0 ] );
+		var source = new SkeletonHelper( skeleton.bones[ 0 ] );
 		source.skeleton = skeleton;
 
 		return source;
@@ -331,12 +344,12 @@ THREE.SkeletonUtils = {
 
 	getSkeletonOffsets: function () {
 
-		var targetParentPos = new THREE.Vector3(),
-			targetPos = new THREE.Vector3(),
-			sourceParentPos = new THREE.Vector3(),
-			sourcePos = new THREE.Vector3(),
-			targetDir = new THREE.Vector2(),
-			sourceDir = new THREE.Vector2();
+		var targetParentPos = new Vector3(),
+			targetPos = new Vector3(),
+			sourceParentPos = new Vector3(),
+			sourcePos = new Vector3(),
+			targetDir = new Vector2(),
+			sourceDir = new Vector2();
 
 		return function ( target, source, options ) {
 
@@ -382,19 +395,19 @@ THREE.SkeletonUtils = {
 					sourcePos.setFromMatrixPosition( boneTo.matrixWorld );
 
 					targetDir.subVectors(
-						new THREE.Vector2( targetPos.x, targetPos.y ),
-						new THREE.Vector2( targetParentPos.x, targetParentPos.y )
+						new Vector2( targetPos.x, targetPos.y ),
+						new Vector2( targetParentPos.x, targetParentPos.y )
 					).normalize();
 
 					sourceDir.subVectors(
-						new THREE.Vector2( sourcePos.x, sourcePos.y ),
-						new THREE.Vector2( sourceParentPos.x, sourceParentPos.y )
+						new Vector2( sourcePos.x, sourcePos.y ),
+						new Vector2( sourceParentPos.x, sourceParentPos.y )
 					).normalize();
 
 					var laterialAngle = targetDir.angle() - sourceDir.angle();
 
-					var offset = new THREE.Matrix4().makeRotationFromEuler(
-						new THREE.Euler(
+					var offset = new Matrix4().makeRotationFromEuler(
+						new Euler(
 							0,
 							0,
 							laterialAngle
@@ -577,3 +590,5 @@ function parallelTraverse( a, b, callback ) {
 	}
 
 }
+
+export { SkeletonUtils };

@@ -1,4 +1,4 @@
-THREE.WEBGL = {
+var WEBGL = {
 
 	isWebGLAvailable: function () {
 
@@ -87,3 +87,5 @@ THREE.WEBGL = {
 	}
 
 };
+
+export { WEBGL };
