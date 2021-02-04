@@ -1,16 +1,4 @@
-import {
-	Box3,
-	MathUtils,
-	MeshLambertMaterial,
-	Object3D,
-	TextureLoader,
-	UVMapping,
-	sRGBEncoding
-} from '../../../build/three.module.js';
-import { MD2Loader } from '../loaders/MD2Loader.js';
-import { MorphBlendMesh } from '../misc/MorphBlendMesh.js';
-
-var MD2CharacterComplex = function () {
+THREE.MD2CharacterComplex = function () {
 
 	var scope = this;
 
@@ -35,7 +23,7 @@ var MD2CharacterComplex = function () {
 
 	// rig
 
-	this.root = new Object3D();
+	this.root = new THREE.Object3D();
 
 	this.meshBody = null;
 	this.meshWeapon = null;
@@ -160,11 +148,11 @@ var MD2CharacterComplex = function () {
 
 		// BODY
 
-		var loader = new MD2Loader();
+		var loader = new THREE.MD2Loader();
 
 		loader.load( config.baseUrl + config.body, function ( geo ) {
 
-			var boundingBox = new Box3();
+			var boundingBox = new THREE.Box3();
 			boundingBox.setFromBufferAttribute( geo.attributes.position );
 
 			scope.root.position.y = - scope.scale * boundingBox.min.y;
@@ -459,8 +447,8 @@ var MD2CharacterComplex = function () {
 
 		this.maxReverseSpeed = - this.maxSpeed;
 
-		if ( controls.moveForward ) this.speed = MathUtils.clamp( this.speed + delta * this.frontAcceleration, this.maxReverseSpeed, this.maxSpeed );
-		if ( controls.moveBackward ) this.speed = MathUtils.clamp( this.speed - delta * this.backAcceleration, this.maxReverseSpeed, this.maxSpeed );
+		if ( controls.moveForward ) this.speed = THREE.MathUtils.clamp( this.speed + delta * this.frontAcceleration, this.maxReverseSpeed, this.maxSpeed );
+		if ( controls.moveBackward ) this.speed = THREE.MathUtils.clamp( this.speed - delta * this.backAcceleration, this.maxReverseSpeed, this.maxSpeed );
 
 		// orientation based on controls
 		// (don't just stand while turning)
@@ -470,14 +458,14 @@ var MD2CharacterComplex = function () {
 		if ( controls.moveLeft ) {
 
 			this.bodyOrientation += delta * this.angularSpeed;
-			this.speed = MathUtils.clamp( this.speed + dir * delta * this.frontAcceleration, this.maxReverseSpeed, this.maxSpeed );
+			this.speed = THREE.MathUtils.clamp( this.speed + dir * delta * this.frontAcceleration, this.maxReverseSpeed, this.maxSpeed );
 
 		}
 
 		if ( controls.moveRight ) {
 
 			this.bodyOrientation -= delta * this.angularSpeed;
-			this.speed = MathUtils.clamp( this.speed + dir * delta * this.frontAcceleration, this.maxReverseSpeed, this.maxSpeed );
+			this.speed = THREE.MathUtils.clamp( this.speed + dir * delta * this.frontAcceleration, this.maxReverseSpeed, this.maxSpeed );
 
 		}
 
@@ -488,12 +476,12 @@ var MD2CharacterComplex = function () {
 			if ( this.speed > 0 ) {
 
 				var k = exponentialEaseOut( this.speed / this.maxSpeed );
-				this.speed = MathUtils.clamp( this.speed - k * delta * this.frontDecceleration, 0, this.maxSpeed );
+				this.speed = THREE.MathUtils.clamp( this.speed - k * delta * this.frontDecceleration, 0, this.maxSpeed );
 
 			} else {
 
 				var k = exponentialEaseOut( this.speed / this.maxReverseSpeed );
-				this.speed = MathUtils.clamp( this.speed + k * delta * this.backAcceleration, this.maxReverseSpeed, 0 );
+				this.speed = THREE.MathUtils.clamp( this.speed + k * delta * this.backAcceleration, this.maxReverseSpeed, 0 );
 
 			}
 
@@ -516,15 +504,15 @@ var MD2CharacterComplex = function () {
 
 	function loadTextures( baseUrl, textureUrls ) {
 
-		var textureLoader = new TextureLoader();
+		var textureLoader = new THREE.TextureLoader();
 		var textures = [];
 
 		for ( var i = 0; i < textureUrls.length; i ++ ) {
 
 			textures[ i ] = textureLoader.load( baseUrl + textureUrls[ i ], checkLoadingComplete );
-			textures[ i ].mapping = UVMapping;
+			textures[ i ].mapping = THREE.UVMapping;
 			textures[ i ].name = textureUrls[ i ];
-			textures[ i ].encoding = sRGBEncoding;
+			textures[ i ].encoding = THREE.sRGBEncoding;
 
 		}
 
@@ -534,12 +522,12 @@ var MD2CharacterComplex = function () {
 
 	function createPart( geometry, skinMap ) {
 
-		var materialWireframe = new MeshLambertMaterial( { color: 0xffaa00, wireframe: true, morphTargets: true, morphNormals: true } );
-		var materialTexture = new MeshLambertMaterial( { color: 0xffffff, wireframe: false, map: skinMap, morphTargets: true, morphNormals: true } );
+		var materialWireframe = new THREE.MeshLambertMaterial( { color: 0xffaa00, wireframe: true, morphTargets: true, morphNormals: true } );
+		var materialTexture = new THREE.MeshLambertMaterial( { color: 0xffffff, wireframe: false, map: skinMap, morphTargets: true, morphNormals: true } );
 
 		//
 
-		var mesh = new MorphBlendMesh( geometry, materialTexture );
+		var mesh = new THREE.MorphBlendMesh( geometry, materialTexture );
 		mesh.rotation.y = - Math.PI / 2;
 
 		//
@@ -569,5 +557,3 @@ var MD2CharacterComplex = function () {
 	}
 
 };
-
-export { MD2CharacterComplex };

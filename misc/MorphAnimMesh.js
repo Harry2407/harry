@@ -1,36 +1,30 @@
-import {
-	AnimationClip,
-	AnimationMixer,
-	Mesh
-} from '../../../build/three.module.js';
+THREE.MorphAnimMesh = function ( geometry, material ) {
 
-var MorphAnimMesh = function ( geometry, material ) {
-
-	Mesh.call( this, geometry, material );
+	THREE.Mesh.call( this, geometry, material );
 
 	this.type = 'MorphAnimMesh';
 
-	this.mixer = new AnimationMixer( this );
+	this.mixer = new THREE.AnimationMixer( this );
 	this.activeAction = null;
 
 };
 
-MorphAnimMesh.prototype = Object.create( Mesh.prototype );
-MorphAnimMesh.prototype.constructor = MorphAnimMesh;
+THREE.MorphAnimMesh.prototype = Object.create( THREE.Mesh.prototype );
+THREE.MorphAnimMesh.prototype.constructor = THREE.MorphAnimMesh;
 
-MorphAnimMesh.prototype.setDirectionForward = function () {
+THREE.MorphAnimMesh.prototype.setDirectionForward = function () {
 
 	this.mixer.timeScale = 1.0;
 
 };
 
-MorphAnimMesh.prototype.setDirectionBackward = function () {
+THREE.MorphAnimMesh.prototype.setDirectionBackward = function () {
 
 	this.mixer.timeScale = - 1.0;
 
 };
 
-MorphAnimMesh.prototype.playAnimation = function ( label, fps ) {
+THREE.MorphAnimMesh.prototype.playAnimation = function ( label, fps ) {
 
 	if ( this.activeAction ) {
 
@@ -39,7 +33,7 @@ MorphAnimMesh.prototype.playAnimation = function ( label, fps ) {
 
 	}
 
-	var clip = AnimationClip.findByName( this, label );
+	var clip = THREE.AnimationClip.findByName( this, label );
 
 	if ( clip ) {
 
@@ -55,20 +49,18 @@ MorphAnimMesh.prototype.playAnimation = function ( label, fps ) {
 
 };
 
-MorphAnimMesh.prototype.updateAnimation = function ( delta ) {
+THREE.MorphAnimMesh.prototype.updateAnimation = function ( delta ) {
 
 	this.mixer.update( delta );
 
 };
 
-MorphAnimMesh.prototype.copy = function ( source ) {
+THREE.MorphAnimMesh.prototype.copy = function ( source ) {
 
-	Mesh.prototype.copy.call( this, source );
+	THREE.Mesh.prototype.copy.call( this, source );
 
-	this.mixer = new AnimationMixer( this );
+	this.mixer = new THREE.AnimationMixer( this );
 
 	return this;
 
 };
-
-export { MorphAnimMesh };

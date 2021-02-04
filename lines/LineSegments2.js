@@ -1,37 +1,24 @@
-import {
-	InstancedInterleavedBuffer,
-	InterleavedBufferAttribute,
-	Line3,
-	MathUtils,
-	Matrix4,
-	Mesh,
-	Vector3,
-	Vector4
-} from '../../../build/three.module.js';
-import { LineSegmentsGeometry } from '../lines/LineSegmentsGeometry.js';
-import { LineMaterial } from '../lines/LineMaterial.js';
+THREE.LineSegments2 = function ( geometry, material ) {
 
-var LineSegments2 = function ( geometry, material ) {
+	if ( geometry === undefined ) geometry = new THREE.LineSegmentsGeometry();
+	if ( material === undefined ) material = new THREE.LineMaterial( { color: Math.random() * 0xffffff } );
 
-	if ( geometry === undefined ) geometry = new LineSegmentsGeometry();
-	if ( material === undefined ) material = new LineMaterial( { color: Math.random() * 0xffffff } );
-
-	Mesh.call( this, geometry, material );
+	THREE.Mesh.call( this, geometry, material );
 
 	this.type = 'LineSegments2';
 
 };
 
-LineSegments2.prototype = Object.assign( Object.create( Mesh.prototype ), {
+THREE.LineSegments2.prototype = Object.assign( Object.create( THREE.Mesh.prototype ), {
 
-	constructor: LineSegments2,
+	constructor: THREE.LineSegments2,
 
 	isLineSegments2: true,
 
 	computeLineDistances: ( function () { // for backwards-compatability, but could be a method of LineSegmentsGeometry...
 
-		var start = new Vector3();
-		var end = new Vector3();
+		var start = new THREE.Vector3();
+		var end = new THREE.Vector3();
 
 		return function computeLineDistances() {
 
@@ -51,10 +38,10 @@ LineSegments2.prototype = Object.assign( Object.create( Mesh.prototype ), {
 
 			}
 
-			var instanceDistanceBuffer = new InstancedInterleavedBuffer( lineDistances, 2, 1 ); // d0, d1
+			var instanceDistanceBuffer = new THREE.InstancedInterleavedBuffer( lineDistances, 2, 1 ); // d0, d1
 
-			geometry.setAttribute( 'instanceDistanceStart', new InterleavedBufferAttribute( instanceDistanceBuffer, 1, 0 ) ); // d0
-			geometry.setAttribute( 'instanceDistanceEnd', new InterleavedBufferAttribute( instanceDistanceBuffer, 1, 1 ) ); // d1
+			geometry.setAttribute( 'instanceDistanceStart', new THREE.InterleavedBufferAttribute( instanceDistanceBuffer, 1, 0 ) ); // d0
+			geometry.setAttribute( 'instanceDistanceEnd', new THREE.InterleavedBufferAttribute( instanceDistanceBuffer, 1, 1 ) ); // d1
 
 			return this;
 
@@ -64,14 +51,14 @@ LineSegments2.prototype = Object.assign( Object.create( Mesh.prototype ), {
 
 	raycast: ( function () {
 
-		var start = new Vector4();
-		var end = new Vector4();
+		var start = new THREE.Vector4();
+		var end = new THREE.Vector4();
 
-		var ssOrigin = new Vector4();
-		var ssOrigin3 = new Vector3();
-		var mvMatrix = new Matrix4();
-		var line = new Line3();
-		var closestPoint = new Vector3();
+		var ssOrigin = new THREE.Vector4();
+		var ssOrigin3 = new THREE.Vector3();
+		var mvMatrix = new THREE.Matrix4();
+		var line = new THREE.Line3();
+		var closestPoint = new THREE.Vector3();
 
 		return function raycast( raycaster, intersects ) {
 
@@ -181,7 +168,7 @@ LineSegments2.prototype = Object.assign( Object.create( Mesh.prototype ), {
 				line.at( param, closestPoint );
 
 				// check if the intersection point is within clip space
-				var zPos = MathUtils.lerp( start.z, end.z, param );
+				var zPos = THREE.MathUtils.lerp( start.z, end.z, param );
 				var isInClipSpace = zPos >= - 1 && zPos <= 1;
 
 				var isInside = ssOrigin3.distanceTo( closestPoint ) < lineWidth * 0.5;
@@ -194,8 +181,8 @@ LineSegments2.prototype = Object.assign( Object.create( Mesh.prototype ), {
 					line.start.applyMatrix4( matrixWorld );
 					line.end.applyMatrix4( matrixWorld );
 
-					var pointOnLine = new Vector3();
-					var point = new Vector3();
+					var pointOnLine = new THREE.Vector3();
+					var point = new THREE.Vector3();
 
 					ray.distanceSqToSegment( line.start, line.end, point, pointOnLine );
 
@@ -222,5 +209,3 @@ LineSegments2.prototype = Object.assign( Object.create( Mesh.prototype ), {
 	}() )
 
 } );
-
-export { LineSegments2 };

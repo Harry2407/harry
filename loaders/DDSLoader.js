@@ -1,21 +1,12 @@
-import {
-	CompressedTextureLoader,
-	RGBAFormat,
-	RGBA_S3TC_DXT3_Format,
-	RGBA_S3TC_DXT5_Format,
-	RGB_ETC1_Format,
-	RGB_S3TC_DXT1_Format
-} from '../../../build/three.module.js';
+THREE.DDSLoader = function ( manager ) {
 
-var DDSLoader = function ( manager ) {
-
-	CompressedTextureLoader.call( this, manager );
+	THREE.CompressedTextureLoader.call( this, manager );
 
 };
 
-DDSLoader.prototype = Object.assign( Object.create( CompressedTextureLoader.prototype ), {
+THREE.DDSLoader.prototype = Object.assign( Object.create( THREE.CompressedTextureLoader.prototype ), {
 
-	constructor: DDSLoader,
+	constructor: THREE.DDSLoader,
 
 	parse: function ( buffer, loadMipmaps ) {
 
@@ -166,25 +157,25 @@ DDSLoader.prototype = Object.assign( Object.create( CompressedTextureLoader.prot
 			case FOURCC_DXT1:
 
 				blockBytes = 8;
-				dds.format = RGB_S3TC_DXT1_Format;
+				dds.format = THREE.RGB_S3TC_DXT1_Format;
 				break;
 
 			case FOURCC_DXT3:
 
 				blockBytes = 16;
-				dds.format = RGBA_S3TC_DXT3_Format;
+				dds.format = THREE.RGBA_S3TC_DXT3_Format;
 				break;
 
 			case FOURCC_DXT5:
 
 				blockBytes = 16;
-				dds.format = RGBA_S3TC_DXT5_Format;
+				dds.format = THREE.RGBA_S3TC_DXT5_Format;
 				break;
 
 			case FOURCC_ETC1:
 
 				blockBytes = 8;
-				dds.format = RGB_ETC1_Format;
+				dds.format = THREE.RGB_ETC1_Format;
 				break;
 
 			default:
@@ -197,7 +188,7 @@ DDSLoader.prototype = Object.assign( Object.create( CompressedTextureLoader.prot
 
 					isRGBAUncompressed = true;
 					blockBytes = 64;
-					dds.format = RGBAFormat;
+					dds.format = THREE.RGBAFormat;
 
 				} else {
 
@@ -277,5 +268,3 @@ DDSLoader.prototype = Object.assign( Object.create( CompressedTextureLoader.prot
 	}
 
 } );
-
-export { DDSLoader };

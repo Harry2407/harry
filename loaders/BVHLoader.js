@@ -1,40 +1,28 @@
-import {
-	AnimationClip,
-	Bone,
-	FileLoader,
-	Loader,
-	Quaternion,
-	QuaternionKeyframeTrack,
-	Skeleton,
-	Vector3,
-	VectorKeyframeTrack
-} from '../../../build/three.module.js';
-
 /**
- * Description: reads BVH files and outputs a single Skeleton and an AnimationClip
+ * Description: reads BVH files and outputs a single THREE.Skeleton and an THREE.AnimationClip
  *
  * Currently only supports bvh files containing a single root.
  *
  */
 
-var BVHLoader = function ( manager ) {
+THREE.BVHLoader = function ( manager ) {
 
-	Loader.call( this, manager );
+	THREE.Loader.call( this, manager );
 
 	this.animateBonePositions = true;
 	this.animateBoneRotations = true;
 
 };
 
-BVHLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
+THREE.BVHLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype ), {
 
-	constructor: BVHLoader,
+	constructor: THREE.BVHLoader,
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
 		var scope = this;
 
-		var loader = new FileLoader( scope.manager );
+		var loader = new THREE.FileLoader( scope.manager );
 		loader.setPath( scope.path );
 		loader.setRequestHeader( scope.requestHeader );
 		loader.setWithCredentials( scope.withCredentials );
@@ -149,17 +137,17 @@ BVHLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 			var keyframe = {
 				time: frameTime,
-				position: new Vector3(),
-				rotation: new Quaternion()
+				position: new THREE.Vector3(),
+				rotation: new THREE.Quaternion()
 			};
 
 			bone.frames.push( keyframe );
 
-			var quat = new Quaternion();
+			var quat = new THREE.Quaternion();
 
-			var vx = new Vector3( 1, 0, 0 );
-			var vy = new Vector3( 0, 1, 0 );
-			var vz = new Vector3( 0, 0, 1 );
+			var vx = new THREE.Vector3( 1, 0, 0 );
+			var vy = new THREE.Vector3( 0, 1, 0 );
+			var vz = new THREE.Vector3( 0, 0, 1 );
 
 			// parse values for each channel in node
 
@@ -257,7 +245,7 @@ BVHLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 			}
 
-			var offset = new Vector3(
+			var offset = new THREE.Vector3(
 				parseFloat( tokens[ 1 ] ),
 				parseFloat( tokens[ 2 ] ),
 				parseFloat( tokens[ 3 ] )
@@ -310,16 +298,16 @@ BVHLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 		}
 
 		/*
-			recursively converts the internal bvh node structure to a Bone hierarchy
+			recursively converts the internal bvh node structure to a THREE.Bone hierarchy
 
 			source: the bvh root node
 			list: pass an empty array, collects a flat list of all converted THREE.Bones
 
-			returns the root Bone
+			returns the root THREE.Bone
 		*/
 		function toTHREEBone( source, list ) {
 
-			var bone = new Bone();
+			var bone = new THREE.Bone();
 			list.push( bone );
 
 			bone.position.add( source.offset );
@@ -340,11 +328,11 @@ BVHLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 		}
 
 		/*
-			builds a AnimationClip from the keyframe data saved in each bone.
+			builds a THREE.AnimationClip from the keyframe data saved in each bone.
 
 			bone: bvh root node
 
-			returns: a AnimationClip containing position and quaternion tracks
+			returns: a THREE.AnimationClip containing position and quaternion tracks
 		*/
 		function toTHREEAnimation( bones ) {
 
@@ -387,19 +375,19 @@ BVHLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 				if ( scope.animateBonePositions ) {
 
-					tracks.push( new VectorKeyframeTrack( '.bones[' + bone.name + '].position', times, positions ) );
+					tracks.push( new THREE.VectorKeyframeTrack( '.bones[' + bone.name + '].position', times, positions ) );
 
 				}
 
 				if ( scope.animateBoneRotations ) {
 
-					tracks.push( new QuaternionKeyframeTrack( '.bones[' + bone.name + '].quaternion', times, rotations ) );
+					tracks.push( new THREE.QuaternionKeyframeTrack( '.bones[' + bone.name + '].quaternion', times, rotations ) );
 
 				}
 
 			}
 
-			return new AnimationClip( 'animation', - 1, tracks );
+			return new THREE.AnimationClip( 'animation', - 1, tracks );
 
 		}
 
@@ -428,12 +416,10 @@ BVHLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 		var threeClip = toTHREEAnimation( bones );
 
 		return {
-			skeleton: new Skeleton( threeBones ),
+			skeleton: new THREE.Skeleton( threeBones ),
 			clip: threeClip
 		};
 
 	}
 
 } );
-
-export { BVHLoader };

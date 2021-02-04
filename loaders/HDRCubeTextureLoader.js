@@ -1,32 +1,15 @@
-import {
-	CubeTexture,
-	DataTexture,
-	FileLoader,
-	FloatType,
-	HalfFloatType,
-	LinearEncoding,
-	LinearFilter,
-	Loader,
-	NearestFilter,
-	RGBAFormat,
-	RGBEEncoding,
-	RGBFormat,
-	UnsignedByteType
-} from '../../../build/three.module.js';
-import { RGBELoader } from '../loaders/RGBELoader.js';
+THREE.HDRCubeTextureLoader = function ( manager ) {
 
-var HDRCubeTextureLoader = function ( manager ) {
+	THREE.Loader.call( this, manager );
 
-	Loader.call( this, manager );
-
-	this.hdrLoader = new RGBELoader();
-	this.type = UnsignedByteType;
+	this.hdrLoader = new THREE.RGBELoader();
+	this.type = THREE.UnsignedByteType;
 
 };
 
-HDRCubeTextureLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
+THREE.HDRCubeTextureLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype ), {
 
-	constructor: HDRCubeTextureLoader,
+	constructor: THREE.HDRCubeTextureLoader,
 
 	load: function ( urls, onLoad, onProgress, onError ) {
 
@@ -43,36 +26,36 @@ HDRCubeTextureLoader.prototype = Object.assign( Object.create( Loader.prototype 
 
 		}
 
-		var texture = new CubeTexture();
+		var texture = new THREE.CubeTexture();
 
 		texture.type = this.type;
 
 		switch ( texture.type ) {
 
-			case UnsignedByteType:
+			case THREE.UnsignedByteType:
 
-				texture.encoding = RGBEEncoding;
-				texture.format = RGBAFormat;
-				texture.minFilter = NearestFilter;
-				texture.magFilter = NearestFilter;
+				texture.encoding = THREE.RGBEEncoding;
+				texture.format = THREE.RGBAFormat;
+				texture.minFilter = THREE.NearestFilter;
+				texture.magFilter = THREE.NearestFilter;
 				texture.generateMipmaps = false;
 				break;
 
-			case FloatType:
+			case THREE.FloatType:
 
-				texture.encoding = LinearEncoding;
-				texture.format = RGBFormat;
-				texture.minFilter = LinearFilter;
-				texture.magFilter = LinearFilter;
+				texture.encoding = THREE.LinearEncoding;
+				texture.format = THREE.RGBFormat;
+				texture.minFilter = THREE.LinearFilter;
+				texture.magFilter = THREE.LinearFilter;
 				texture.generateMipmaps = false;
 				break;
 
-			case HalfFloatType:
+			case THREE.HalfFloatType:
 
-				texture.encoding = LinearEncoding;
-				texture.format = RGBFormat;
-				texture.minFilter = LinearFilter;
-				texture.magFilter = LinearFilter;
+				texture.encoding = THREE.LinearEncoding;
+				texture.format = THREE.RGBFormat;
+				texture.minFilter = THREE.LinearFilter;
+				texture.magFilter = THREE.LinearFilter;
 				texture.generateMipmaps = false;
 				break;
 
@@ -84,7 +67,7 @@ HDRCubeTextureLoader.prototype = Object.assign( Object.create( Loader.prototype 
 
 		function loadHDRData( i, onLoad, onProgress, onError ) {
 
-			new FileLoader( scope.manager )
+			new THREE.FileLoader( scope.manager )
 				.setPath( scope.path )
 				.setResponseType( 'arraybuffer' )
 				.setWithCredentials( scope.withCredentials )
@@ -98,7 +81,7 @@ HDRCubeTextureLoader.prototype = Object.assign( Object.create( Loader.prototype 
 
 					if ( texData.data !== undefined ) {
 
-						var dataTexture = new DataTexture( texData.data, texData.width, texData.height );
+						var dataTexture = new THREE.DataTexture( texData.data, texData.width, texData.height );
 
 						dataTexture.type = texture.type;
 						dataTexture.encoding = texture.encoding;
@@ -142,5 +125,3 @@ HDRCubeTextureLoader.prototype = Object.assign( Object.create( Loader.prototype 
 	}
 
 } );
-
-export { HDRCubeTextureLoader };

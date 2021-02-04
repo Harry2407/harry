@@ -1,23 +1,11 @@
-import {
-	AnimationMixer,
-	Box3,
-	Mesh,
-	MeshLambertMaterial,
-	Object3D,
-	TextureLoader,
-	UVMapping,
-	sRGBEncoding
-} from '../../../build/three.module.js';
-import { MD2Loader } from '../loaders/MD2Loader.js';
-
-var MD2Character = function () {
+THREE.MD2Character = function () {
 
 	var scope = this;
 
 	this.scale = 1;
 	this.animationFPS = 6;
 
-	this.root = new Object3D();
+	this.root = new THREE.Object3D();
 
 	this.meshBody = null;
 	this.meshWeapon = null;
@@ -48,11 +36,11 @@ var MD2Character = function () {
 
 		// BODY
 
-		var loader = new MD2Loader();
+		var loader = new THREE.MD2Loader();
 
 		loader.load( config.baseUrl + config.body, function ( geo ) {
 
-			var boundingBox = new Box3();
+			var boundingBox = new THREE.Box3();
 			boundingBox.setFromBufferAttribute( geo.attributes.position );
 
 			scope.root.position.y = - scope.scale * boundingBox.min.y;
@@ -67,7 +55,7 @@ var MD2Character = function () {
 			scope.meshBody.clipOffset = 0;
 			scope.activeAnimationClipName = mesh.geometry.animations[ 0 ].name;
 
-			scope.mixer = new AnimationMixer( mesh );
+			scope.mixer = new THREE.AnimationMixer( mesh );
 
 			checkLoadingComplete();
 
@@ -221,15 +209,15 @@ var MD2Character = function () {
 
 	function loadTextures( baseUrl, textureUrls ) {
 
-		var textureLoader = new TextureLoader();
+		var textureLoader = new THREE.TextureLoader();
 		var textures = [];
 
 		for ( var i = 0; i < textureUrls.length; i ++ ) {
 
 			textures[ i ] = textureLoader.load( baseUrl + textureUrls[ i ], checkLoadingComplete );
-			textures[ i ].mapping = UVMapping;
+			textures[ i ].mapping = THREE.UVMapping;
 			textures[ i ].name = textureUrls[ i ];
-			textures[ i ].encoding = sRGBEncoding;
+			textures[ i ].encoding = THREE.sRGBEncoding;
 
 		}
 
@@ -239,12 +227,12 @@ var MD2Character = function () {
 
 	function createPart( geometry, skinMap ) {
 
-		var materialWireframe = new MeshLambertMaterial( { color: 0xffaa00, wireframe: true, morphTargets: true, morphNormals: true } );
-		var materialTexture = new MeshLambertMaterial( { color: 0xffffff, wireframe: false, map: skinMap, morphTargets: true, morphNormals: true } );
+		var materialWireframe = new THREE.MeshLambertMaterial( { color: 0xffaa00, wireframe: true, morphTargets: true, morphNormals: true } );
+		var materialTexture = new THREE.MeshLambertMaterial( { color: 0xffffff, wireframe: false, map: skinMap, morphTargets: true, morphNormals: true } );
 
 		//
 
-		var mesh = new Mesh( geometry, materialTexture );
+		var mesh = new THREE.Mesh( geometry, materialTexture );
 		mesh.rotation.y = - Math.PI / 2;
 
 		mesh.castShadow = true;
@@ -268,5 +256,3 @@ var MD2Character = function () {
 	}
 
 };
-
-export { MD2Character };

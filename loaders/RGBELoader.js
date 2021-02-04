@@ -1,31 +1,17 @@
-import {
-	DataTextureLoader,
-	DataUtils,
-	FloatType,
-	HalfFloatType,
-	LinearEncoding,
-	LinearFilter,
-	NearestFilter,
-	RGBEEncoding,
-	RGBEFormat,
-	RGBFormat,
-	UnsignedByteType
-} from '../../../build/three.module.js';
-
 // https://github.com/mrdoob/three.js/issues/5552
 // http://en.wikipedia.org/wiki/RGBE_image_format
 
-var RGBELoader = function ( manager ) {
+THREE.RGBELoader = function ( manager ) {
 
-	DataTextureLoader.call( this, manager );
+	THREE.DataTextureLoader.call( this, manager );
 
-	this.type = UnsignedByteType;
+	this.type = THREE.UnsignedByteType;
 
 };
 
-RGBELoader.prototype = Object.assign( Object.create( DataTextureLoader.prototype ), {
+THREE.RGBELoader.prototype = Object.assign( Object.create( THREE.DataTextureLoader.prototype ), {
 
-	constructor: RGBELoader,
+	constructor: THREE.RGBELoader,
 
 	// adapted from http://www.graphics.cornell.edu/~bjw/rgbe.html
 
@@ -352,9 +338,9 @@ RGBELoader.prototype = Object.assign( Object.create( DataTextureLoader.prototype
 			var e = sourceArray[ sourceOffset + 3 ];
 			var scale = Math.pow( 2.0, e - 128.0 ) / 255.0;
 
-			destArray[ destOffset + 0 ] = DataUtils.toHalfFloat( sourceArray[ sourceOffset + 0 ] * scale );
-			destArray[ destOffset + 1 ] = DataUtils.toHalfFloat( sourceArray[ sourceOffset + 1 ] * scale );
-			destArray[ destOffset + 2 ] = DataUtils.toHalfFloat( sourceArray[ sourceOffset + 2 ] * scale );
+			destArray[ destOffset + 0 ] = THREE.DataUtils.toHalfFloat( sourceArray[ sourceOffset + 0 ] * scale );
+			destArray[ destOffset + 1 ] = THREE.DataUtils.toHalfFloat( sourceArray[ sourceOffset + 1 ] * scale );
+			destArray[ destOffset + 2 ] = THREE.DataUtils.toHalfFloat( sourceArray[ sourceOffset + 2 ] * scale );
 
 		};
 
@@ -372,14 +358,14 @@ RGBELoader.prototype = Object.assign( Object.create( DataTextureLoader.prototype
 
 				switch ( this.type ) {
 
-					case UnsignedByteType:
+					case THREE.UnsignedByteType:
 
 						var data = image_rgba_data;
-						var format = RGBEFormat; // handled as THREE.RGBAFormat in shaders
-						var type = UnsignedByteType;
+						var format = THREE.RGBEFormat; // handled as THREE.RGBAFormat in shaders
+						var type = THREE.UnsignedByteType;
 						break;
 
-					case FloatType:
+					case THREE.FloatType:
 
 						var numElements = ( image_rgba_data.length / 4 ) * 3;
 						var floatArray = new Float32Array( numElements );
@@ -391,11 +377,11 @@ RGBELoader.prototype = Object.assign( Object.create( DataTextureLoader.prototype
 						}
 
 						var data = floatArray;
-						var format = RGBFormat;
-						var type = FloatType;
+						var format = THREE.RGBFormat;
+						var type = THREE.FloatType;
 						break;
 
-					case HalfFloatType:
+					case THREE.HalfFloatType:
 
 						var numElements = ( image_rgba_data.length / 4 ) * 3;
 						var halfArray = new Uint16Array( numElements );
@@ -407,8 +393,8 @@ RGBELoader.prototype = Object.assign( Object.create( DataTextureLoader.prototype
 						}
 
 						var data = halfArray;
-						var format = RGBFormat;
-						var type = HalfFloatType;
+						var format = THREE.RGBFormat;
+						var type = THREE.HalfFloatType;
 						break;
 
 					default:
@@ -449,29 +435,29 @@ RGBELoader.prototype = Object.assign( Object.create( DataTextureLoader.prototype
 
 			switch ( texture.type ) {
 
-				case UnsignedByteType:
+				case THREE.UnsignedByteType:
 
-					texture.encoding = RGBEEncoding;
-					texture.minFilter = NearestFilter;
-					texture.magFilter = NearestFilter;
+					texture.encoding = THREE.RGBEEncoding;
+					texture.minFilter = THREE.NearestFilter;
+					texture.magFilter = THREE.NearestFilter;
 					texture.generateMipmaps = false;
 					texture.flipY = true;
 					break;
 
-				case FloatType:
+				case THREE.FloatType:
 
-					texture.encoding = LinearEncoding;
-					texture.minFilter = LinearFilter;
-					texture.magFilter = LinearFilter;
+					texture.encoding = THREE.LinearEncoding;
+					texture.minFilter = THREE.LinearFilter;
+					texture.magFilter = THREE.LinearFilter;
 					texture.generateMipmaps = false;
 					texture.flipY = true;
 					break;
 
-				case HalfFloatType:
+				case THREE.HalfFloatType:
 
-					texture.encoding = LinearEncoding;
-					texture.minFilter = LinearFilter;
-					texture.magFilter = LinearFilter;
+					texture.encoding = THREE.LinearEncoding;
+					texture.minFilter = THREE.LinearFilter;
+					texture.magFilter = THREE.LinearFilter;
 					texture.generateMipmaps = false;
 					texture.flipY = true;
 					break;
@@ -482,10 +468,8 @@ RGBELoader.prototype = Object.assign( Object.create( DataTextureLoader.prototype
 
 		}
 
-		return DataTextureLoader.prototype.load.call( this, url, onLoadCallback, onProgress, onError );
+		return THREE.DataTextureLoader.prototype.load.call( this, url, onLoadCallback, onProgress, onError );
 
 	}
 
 } );
-
-export { RGBELoader };

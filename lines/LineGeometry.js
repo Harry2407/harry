@@ -1,16 +1,14 @@
-import { LineSegmentsGeometry } from '../lines/LineSegmentsGeometry.js';
+THREE.LineGeometry = function () {
 
-var LineGeometry = function () {
-
-	LineSegmentsGeometry.call( this );
+	THREE.LineSegmentsGeometry.call( this );
 
 	this.type = 'LineGeometry';
 
 };
 
-LineGeometry.prototype = Object.assign( Object.create( LineSegmentsGeometry.prototype ), {
+THREE.LineGeometry.prototype = Object.assign( Object.create( THREE.LineSegmentsGeometry.prototype ), {
 
-	constructor: LineGeometry,
+	constructor: THREE.LineGeometry,
 
 	isLineGeometry: true,
 
@@ -33,7 +31,7 @@ LineGeometry.prototype = Object.assign( Object.create( LineSegmentsGeometry.prot
 
 		}
 
-		LineSegmentsGeometry.prototype.setPositions.call( this, points );
+		THREE.LineSegmentsGeometry.prototype.setPositions.call( this, points );
 
 		return this;
 
@@ -58,7 +56,7 @@ LineGeometry.prototype = Object.assign( Object.create( LineSegmentsGeometry.prot
 
 		}
 
-		LineSegmentsGeometry.prototype.setColors.call( this, colors );
+		THREE.LineSegmentsGeometry.prototype.setColors.call( this, colors );
 
 		return this;
 
@@ -70,7 +68,7 @@ LineGeometry.prototype = Object.assign( Object.create( LineSegmentsGeometry.prot
 
 		if ( geometry.isGeometry ) {
 
-			console.error( 'THREE.LineGeometry no longer supports Geometry. Use THREE.BufferGeometry instead.' );
+			console.error( 'THREE.LineGeometry no longer supports THREE.Geometry. Use THREE.BufferGeometry instead.' );
 			return;
 
 		} else if ( geometry.isBufferGeometry ) {
@@ -94,5 +92,3 @@ LineGeometry.prototype = Object.assign( Object.create( LineSegmentsGeometry.prot
 	}
 
 } );
-
-export { LineGeometry };

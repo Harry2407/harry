@@ -1,17 +1,6 @@
-import {
-	Box3,
-	Float32BufferAttribute,
-	InstancedBufferGeometry,
-	InstancedInterleavedBuffer,
-	InterleavedBufferAttribute,
-	Sphere,
-	Vector3,
-	WireframeGeometry
-} from '../../../build/three.module.js';
+THREE.LineSegmentsGeometry = function () {
 
-var LineSegmentsGeometry = function () {
-
-	InstancedBufferGeometry.call( this );
+	THREE.InstancedBufferGeometry.call( this );
 
 	this.type = 'LineSegmentsGeometry';
 
@@ -20,14 +9,14 @@ var LineSegmentsGeometry = function () {
 	var index = [ 0, 2, 1, 2, 3, 1, 2, 4, 3, 4, 5, 3, 4, 6, 5, 6, 7, 5 ];
 
 	this.setIndex( index );
-	this.setAttribute( 'position', new Float32BufferAttribute( positions, 3 ) );
-	this.setAttribute( 'uv', new Float32BufferAttribute( uvs, 2 ) );
+	this.setAttribute( 'position', new THREE.Float32BufferAttribute( positions, 3 ) );
+	this.setAttribute( 'uv', new THREE.Float32BufferAttribute( uvs, 2 ) );
 
 };
 
-LineSegmentsGeometry.prototype = Object.assign( Object.create( InstancedBufferGeometry.prototype ), {
+THREE.LineSegmentsGeometry.prototype = Object.assign( Object.create( THREE.InstancedBufferGeometry.prototype ), {
 
-	constructor: LineSegmentsGeometry,
+	constructor: THREE.LineSegmentsGeometry,
 
 	isLineSegmentsGeometry: true,
 
@@ -76,10 +65,10 @@ LineSegmentsGeometry.prototype = Object.assign( Object.create( InstancedBufferGe
 
 		}
 
-		var instanceBuffer = new InstancedInterleavedBuffer( lineSegments, 6, 1 ); // xyz, xyz
+		var instanceBuffer = new THREE.InstancedInterleavedBuffer( lineSegments, 6, 1 ); // xyz, xyz
 
-		this.setAttribute( 'instanceStart', new InterleavedBufferAttribute( instanceBuffer, 3, 0 ) ); // xyz
-		this.setAttribute( 'instanceEnd', new InterleavedBufferAttribute( instanceBuffer, 3, 3 ) ); // xyz
+		this.setAttribute( 'instanceStart', new THREE.InterleavedBufferAttribute( instanceBuffer, 3, 0 ) ); // xyz
+		this.setAttribute( 'instanceEnd', new THREE.InterleavedBufferAttribute( instanceBuffer, 3, 3 ) ); // xyz
 
 		//
 
@@ -104,10 +93,10 @@ LineSegmentsGeometry.prototype = Object.assign( Object.create( InstancedBufferGe
 
 		}
 
-		var instanceColorBuffer = new InstancedInterleavedBuffer( colors, 6, 1 ); // rgb, rgb
+		var instanceColorBuffer = new THREE.InstancedInterleavedBuffer( colors, 6, 1 ); // rgb, rgb
 
-		this.setAttribute( 'instanceColorStart', new InterleavedBufferAttribute( instanceColorBuffer, 3, 0 ) ); // rgb
-		this.setAttribute( 'instanceColorEnd', new InterleavedBufferAttribute( instanceColorBuffer, 3, 3 ) ); // rgb
+		this.setAttribute( 'instanceColorStart', new THREE.InterleavedBufferAttribute( instanceColorBuffer, 3, 0 ) ); // rgb
+		this.setAttribute( 'instanceColorEnd', new THREE.InterleavedBufferAttribute( instanceColorBuffer, 3, 3 ) ); // rgb
 
 		return this;
 
@@ -131,7 +120,7 @@ LineSegmentsGeometry.prototype = Object.assign( Object.create( InstancedBufferGe
 
 	fromMesh: function ( mesh ) {
 
-		this.fromWireframeGeometry( new WireframeGeometry( mesh.geometry ) );
+		this.fromWireframeGeometry( new THREE.WireframeGeometry( mesh.geometry ) );
 
 		// set colors, maybe
 
@@ -145,7 +134,7 @@ LineSegmentsGeometry.prototype = Object.assign( Object.create( InstancedBufferGe
 
 		if ( geometry.isGeometry ) {
 
-			console.error( 'THREE.LineSegmentsGeometry no longer supports Geometry. Use THREE.BufferGeometry instead.' );
+			console.error( 'THREE.LineSegmentsGeometry no longer supports THREE.Geometry. Use THREE.BufferGeometry instead.' );
 			return;
 
 		} else if ( geometry.isBufferGeometry ) {
@@ -162,13 +151,13 @@ LineSegmentsGeometry.prototype = Object.assign( Object.create( InstancedBufferGe
 
 	computeBoundingBox: function () {
 
-		var box = new Box3();
+		var box = new THREE.Box3();
 
 		return function computeBoundingBox() {
 
 			if ( this.boundingBox === null ) {
 
-				this.boundingBox = new Box3();
+				this.boundingBox = new THREE.Box3();
 
 			}
 
@@ -191,13 +180,13 @@ LineSegmentsGeometry.prototype = Object.assign( Object.create( InstancedBufferGe
 
 	computeBoundingSphere: function () {
 
-		var vector = new Vector3();
+		var vector = new THREE.Vector3();
 
 		return function computeBoundingSphere() {
 
 			if ( this.boundingSphere === null ) {
 
-				this.boundingSphere = new Sphere();
+				this.boundingSphere = new THREE.Sphere();
 
 			}
 
@@ -257,5 +246,3 @@ LineSegmentsGeometry.prototype = Object.assign( Object.create( InstancedBufferGe
 	}
 
 } );
-
-export { LineSegmentsGeometry };

@@ -1,26 +1,4 @@
-import {
-	AnimationClip,
-	AnimationMixer,
-	Bone,
-	BufferGeometry,
-	FileLoader,
-	Float32BufferAttribute,
-	FrontSide,
-	Loader,
-	LoaderUtils,
-	Matrix4,
-	Mesh,
-	MeshPhongMaterial,
-	Quaternion,
-	Skeleton,
-	SkinnedMesh,
-	TextureLoader,
-	Uint16BufferAttribute,
-	Vector2,
-	Vector3
-} from '../../../build/three.module.js';
-
-var XLoader = ( function () {
+THREE.XLoader = ( function () {
 
 	var classCallCheck = function ( instance, Constructor ) {
 
@@ -185,19 +163,19 @@ var XLoader = ( function () {
 						keyframe.matrix = XAnimationInfo.keyFrames[ i ].matrix;
 						if ( this.putFlags.putPos ) {
 
-							keyframe.pos = new Vector3().setFromMatrixPosition( keyframe.matrix );
+							keyframe.pos = new THREE.Vector3().setFromMatrixPosition( keyframe.matrix );
 
 						}
 
 						if ( this.putFlags.putRot ) {
 
-							keyframe.rot = new Quaternion().setFromRotationMatrix( keyframe.matrix );
+							keyframe.rot = new THREE.Quaternion().setFromRotationMatrix( keyframe.matrix );
 
 						}
 
 						if ( this.putFlags.putScl ) {
 
-							keyframe.scl = new Vector3().setFromMatrixScale( keyframe.matrix );
+							keyframe.scl = new THREE.Vector3().setFromMatrixScale( keyframe.matrix );
 
 						}
 
@@ -230,12 +208,12 @@ var XLoader = ( function () {
 
 		function XLoader( manager ) {
 
-			Loader.call( this, manager );
+			THREE.Loader.call( this, manager );
 
 			classCallCheck( this, XLoader );
 
 			this.debug = false;
-			this.texloader = new TextureLoader( this.manager );
+			this.texloader = new THREE.TextureLoader( this.manager );
 			this.url = '';
 			this._putMatLength = 0;
 			this._nowMat = null;
@@ -298,7 +276,7 @@ var XLoader = ( function () {
 				var _this = this;
 
 				this._setArgOption( _arg );
-				var loader = new FileLoader( this.manager );
+				var loader = new THREE.FileLoader( this.manager );
 				loader.setPath( this.path );
 				loader.setResponseType( 'arraybuffer' );
 				loader.setRequestHeader( this.requestHeader );
@@ -482,7 +460,7 @@ var XLoader = ( function () {
 
 				if ( typeof buf !== 'string' ) {
 
-					return LoaderUtils.decodeText( new Uint8Array( buf ) );
+					return THREE.LoaderUtils.decodeText( new Uint8Array( buf ) );
 
 				} else {
 
@@ -505,7 +483,7 @@ var XLoader = ( function () {
 			key: '_parseBinary',
 			value: function _parseBinary( data ) {
 
-				return this._parseASCII( LoaderUtils.decodeText( new Uint8Array( data ) ) );
+				return this._parseASCII( THREE.LoaderUtils.decodeText( new Uint8Array( data ) ) );
 
 			}
 		}, {
@@ -524,7 +502,7 @@ var XLoader = ( function () {
 
 				} else {
 
-					path = LoaderUtils.extractUrlBase( this.url );
+					path = THREE.LoaderUtils.extractUrlBase( this.url );
 
 				}
 
@@ -854,7 +832,7 @@ var XLoader = ( function () {
 			key: '_setFrameTransformMatrix',
 			value: function _setFrameTransformMatrix() {
 
-				this._currentFrame.FrameTransformMatrix = new Matrix4();
+				this._currentFrame.FrameTransformMatrix = new THREE.Matrix4();
 				var data = this._currentObject.data.split( ',' );
 				this._ParseMatrixData( this._currentFrame.FrameTransformMatrix, data );
 				this._makeBoneFrom_CurrentFrame();
@@ -870,7 +848,7 @@ var XLoader = ( function () {
 
 				}
 
-				var b = new Bone();
+				var b = new THREE.Bone();
 				b.name = this._currentFrame.name;
 				b.applyMatrix4( this._currentFrame.FrameTransformMatrix );
 				b.matrixWorld = b.matrix;
@@ -1024,7 +1002,7 @@ var XLoader = ( function () {
 			key: '_buildGeometry',
 			value: function _buildGeometry() {
 
-				var bufferGeometry = new BufferGeometry();
+				var bufferGeometry = new THREE.BufferGeometry();
 				var position = [];
 				var normals = [];
 				var uvs = [];
@@ -1051,11 +1029,11 @@ var XLoader = ( function () {
 
 				//
 
-				bufferGeometry.setAttribute( 'position', new Float32BufferAttribute( position, 3 ) );
-				bufferGeometry.setAttribute( 'normal', new Float32BufferAttribute( normals, 3 ) );
-				bufferGeometry.setAttribute( 'uv', new Float32BufferAttribute( uvs, 2 ) );
-				bufferGeometry.setAttribute( 'skinIndex', new Uint16BufferAttribute( skinIndices, 4 ) );
-				bufferGeometry.setAttribute( 'skinWeight', new Float32BufferAttribute( skinWeights, 4 ) );
+				bufferGeometry.setAttribute( 'position', new THREE.Float32BufferAttribute( position, 3 ) );
+				bufferGeometry.setAttribute( 'normal', new THREE.Float32BufferAttribute( normals, 3 ) );
+				bufferGeometry.setAttribute( 'uv', new THREE.Float32BufferAttribute( uvs, 2 ) );
+				bufferGeometry.setAttribute( 'skinIndex', new THREE.Uint16BufferAttribute( skinIndices, 4 ) );
+				bufferGeometry.setAttribute( 'skinWeight', new THREE.Float32BufferAttribute( skinWeights, 4 ) );
 
 				this._computeGroups( bufferGeometry, data.materialIndices );
 
@@ -1213,10 +1191,10 @@ var XLoader = ( function () {
 			key: '_setMaterial',
 			value: function _setMaterial() {
 
-				var _nowMat = new MeshPhongMaterial( {
+				var _nowMat = new THREE.MeshPhongMaterial( {
 					color: Math.random() * 0xffffff
 				} );
-				_nowMat.side = FrontSide;
+				_nowMat.side = THREE.FrontSide;
 				_nowMat.name = this._currentObject.name;
 				var endRead = 0;
 				var find = this._currentObject.data.indexOf( ';;', endRead );
@@ -1273,7 +1251,7 @@ var XLoader = ( function () {
 								break;
 							case 'NormalMapFilename':
 								_nowMat.normalMap = this.texloader.load( fileName );
-								_nowMat.normalScale = new Vector2( 2, 2 );
+								_nowMat.normalScale = new THREE.Vector2( 2, 2 );
 								break;
 							case 'EmissiveMapFilename':
 								_nowMat.emissiveMap = this.texloader.load( fileName );
@@ -1337,7 +1315,7 @@ var XLoader = ( function () {
 
 				line = this._currentObject.data.substr( endRead, find - endRead );
 				var data3 = this._readLine( line.trim() ).split( ',' );
-				boneInf.OffsetMatrix = new Matrix4();
+				boneInf.OffsetMatrix = new THREE.Matrix4();
 				this._ParseMatrixData( boneInf.OffsetMatrix, data3 );
 				this._currentGeo.BoneInfs.push( boneInf );
 
@@ -1352,14 +1330,14 @@ var XLoader = ( function () {
 					if ( this.HieStack[ frame ].name === _RootName || putting ) {
 
 						putting = true;
-						var b = new Bone();
+						var b = new THREE.Bone();
 						b.name = this.HieStack[ frame ].name;
 						b.applyMatrix4( this.HieStack[ frame ].FrameTransformMatrix );
 						b.matrixWorld = b.matrix;
 						b.FrameTransformMatrix = this.HieStack[ frame ].FrameTransformMatrix;
-						b.pos = new Vector3().setFromMatrixPosition( b.FrameTransformMatrix ).toArray();
-						b.rotq = new Quaternion().setFromRotationMatrix( b.FrameTransformMatrix ).toArray();
-						b.scl = new Vector3().setFromMatrixScale( b.FrameTransformMatrix ).toArray();
+						b.pos = new THREE.Vector3().setFromMatrixPosition( b.FrameTransformMatrix ).toArray();
+						b.rotq = new THREE.Quaternion().setFromRotationMatrix( b.FrameTransformMatrix ).toArray();
+						b.scl = new THREE.Vector3().setFromMatrixScale( b.FrameTransformMatrix ).toArray();
 						if ( this.HieStack[ frame ].parentName && this.HieStack[ frame ].parentName.length > 0 ) {
 
 							for ( var i = 0; i < _bones.length; i ++ ) {
@@ -1400,7 +1378,7 @@ var XLoader = ( function () {
 							if ( putBones[ bb ].name === this._currentGeo.BoneInfs[ bi ].boneName ) {
 
 								boneIndex = bb;
-								putBones[ bb ].OffsetMatrix = new Matrix4();
+								putBones[ bb ].OffsetMatrix = new THREE.Matrix4();
 								putBones[ bb ].OffsetMatrix.copy( this._currentGeo.BoneInfs[ bi ].OffsetMatrix );
 								break;
 
@@ -1462,26 +1440,26 @@ var XLoader = ( function () {
 
 						} else {
 
-							offsetList.push( new Matrix4() );
+							offsetList.push( new THREE.Matrix4() );
 
 						}
 
 					}
 
 					var bufferGeometry = this._buildGeometry();
-					mesh = new SkinnedMesh( bufferGeometry, this._currentGeo.Materials.length === 1 ? this._currentGeo.Materials[ 0 ] : this._currentGeo.Materials );
+					mesh = new THREE.SkinnedMesh( bufferGeometry, this._currentGeo.Materials.length === 1 ? this._currentGeo.Materials[ 0 ] : this._currentGeo.Materials );
 
 					this._initSkeleton( mesh, putBones, offsetList );
 
 				} else {
 
 					var _bufferGeometry = this._buildGeometry();
-					mesh = new Mesh( _bufferGeometry, this._currentGeo.Materials.length === 1 ? this._currentGeo.Materials[ 0 ] : this._currentGeo.Materials );
+					mesh = new THREE.Mesh( _bufferGeometry, this._currentGeo.Materials.length === 1 ? this._currentGeo.Materials[ 0 ] : this._currentGeo.Materials );
 
 				}
 
 				mesh.name = this._currentGeo.name;
-				var worldBaseMx = new Matrix4();
+				var worldBaseMx = new THREE.Matrix4();
 				var currentMxFrame = this._currentGeo.baseFrame.putBone;
 				if ( currentMxFrame && currentMxFrame.parent ) {
 
@@ -1518,7 +1496,7 @@ var XLoader = ( function () {
 
 					gbone = boneList[ i ];
 
-					bone = new Bone();
+					bone = new THREE.Bone();
 					bones.push( bone );
 
 					bone.name = gbone.name;
@@ -1546,7 +1524,7 @@ var XLoader = ( function () {
 
 				mesh.updateMatrixWorld( true );
 
-				var skeleton = new Skeleton( bones, boneInverses );
+				var skeleton = new THREE.Skeleton( bones, boneInverses );
 				mesh.bind( skeleton, mesh.matrixWorld );
 
 			}
@@ -1591,13 +1569,13 @@ var XLoader = ( function () {
 						switch ( nowKeyType ) {
 
 							case 0:
-								keyInfo.rot = new Quaternion( parseFloat( frameValue[ 1 ] ), parseFloat( frameValue[ 2 ] ), parseFloat( frameValue[ 3 ] ), parseFloat( frameValue[ 0 ] ) * - 1 );
+								keyInfo.rot = new THREE.Quaternion( parseFloat( frameValue[ 1 ] ), parseFloat( frameValue[ 2 ] ), parseFloat( frameValue[ 3 ] ), parseFloat( frameValue[ 0 ] ) * - 1 );
 								break;
 							case 1:
-								keyInfo.scl = new Vector3( parseFloat( frameValue[ 0 ] ), parseFloat( frameValue[ 1 ] ), parseFloat( frameValue[ 2 ] ) );
+								keyInfo.scl = new THREE.Vector3( parseFloat( frameValue[ 0 ] ), parseFloat( frameValue[ 1 ] ), parseFloat( frameValue[ 2 ] ) );
 								break;
 							case 2:
-								keyInfo.pos = new Vector3( parseFloat( frameValue[ 0 ] ), parseFloat( frameValue[ 1 ] ), parseFloat( frameValue[ 2 ] ) );
+								keyInfo.pos = new THREE.Vector3( parseFloat( frameValue[ 0 ] ), parseFloat( frameValue[ 1 ] ), parseFloat( frameValue[ 2 ] ) );
 								break;
 
 						}
@@ -1610,7 +1588,7 @@ var XLoader = ( function () {
 
 					} else {
 
-						keyInfo.matrix = new Matrix4();
+						keyInfo.matrix = new THREE.Matrix4();
 						this._ParseMatrixData( keyInfo.matrix, data2[ 2 ].split( ',' ) );
 						this._currentAnimeFrames.keyFrames.push( keyInfo );
 
@@ -1730,10 +1708,10 @@ var XLoader = ( function () {
 
 				}
 
-				model.geometry.animations.push( AnimationClip.parseAnimation( put, model.skeleton.bones ) );
+				model.geometry.animations.push( THREE.AnimationClip.parseAnimation( put, model.skeleton.bones ) );
 				if ( ! model.animationMixer ) {
 
-					model.animationMixer = new AnimationMixer( model );
+					model.animationMixer = new THREE.AnimationMixer( model );
 
 				}
 
@@ -1755,5 +1733,3 @@ var XLoader = ( function () {
 	return XLoader;
 
 } )();
-
-export { XLoader };

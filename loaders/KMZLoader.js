@@ -1,27 +1,18 @@
-import {
-	FileLoader,
-	Group,
-	Loader,
-	LoadingManager
-} from '../../../build/three.module.js';
-import { ColladaLoader } from '../loaders/ColladaLoader.js';
-import * as fflate from '../libs/fflate.module.min.js';
+THREE.KMZLoader = function ( manager ) {
 
-var KMZLoader = function ( manager ) {
-
-	Loader.call( this, manager );
+	THREE.Loader.call( this, manager );
 
 };
 
-KMZLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
+THREE.KMZLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype ), {
 
-	constructor: KMZLoader,
+	constructor: THREE.KMZLoader,
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
 		var scope = this;
 
-		var loader = new FileLoader( scope.manager );
+		var loader = new THREE.FileLoader( scope.manager );
 		loader.setPath( scope.path );
 		loader.setResponseType( 'arraybuffer' );
 		loader.setRequestHeader( scope.requestHeader );
@@ -68,7 +59,7 @@ KMZLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 		}
 
-		var manager = new LoadingManager();
+		var manager = new THREE.LoadingManager();
 		manager.setURLModifier( function ( url ) {
 
 			var image = findFile( url );
@@ -98,7 +89,7 @@ KMZLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 			if ( model ) {
 
-				var loader = new ColladaLoader( manager );
+				var loader = new THREE.ColladaLoader( manager );
 				return loader.parse( fflate.strFromU8( zip[ model.textContent ] ) ); // eslint-disable-line no-undef
 
 			}
@@ -113,7 +104,7 @@ KMZLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 				if ( extension === 'dae' ) {
 
-					var loader = new ColladaLoader( manager );
+					var loader = new THREE.ColladaLoader( manager );
 					return loader.parse( fflate.strFromU8( zip[ path ] ) ); // eslint-disable-line no-undef
 
 				}
@@ -123,10 +114,8 @@ KMZLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 		}
 
 		console.error( 'KMZLoader: Couldn\'t find .dae file.' );
-		return { scene: new Group() };
+		return { scene: new THREE.Group() };
 
 	}
 
 } );
-
-export { KMZLoader };

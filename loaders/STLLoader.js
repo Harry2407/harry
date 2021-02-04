@@ -1,13 +1,3 @@
-import {
-	BufferAttribute,
-	BufferGeometry,
-	FileLoader,
-	Float32BufferAttribute,
-	Loader,
-	LoaderUtils,
-	Vector3
-} from '../../../build/three.module.js';
-
 /**
  * Description: A THREE loader for STL ASCII files, as created by Solidworks and other CAD programs.
  *
@@ -21,7 +11,7 @@ import {
  *  ASCII decoding assumes file is UTF-8.
  *
  * Usage:
- *  var loader = new STLLoader();
+ *  var loader = new THREE.STLLoader();
  *  loader.load( './models/stl/slotted_disk.stl', function ( geometry ) {
  *    scene.add( new THREE.Mesh( geometry ) );
  *  });
@@ -60,21 +50,21 @@ import {
  */
 
 
-var STLLoader = function ( manager ) {
+THREE.STLLoader = function ( manager ) {
 
-	Loader.call( this, manager );
+	THREE.Loader.call( this, manager );
 
 };
 
-STLLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
+THREE.STLLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype ), {
 
-	constructor: STLLoader,
+	constructor: THREE.STLLoader,
 
 	load: function ( url, onLoad, onProgress, onError ) {
 
 		var scope = this;
 
-		var loader = new FileLoader( this.manager );
+		var loader = new THREE.FileLoader( this.manager );
 		loader.setPath( this.path );
 		loader.setResponseType( 'arraybuffer' );
 		loader.setRequestHeader( this.requestHeader );
@@ -194,7 +184,7 @@ STLLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 			var dataOffset = 84;
 			var faceLength = 12 * 4 + 2;
 
-			var geometry = new BufferGeometry();
+			var geometry = new THREE.BufferGeometry();
 
 			var vertices = new Float32Array( faces * 3 * 3 );
 			var normals = new Float32Array( faces * 3 * 3 );
@@ -253,12 +243,12 @@ STLLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 			}
 
-			geometry.setAttribute( 'position', new BufferAttribute( vertices, 3 ) );
-			geometry.setAttribute( 'normal', new BufferAttribute( normals, 3 ) );
+			geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+			geometry.setAttribute( 'normal', new THREE.BufferAttribute( normals, 3 ) );
 
 			if ( hasColors ) {
 
-				geometry.setAttribute( 'color', new BufferAttribute( colors, 3 ) );
+				geometry.setAttribute( 'color', new THREE.BufferAttribute( colors, 3 ) );
 				geometry.hasColors = true;
 				geometry.alpha = alpha;
 
@@ -270,7 +260,7 @@ STLLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 		function parseASCII( data ) {
 
-			var geometry = new BufferGeometry();
+			var geometry = new THREE.BufferGeometry();
 			var patternSolid = /solid([\s\S]*?)endsolid/g;
 			var patternFace = /facet([\s\S]*?)endfacet/g;
 			var faceCounter = 0;
@@ -282,7 +272,7 @@ STLLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 			var vertices = [];
 			var normals = [];
 
-			var normal = new Vector3();
+			var normal = new THREE.Vector3();
 
 			var result;
 
@@ -349,8 +339,8 @@ STLLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 			}
 
-			geometry.setAttribute( 'position', new Float32BufferAttribute( vertices, 3 ) );
-			geometry.setAttribute( 'normal', new Float32BufferAttribute( normals, 3 ) );
+			geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
+			geometry.setAttribute( 'normal', new THREE.Float32BufferAttribute( normals, 3 ) );
 
 			return geometry;
 
@@ -360,7 +350,7 @@ STLLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 			if ( typeof buffer !== 'string' ) {
 
-				return LoaderUtils.decodeText( new Uint8Array( buffer ) );
+				return THREE.LoaderUtils.decodeText( new Uint8Array( buffer ) );
 
 			}
 
@@ -398,5 +388,3 @@ STLLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 	}
 
 } );
-
-export { STLLoader };

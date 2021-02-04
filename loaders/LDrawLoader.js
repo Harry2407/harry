@@ -1,24 +1,4 @@
-import {
-	BufferAttribute,
-	BufferGeometry,
-	Color,
-	FileLoader,
-	Float32BufferAttribute,
-	Group,
-	LineBasicMaterial,
-	LineSegments,
-	Loader,
-	Matrix4,
-	Mesh,
-	MeshPhongMaterial,
-	MeshStandardMaterial,
-	ShaderMaterial,
-	UniformsLib,
-	UniformsUtils,
-	Vector3
-} from '../../../build/three.module.js';
-
-var LDrawLoader = ( function () {
+THREE.LDrawLoader = ( function () {
 
 	var conditionalLineVertShader = /* glsl */`
 	attribute vec3 control0;
@@ -98,8 +78,8 @@ var LDrawLoader = ( function () {
 
 
 
-	var tempVec0 = new Vector3();
-	var tempVec1 = new Vector3();
+	var tempVec0 = new THREE.Vector3();
+	var tempVec1 = new THREE.Vector3();
 	function smoothNormals( triangles, lineSegments ) {
 
 		function hashVertex( v ) {
@@ -399,7 +379,7 @@ var LDrawLoader = ( function () {
 
 	function createObject( elements, elementSize, isConditionalSegments ) {
 
-		// Creates a LineSegments (elementSize = 2) or a Mesh (elementSize = 3 )
+		// Creates a THREE.LineSegments (elementSize = 2) or a THREE.Mesh (elementSize = 3 )
 		// With per face / segment material, implemented with mesh groups and materials array
 
 		// Sort the triangles or line segments by colour code to make later the mesh groups
@@ -409,7 +389,7 @@ var LDrawLoader = ( function () {
 		var normals = [];
 		var materials = [];
 
-		var bufferGeometry = new BufferGeometry();
+		var bufferGeometry = new THREE.BufferGeometry();
 		var prevMaterial = null;
 		var index0 = 0;
 		var numGroupVerts = 0;
@@ -462,11 +442,11 @@ var LDrawLoader = ( function () {
 
 		}
 
-		bufferGeometry.setAttribute( 'position', new Float32BufferAttribute( positions, 3 ) );
+		bufferGeometry.setAttribute( 'position', new THREE.Float32BufferAttribute( positions, 3 ) );
 
 		if ( elementSize === 3 ) {
 
-			bufferGeometry.setAttribute( 'normal', new Float32BufferAttribute( normals, 3 ) );
+			bufferGeometry.setAttribute( 'normal', new THREE.Float32BufferAttribute( normals, 3 ) );
 
 		}
 
@@ -474,11 +454,11 @@ var LDrawLoader = ( function () {
 
 		if ( elementSize === 2 ) {
 
-			object3d = new LineSegments( bufferGeometry, materials );
+			object3d = new THREE.LineSegments( bufferGeometry, materials );
 
 		} else if ( elementSize === 3 ) {
 
-			object3d = new Mesh( bufferGeometry, materials );
+			object3d = new THREE.Mesh( bufferGeometry, materials );
 
 		}
 
@@ -520,9 +500,9 @@ var LDrawLoader = ( function () {
 
 			}
 
-			bufferGeometry.setAttribute( 'control0', new BufferAttribute( controlArray0, 3, false ) );
-			bufferGeometry.setAttribute( 'control1', new BufferAttribute( controlArray1, 3, false ) );
-			bufferGeometry.setAttribute( 'direction', new BufferAttribute( directionArray, 3, false ) );
+			bufferGeometry.setAttribute( 'control0', new THREE.BufferAttribute( controlArray0, 3, false ) );
+			bufferGeometry.setAttribute( 'control1', new THREE.BufferAttribute( controlArray1, 3, false ) );
+			bufferGeometry.setAttribute( 'direction', new THREE.BufferAttribute( directionArray, 3, false ) );
 
 		}
 
@@ -534,7 +514,7 @@ var LDrawLoader = ( function () {
 
 	function LDrawLoader( manager ) {
 
-		Loader.call( this, manager );
+		THREE.Loader.call( this, manager );
 
 		// This is a stack of 'parse scopes' with one level per subobject loaded file.
 		// Each level contains a material lib and also other runtime variables passed between parent and child subobjects
@@ -558,7 +538,7 @@ var LDrawLoader = ( function () {
 			this.parseColourMetaDirective( new LineParser( 'Edge_Colour CODE 24 VALUE #A0A0A0 EDGE #333333' ) )
 		] );
 
-		// If this flag is set to true, each subobject will be a Object.
+		// If this flag is set to true, each subobject will be a THREE.Object.
 		// If not (the default), only one object which contains all the merged primitives will be created.
 		this.separateObjects = false;
 
@@ -586,7 +566,7 @@ var LDrawLoader = ( function () {
 	LDrawLoader.FILE_LOCATION_TRY_ABSOLUTE = 5;
 	LDrawLoader.FILE_LOCATION_NOT_FOUND = 6;
 
-	LDrawLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
+	LDrawLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype ), {
 
 		constructor: LDrawLoader,
 
@@ -600,7 +580,7 @@ var LDrawLoader = ( function () {
 
 			var scope = this;
 
-			var fileLoader = new FileLoader( this.manager );
+			var fileLoader = new THREE.FileLoader( this.manager );
 			fileLoader.setPath( this.path );
 			fileLoader.setRequestHeader( this.requestHeader );
 			fileLoader.setWithCredentials( this.withCredentials );
@@ -679,8 +659,8 @@ var LDrawLoader = ( function () {
 				currentFileName: null,
 				mainColourCode: topParseScope ? topParseScope.mainColourCode : '16',
 				mainEdgeColourCode: topParseScope ? topParseScope.mainEdgeColourCode : '24',
-				currentMatrix: new Matrix4(),
-				matrix: new Matrix4(),
+				currentMatrix: new THREE.Matrix4(),
+				matrix: new THREE.Matrix4(),
 
 				// If false, it is a root material scope previous to parse
 				isFromParse: true,
@@ -939,44 +919,44 @@ var LDrawLoader = ( function () {
 
 				case LDrawLoader.FINISH_TYPE_DEFAULT:
 
-					material = new MeshStandardMaterial( { color: colour, roughness: 0.3, envMapIntensity: 0.3, metalness: 0 } );
+					material = new THREE.MeshStandardMaterial( { color: colour, roughness: 0.3, envMapIntensity: 0.3, metalness: 0 } );
 					break;
 
 				case LDrawLoader.FINISH_TYPE_PEARLESCENT:
 
 					// Try to imitate pearlescency by setting the specular to the complementary of the color, and low shininess
-					var specular = new Color( colour );
+					var specular = new THREE.Color( colour );
 					var hsl = specular.getHSL( { h: 0, s: 0, l: 0 } );
 					hsl.h = ( hsl.h + 0.5 ) % 1;
 					hsl.l = Math.min( 1, hsl.l + ( 1 - hsl.l ) * 0.7 );
 					specular.setHSL( hsl.h, hsl.s, hsl.l );
 
-					material = new MeshPhongMaterial( { color: colour, specular: specular, shininess: 10, reflectivity: 0.3 } );
+					material = new THREE.MeshPhongMaterial( { color: colour, specular: specular, shininess: 10, reflectivity: 0.3 } );
 					break;
 
 				case LDrawLoader.FINISH_TYPE_CHROME:
 
 					// Mirror finish surface
-					material = new MeshStandardMaterial( { color: colour, roughness: 0, metalness: 1 } );
+					material = new THREE.MeshStandardMaterial( { color: colour, roughness: 0, metalness: 1 } );
 					break;
 
 				case LDrawLoader.FINISH_TYPE_RUBBER:
 
 					// Rubber finish
-					material = new MeshStandardMaterial( { color: colour, roughness: 0.9, metalness: 0 } );
+					material = new THREE.MeshStandardMaterial( { color: colour, roughness: 0.9, metalness: 0 } );
 					canHaveEnvMap = false;
 					break;
 
 				case LDrawLoader.FINISH_TYPE_MATTE_METALLIC:
 
 					// Brushed metal finish
-					material = new MeshStandardMaterial( { color: colour, roughness: 0.8, metalness: 0.4 } );
+					material = new THREE.MeshStandardMaterial( { color: colour, roughness: 0.8, metalness: 0.4 } );
 					break;
 
 				case LDrawLoader.FINISH_TYPE_METAL:
 
 					// Average metal finish
-					material = new MeshStandardMaterial( { color: colour, roughness: 0.2, metalness: 0.85 } );
+					material = new THREE.MeshStandardMaterial( { color: colour, roughness: 0.2, metalness: 0.85 } );
 					break;
 
 				default:
@@ -1004,7 +984,7 @@ var LDrawLoader = ( function () {
 			if ( ! edgeMaterial ) {
 
 				// This is the material used for edges
-				edgeMaterial = new LineBasicMaterial( {
+				edgeMaterial = new THREE.LineBasicMaterial( {
 					color: edgeColour,
 					transparent: isTransparent,
 					opacity: alpha,
@@ -1015,14 +995,14 @@ var LDrawLoader = ( function () {
 				edgeMaterial.userData.canHaveEnvMap = false;
 
 				// This is the material used for conditional edges
-				edgeMaterial.userData.conditionalEdgeMaterial = new ShaderMaterial( {
+				edgeMaterial.userData.conditionalEdgeMaterial = new THREE.ShaderMaterial( {
 					vertexShader: conditionalLineVertShader,
 					fragmentShader: conditionalLineFragShader,
-					uniforms: UniformsUtils.merge( [
-						UniformsLib.fog,
+					uniforms: THREE.UniformsUtils.merge( [
+						THREE.UniformsLib.fog,
 						{
 							diffuse: {
-								value: new Color( edgeColour )
+								value: new THREE.Color( edgeColour )
 							},
 							opacity: {
 								value: alpha
@@ -1125,7 +1105,7 @@ var LDrawLoader = ( function () {
 
 			function parseVector( lp ) {
 
-				var v = new Vector3( parseFloat( lp.getToken() ), parseFloat( lp.getToken() ), parseFloat( lp.getToken() ) );
+				var v = new THREE.Vector3( parseFloat( lp.getToken() ), parseFloat( lp.getToken() ), parseFloat( lp.getToken() ) );
 
 				if ( ! scope.separateObjects ) {
 
@@ -1203,7 +1183,7 @@ var LDrawLoader = ( function () {
 									var isRoot = ! parentParseScope.isFromParse;
 									if ( isRoot || scope.separateObjects && ! isPrimitiveType( type ) ) {
 
-										currentParseScope.groupObject = new Group();
+										currentParseScope.groupObject = new THREE.Group();
 
 										currentParseScope.groupObject.userData.startingConstructionStep = currentParseScope.startingConstructionStep;
 
@@ -1368,7 +1348,7 @@ var LDrawLoader = ( function () {
 						var m7 = parseFloat( lp.getToken() );
 						var m8 = parseFloat( lp.getToken() );
 
-						var matrix = new Matrix4().set(
+						var matrix = new THREE.Matrix4().set(
 							m0, m1, m2, posX,
 							m3, m4, m5, posY,
 							m6, m7, m8, posZ,
@@ -1473,7 +1453,7 @@ var LDrawLoader = ( function () {
 
 						tempVec0.subVectors( v1, v0 );
 						tempVec1.subVectors( v2, v1 );
-						faceNormal = new Vector3()
+						faceNormal = new THREE.Vector3()
 							.crossVectors( tempVec0, tempVec1 )
 							.normalize();
 
@@ -1535,7 +1515,7 @@ var LDrawLoader = ( function () {
 
 						tempVec0.subVectors( v1, v0 );
 						tempVec1.subVectors( v2, v1 );
-						faceNormal = new Vector3()
+						faceNormal = new THREE.Vector3()
 							.crossVectors( tempVec0, tempVec1 )
 							.normalize();
 
@@ -1675,7 +1655,7 @@ var LDrawLoader = ( function () {
 			}
 
 
-			// Parse the object (returns a Group)
+			// Parse the object (returns a THREE.Group)
 			scope.objectParse( text );
 			var finishedCount = 0;
 			onSubobjectFinish();
@@ -1919,7 +1899,7 @@ var LDrawLoader = ( function () {
 				// Load the subobject
 				// Use another file loader here so we can keep track of the subobject information
 				// and use it when processing the next model.
-				var fileLoader = new FileLoader( scope.manager );
+				var fileLoader = new THREE.FileLoader( scope.manager );
 				fileLoader.setPath( scope.path );
 				fileLoader.setRequestHeader( scope.requestHeader );
 				fileLoader.setWithCredentials( scope.withCredentials );
@@ -1968,5 +1948,3 @@ var LDrawLoader = ( function () {
 	return LDrawLoader;
 
 } )();
-
-export { LDrawLoader };

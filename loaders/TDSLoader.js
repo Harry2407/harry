@@ -1,19 +1,3 @@
-import {
-	AdditiveBlending,
-	BufferGeometry,
-	Color,
-	DoubleSide,
-	FileLoader,
-	Float32BufferAttribute,
-	Group,
-	Loader,
-	LoaderUtils,
-	Matrix4,
-	Mesh,
-	MeshPhongMaterial,
-	TextureLoader
-} from '../../../build/three.module.js';
-
 /**
  * Autodesk 3DS three.js file loader, based on lib3ds.
  *
@@ -23,9 +7,9 @@ import {
  * @constructor
  */
 
-var TDSLoader = function ( manager ) {
+THREE.TDSLoader = function ( manager ) {
 
-	Loader.call( this, manager );
+	THREE.Loader.call( this, manager );
 
 	this.debug = false;
 
@@ -37,9 +21,9 @@ var TDSLoader = function ( manager ) {
 
 };
 
-TDSLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
+THREE.TDSLoader.prototype = Object.assign( Object.create( THREE.Loader.prototype ), {
 
-	constructor: TDSLoader,
+	constructor: THREE.TDSLoader,
 
 	/**
 	 * Load 3ds file from url.
@@ -54,9 +38,9 @@ TDSLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 		var scope = this;
 
-		var path = ( this.path === '' ) ? LoaderUtils.extractUrlBase( url ) : this.path;
+		var path = ( this.path === '' ) ? THREE.LoaderUtils.extractUrlBase( url ) : this.path;
 
-		var loader = new FileLoader( this.manager );
+		var loader = new THREE.FileLoader( this.manager );
 		loader.setPath( this.path );
 		loader.setResponseType( 'arraybuffer' );
 		loader.setRequestHeader( this.requestHeader );
@@ -98,7 +82,7 @@ TDSLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 	 */
 	parse: function ( arraybuffer, path ) {
 
-		this.group = new Group();
+		this.group = new THREE.Group();
 		this.position = 0;
 		this.materials = [];
 		this.meshes = [];
@@ -255,7 +239,7 @@ TDSLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 		var chunk = this.readChunk( data );
 		var next = this.nextChunk( data, chunk );
-		var material = new MeshPhongMaterial();
+		var material = new THREE.MeshPhongMaterial();
 
 		while ( next !== 0 ) {
 
@@ -277,13 +261,13 @@ TDSLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 			} else if ( next === MAT_TWO_SIDE ) {
 
-				material.side = DoubleSide;
+				material.side = THREE.DoubleSide;
 				this.debugMessage( '   DoubleSided' );
 
 			} else if ( next === MAT_ADDITIVE ) {
 
 				this.debugMessage( '   Additive Blending' );
-				material.blending = AdditiveBlending;
+				material.blending = THREE.AdditiveBlending;
 
 			} else if ( next === MAT_DIFFUSE ) {
 
@@ -365,11 +349,11 @@ TDSLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 		var chunk = this.readChunk( data );
 		var next = this.nextChunk( data, chunk );
 
-		var geometry = new BufferGeometry();
+		var geometry = new THREE.BufferGeometry();
 		var uvs = [];
 
-		var material = new MeshPhongMaterial();
-		var mesh = new Mesh( geometry, material );
+		var material = new THREE.MeshPhongMaterial();
+		var mesh = new THREE.Mesh( geometry, material );
 		mesh.name = 'mesh';
 
 		while ( next !== 0 ) {
@@ -392,7 +376,7 @@ TDSLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 				}
 
-				geometry.setAttribute( 'position', new Float32BufferAttribute( vertices, 3 ) );
+				geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
 
 			} else if ( next === FACE_ARRAY ) {
 
@@ -416,7 +400,7 @@ TDSLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 				}
 
-				geometry.setAttribute( 'uv', new Float32BufferAttribute( uvs, 2 ) );
+				geometry.setAttribute( 'uv', new THREE.Float32BufferAttribute( uvs, 2 ) );
 
 
 			} else if ( next === MESH_MATRIX ) {
@@ -430,7 +414,7 @@ TDSLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 				}
 
-				var matrix = new Matrix4();
+				var matrix = new THREE.Matrix4();
 
 				//X Line
 				matrix.elements[ 0 ] = values[ 0 ];
@@ -458,7 +442,7 @@ TDSLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 
 				matrix.transpose();
 
-				var inverse = new Matrix4();
+				var inverse = new THREE.Matrix4();
 				inverse.copy( matrix ).invert();
 				geometry.applyMatrix4( inverse );
 
@@ -571,7 +555,7 @@ TDSLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 		var next = this.nextChunk( data, chunk );
 		var texture = {};
 
-		var loader = new TextureLoader( this.manager );
+		var loader = new THREE.TextureLoader( this.manager );
 		loader.setPath( this.resourcePath || path ).setCrossOrigin( this.crossOrigin );
 
 		while ( next !== 0 ) {
@@ -656,7 +640,7 @@ TDSLoader.prototype = Object.assign( Object.create( Loader.prototype ), {
 	readColor: function ( data ) {
 
 		var chunk = this.readChunk( data );
-		var color = new Color();
+		var color = new THREE.Color();
 
 		if ( chunk.id === COLOR_24 || chunk.id === LIN_COLOR_24 ) {
 
@@ -1162,5 +1146,3 @@ var MESH_MATRIX = 0x4160;
 // var VIEWPORT_DATA_3 = 0x7012;
 // var VIEWPORT_SIZE = 0x7020;
 // var NETWORK_VIEW = 0x7030;
-
-export { TDSLoader };
