@@ -1,16 +1,4 @@
-import {
-	Box3,
-	Color,
-	DoubleSide,
-	Frustum,
-	Matrix3,
-	Matrix4,
-	Vector2,
-	Vector3,
-	Vector4
-} from '../../../build/three.module.js';
-
-var RenderableObject = function () {
+THREE.RenderableObject = function () {
 
 	this.id = 0;
 
@@ -22,22 +10,22 @@ var RenderableObject = function () {
 
 //
 
-var RenderableFace = function () {
+THREE.RenderableFace = function () {
 
 	this.id = 0;
 
-	this.v1 = new RenderableVertex();
-	this.v2 = new RenderableVertex();
-	this.v3 = new RenderableVertex();
+	this.v1 = new THREE.RenderableVertex();
+	this.v2 = new THREE.RenderableVertex();
+	this.v3 = new THREE.RenderableVertex();
 
-	this.normalModel = new Vector3();
+	this.normalModel = new THREE.Vector3();
 
-	this.vertexNormalsModel = [ new Vector3(), new Vector3(), new Vector3() ];
+	this.vertexNormalsModel = [ new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3() ];
 	this.vertexNormalsLength = 0;
 
-	this.color = new Color();
+	this.color = new THREE.Color();
 	this.material = null;
-	this.uvs = [ new Vector2(), new Vector2(), new Vector2() ];
+	this.uvs = [ new THREE.Vector2(), new THREE.Vector2(), new THREE.Vector2() ];
 
 	this.z = 0;
 	this.renderOrder = 0;
@@ -46,17 +34,17 @@ var RenderableFace = function () {
 
 //
 
-var RenderableVertex = function () {
+THREE.RenderableVertex = function () {
 
-	this.position = new Vector3();
-	this.positionWorld = new Vector3();
-	this.positionScreen = new Vector4();
+	this.position = new THREE.Vector3();
+	this.positionWorld = new THREE.Vector3();
+	this.positionScreen = new THREE.Vector4();
 
 	this.visible = true;
 
 };
 
-RenderableVertex.prototype.copy = function ( vertex ) {
+THREE.RenderableVertex.prototype.copy = function ( vertex ) {
 
 	this.positionWorld.copy( vertex.positionWorld );
 	this.positionScreen.copy( vertex.positionScreen );
@@ -65,14 +53,14 @@ RenderableVertex.prototype.copy = function ( vertex ) {
 
 //
 
-var RenderableLine = function () {
+THREE.RenderableLine = function () {
 
 	this.id = 0;
 
-	this.v1 = new RenderableVertex();
-	this.v2 = new RenderableVertex();
+	this.v1 = new THREE.RenderableVertex();
+	this.v2 = new THREE.RenderableVertex();
 
-	this.vertexColors = [ new Color(), new Color() ];
+	this.vertexColors = [ new THREE.Color(), new THREE.Color() ];
 	this.material = null;
 
 	this.z = 0;
@@ -82,7 +70,7 @@ var RenderableLine = function () {
 
 //
 
-var RenderableSprite = function () {
+THREE.RenderableSprite = function () {
 
 	this.id = 0;
 
@@ -93,7 +81,7 @@ var RenderableSprite = function () {
 	this.z = 0;
 
 	this.rotation = 0;
-	this.scale = new Vector2();
+	this.scale = new THREE.Vector2();
 
 	this.material = null;
 	this.renderOrder = 0;
@@ -102,7 +90,7 @@ var RenderableSprite = function () {
 
 //
 
-var Projector = function () {
+THREE.Projector = function () {
 
 	var _object, _objectCount, _objectPool = [], _objectPoolLength = 0,
 		_vertex, _vertexCount, _vertexPool = [], _vertexPoolLength = 0,
@@ -112,20 +100,20 @@ var Projector = function () {
 
 		_renderData = { objects: [], lights: [], elements: [] },
 
-		_vector3 = new Vector3(),
-		_vector4 = new Vector4(),
+		_vector3 = new THREE.Vector3(),
+		_vector4 = new THREE.Vector4(),
 
-		_clipBox = new Box3( new Vector3( - 1, - 1, - 1 ), new Vector3( 1, 1, 1 ) ),
-		_boundingBox = new Box3(),
+		_clipBox = new THREE.Box3( new THREE.Vector3( - 1, - 1, - 1 ), new THREE.Vector3( 1, 1, 1 ) ),
+		_boundingBox = new THREE.Box3(),
 		_points3 = new Array( 3 ),
 
-		_viewMatrix = new Matrix4(),
-		_viewProjectionMatrix = new Matrix4(),
+		_viewMatrix = new THREE.Matrix4(),
+		_viewProjectionMatrix = new THREE.Matrix4(),
 
 		_modelMatrix,
-		_modelViewProjectionMatrix = new Matrix4(),
+		_modelViewProjectionMatrix = new THREE.Matrix4(),
 
-		_frustum = new Frustum();
+		_frustum = new THREE.Frustum();
 
 	//
 
@@ -159,7 +147,7 @@ var Projector = function () {
 
 		var object = null;
 
-		var normalMatrix = new Matrix3();
+		var normalMatrix = new THREE.Matrix3();
 
 		function setObject( value ) {
 
@@ -288,7 +276,7 @@ var Projector = function () {
 
 			if ( checkTriangleVisibility( v1, v2, v3 ) === false ) return;
 
-			if ( material.side === DoubleSide || checkBackfaceCulling( v1, v2, v3 ) === true ) {
+			if ( material.side === THREE.DoubleSide || checkBackfaceCulling( v1, v2, v3 ) === true ) {
 
 				_face = getNextFaceInPool();
 
@@ -608,7 +596,7 @@ var Projector = function () {
 
 				} else if ( geometry.isGeometry ) {
 
-					console.error( 'THREE.Projector no longer supports Geometry. Use THREE.BufferGeometry instead.' );
+					console.error( 'THREE.Projector no longer supports THREE.Geometry. Use THREE.BufferGeometry instead.' );
 					return;
 
 				}
@@ -669,7 +657,7 @@ var Projector = function () {
 
 				} else if ( geometry.isGeometry ) {
 
-					console.error( 'THREE.Projector no longer supports Geometry. Use THREE.BufferGeometry instead.' );
+					console.error( 'THREE.Projector no longer supports THREE.Geometry. Use THREE.BufferGeometry instead.' );
 					return;
 
 				}
@@ -680,7 +668,7 @@ var Projector = function () {
 
 				if ( geometry.isGeometry ) {
 
-					console.error( 'THREE.Projector no longer supports Geometry. Use THREE.BufferGeometry instead.' );
+					console.error( 'THREE.Projector no longer supports THREE.Geometry. Use THREE.BufferGeometry instead.' );
 					return;
 
 				} else if ( geometry.isBufferGeometry ) {
@@ -761,7 +749,7 @@ var Projector = function () {
 
 		if ( _objectCount === _objectPoolLength ) {
 
-			var object = new RenderableObject();
+			var object = new THREE.RenderableObject();
 			_objectPool.push( object );
 			_objectPoolLength ++;
 			_objectCount ++;
@@ -777,7 +765,7 @@ var Projector = function () {
 
 		if ( _vertexCount === _vertexPoolLength ) {
 
-			var vertex = new RenderableVertex();
+			var vertex = new THREE.RenderableVertex();
 			_vertexPool.push( vertex );
 			_vertexPoolLength ++;
 			_vertexCount ++;
@@ -793,7 +781,7 @@ var Projector = function () {
 
 		if ( _faceCount === _facePoolLength ) {
 
-			var face = new RenderableFace();
+			var face = new THREE.RenderableFace();
 			_facePool.push( face );
 			_facePoolLength ++;
 			_faceCount ++;
@@ -810,7 +798,7 @@ var Projector = function () {
 
 		if ( _lineCount === _linePoolLength ) {
 
-			var line = new RenderableLine();
+			var line = new THREE.RenderableLine();
 			_linePool.push( line );
 			_linePoolLength ++;
 			_lineCount ++;
@@ -826,7 +814,7 @@ var Projector = function () {
 
 		if ( _spriteCount === _spritePoolLength ) {
 
-			var sprite = new RenderableSprite();
+			var sprite = new THREE.RenderableSprite();
 			_spritePool.push( sprite );
 			_spritePoolLength ++;
 			_spriteCount ++;
@@ -934,5 +922,3 @@ var Projector = function () {
 	}
 
 };
-
-export { RenderableObject, RenderableFace, RenderableVertex, RenderableLine, RenderableSprite, Projector };

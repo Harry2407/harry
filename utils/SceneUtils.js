@@ -1,13 +1,8 @@
-import {
-	Group,
-	Mesh
-} from '../../../build/three.module.js';
-
-var SceneUtils = {
+THREE.SceneUtils = {
 
 	createMeshesFromInstancedMesh: function ( instancedMesh ) {
 
-		var group = new Group();
+		var group = new THREE.Group();
 
 		var count = instancedMesh.count;
 		var geometry = instancedMesh.geometry;
@@ -15,7 +10,7 @@ var SceneUtils = {
 
 		for ( var i = 0; i < count; i ++ ) {
 
-			var mesh = new Mesh( geometry, material );
+			var mesh = new THREE.Mesh( geometry, material );
 
 			instancedMesh.getMatrixAt( i, mesh.matrix );
 			mesh.matrix.decompose( mesh.position, mesh.quaternion, mesh.scale );
@@ -33,11 +28,11 @@ var SceneUtils = {
 
 	createMultiMaterialObject: function ( geometry, materials ) {
 
-		var group = new Group();
+		var group = new THREE.Group();
 
 		for ( var i = 0, l = materials.length; i < l; i ++ ) {
 
-			group.add( new Mesh( geometry, materials[ i ] ) );
+			group.add( new THREE.Mesh( geometry, materials[ i ] ) );
 
 		}
 
@@ -62,5 +57,3 @@ var SceneUtils = {
 	}
 
 };
-
-export { SceneUtils };

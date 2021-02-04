@@ -1,25 +1,6 @@
-import {
-	AdditiveBlending,
-	Box2,
-	BufferGeometry,
-	ClampToEdgeWrapping,
-	Color,
-	DataTexture,
-	InterleavedBuffer,
-	InterleavedBufferAttribute,
-	Mesh,
-	MeshBasicMaterial,
-	NearestFilter,
-	RGBFormat,
-	RawShaderMaterial,
-	Vector2,
-	Vector3,
-	Vector4
-} from '../../../build/three.module.js';
+THREE.Lensflare = function () {
 
-var Lensflare = function () {
-
-	Mesh.call( this, Lensflare.Geometry, new MeshBasicMaterial( { opacity: 0, transparent: true } ) );
+	THREE.Mesh.call( this, THREE.Lensflare.Geometry, new THREE.MeshBasicMaterial( { opacity: 0, transparent: true } ) );
 
 	this.type = 'Lensflare';
 	this.frustumCulled = false;
@@ -27,28 +8,28 @@ var Lensflare = function () {
 
 	//
 
-	var positionScreen = new Vector3();
-	var positionView = new Vector3();
+	var positionScreen = new THREE.Vector3();
+	var positionView = new THREE.Vector3();
 
 	// textures
 
-	var tempMap = new DataTexture( new Uint8Array( 16 * 16 * 3 ), 16, 16, RGBFormat );
-	tempMap.minFilter = NearestFilter;
-	tempMap.magFilter = NearestFilter;
-	tempMap.wrapS = ClampToEdgeWrapping;
-	tempMap.wrapT = ClampToEdgeWrapping;
+	var tempMap = new THREE.DataTexture( new Uint8Array( 16 * 16 * 3 ), 16, 16, THREE.RGBFormat );
+	tempMap.minFilter = THREE.NearestFilter;
+	tempMap.magFilter = THREE.NearestFilter;
+	tempMap.wrapS = THREE.ClampToEdgeWrapping;
+	tempMap.wrapT = THREE.ClampToEdgeWrapping;
 
-	var occlusionMap = new DataTexture( new Uint8Array( 16 * 16 * 3 ), 16, 16, RGBFormat );
-	occlusionMap.minFilter = NearestFilter;
-	occlusionMap.magFilter = NearestFilter;
-	occlusionMap.wrapS = ClampToEdgeWrapping;
-	occlusionMap.wrapT = ClampToEdgeWrapping;
+	var occlusionMap = new THREE.DataTexture( new Uint8Array( 16 * 16 * 3 ), 16, 16, THREE.RGBFormat );
+	occlusionMap.minFilter = THREE.NearestFilter;
+	occlusionMap.magFilter = THREE.NearestFilter;
+	occlusionMap.wrapS = THREE.ClampToEdgeWrapping;
+	occlusionMap.wrapT = THREE.ClampToEdgeWrapping;
 
 	// material
 
-	var geometry = Lensflare.Geometry;
+	var geometry = THREE.Lensflare.Geometry;
 
-	var material1a = new RawShaderMaterial( {
+	var material1a = new THREE.RawShaderMaterial( {
 		uniforms: {
 			'scale': { value: null },
 			'screenPosition': { value: null }
@@ -85,7 +66,7 @@ var Lensflare = function () {
 		transparent: false
 	} );
 
-	var material1b = new RawShaderMaterial( {
+	var material1b = new THREE.RawShaderMaterial( {
 		uniforms: {
 			'map': { value: tempMap },
 			'scale': { value: null },
@@ -134,30 +115,30 @@ var Lensflare = function () {
 
 	// the following object is used for occlusionMap generation
 
-	var mesh1 = new Mesh( geometry, material1a );
+	var mesh1 = new THREE.Mesh( geometry, material1a );
 
 	//
 
 	var elements = [];
 
-	var shader = LensflareElement.Shader;
+	var shader = THREE.LensflareElement.Shader;
 
-	var material2 = new RawShaderMaterial( {
+	var material2 = new THREE.RawShaderMaterial( {
 		uniforms: {
 			'map': { value: null },
 			'occlusionMap': { value: occlusionMap },
-			'color': { value: new Color( 0xffffff ) },
-			'scale': { value: new Vector2() },
-			'screenPosition': { value: new Vector3() }
+			'color': { value: new THREE.Color( 0xffffff ) },
+			'scale': { value: new THREE.Vector2() },
+			'screenPosition': { value: new THREE.Vector3() }
 		},
 		vertexShader: shader.vertexShader,
 		fragmentShader: shader.fragmentShader,
-		blending: AdditiveBlending,
+		blending: THREE.AdditiveBlending,
 		transparent: true,
 		depthWrite: false
 	} );
 
-	var mesh2 = new Mesh( geometry, material2 );
+	var mesh2 = new THREE.Mesh( geometry, material2 );
 
 	this.addElement = function ( element ) {
 
@@ -167,10 +148,10 @@ var Lensflare = function () {
 
 	//
 
-	var scale = new Vector2();
-	var screenPositionPixels = new Vector2();
-	var validArea = new Box2();
-	var viewport = new Vector4();
+	var scale = new THREE.Vector2();
+	var screenPositionPixels = new THREE.Vector2();
+	var validArea = new THREE.Box2();
+	var viewport = new THREE.Vector4();
 
 	this.onBeforeRender = function ( renderer, scene, camera ) {
 
@@ -278,22 +259,22 @@ var Lensflare = function () {
 
 };
 
-Lensflare.prototype = Object.create( Mesh.prototype );
-Lensflare.prototype.constructor = Lensflare;
-Lensflare.prototype.isLensflare = true;
+THREE.Lensflare.prototype = Object.create( THREE.Mesh.prototype );
+THREE.Lensflare.prototype.constructor = THREE.Lensflare;
+THREE.Lensflare.prototype.isLensflare = true;
 
 //
 
-var LensflareElement = function ( texture, size, distance, color ) {
+THREE.LensflareElement = function ( texture, size, distance, color ) {
 
 	this.texture = texture;
 	this.size = size || 1;
 	this.distance = distance || 0;
-	this.color = color || new Color( 0xffffff );
+	this.color = color || new THREE.Color( 0xffffff );
 
 };
 
-LensflareElement.Shader = {
+THREE.LensflareElement.Shader = {
 
 	uniforms: {
 
@@ -369,9 +350,9 @@ LensflareElement.Shader = {
 
 };
 
-Lensflare.Geometry = ( function () {
+THREE.Lensflare.Geometry = ( function () {
 
-	var geometry = new BufferGeometry();
+	var geometry = new THREE.BufferGeometry();
 
 	var float32Array = new Float32Array( [
 		- 1, - 1, 0, 0, 0,
@@ -380,14 +361,12 @@ Lensflare.Geometry = ( function () {
 		- 1, 1, 0, 0, 1
 	] );
 
-	var interleavedBuffer = new InterleavedBuffer( float32Array, 5 );
+	var interleavedBuffer = new THREE.InterleavedBuffer( float32Array, 5 );
 
 	geometry.setIndex( [ 0, 1, 2,	0, 2, 3 ] );
-	geometry.setAttribute( 'position', new InterleavedBufferAttribute( interleavedBuffer, 3, 0, false ) );
-	geometry.setAttribute( 'uv', new InterleavedBufferAttribute( interleavedBuffer, 2, 3, false ) );
+	geometry.setAttribute( 'position', new THREE.InterleavedBufferAttribute( interleavedBuffer, 3, 0, false ) );
+	geometry.setAttribute( 'uv', new THREE.InterleavedBufferAttribute( interleavedBuffer, 2, 3, false ) );
 
 	return geometry;
 
 } )();
-
-export { Lensflare, LensflareElement };

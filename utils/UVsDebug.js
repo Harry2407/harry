@@ -1,27 +1,23 @@
-import {
-	Vector2
-} from '../../../build/three.module.js';
-
 /**
  * tool for "unwrapping" and debugging three.js geometries UV mapping
  *
  * Sample usage:
- *	document.body.appendChild( UVsDebug( new THREE.SphereGeometry( 10, 10, 10, 10 ) );
+ *	document.body.appendChild( THREE.UVsDebug( new THREE.SphereGeometry( 10, 10, 10, 10 ) );
  *
  */
 
-var UVsDebug = function ( geometry, size ) {
+THREE.UVsDebug = function ( geometry, size ) {
 
 	// handles wrapping of uv.x > 1 only
 
 	var abc = 'abc';
-	var a = new Vector2();
-	var b = new Vector2();
+	var a = new THREE.Vector2();
+	var b = new THREE.Vector2();
 
 	var uvs = [
-		new Vector2(),
-		new Vector2(),
-		new Vector2()
+		new THREE.Vector2(),
+		new THREE.Vector2(),
+		new THREE.Vector2()
 	];
 
 	var face = [];
@@ -44,7 +40,7 @@ var UVsDebug = function ( geometry, size ) {
 
 	if ( geometry.isGeometry ) {
 
-		console.error( 'THREE.UVsDebug no longer supports Geometry. Use THREE.BufferGeometry instead.' );
+		console.error( 'THREE.UVsDebug no longer supports THREE.Geometry. Use THREE.BufferGeometry instead.' );
 		return;
 
 	} else {
@@ -170,5 +166,3 @@ var UVsDebug = function ( geometry, size ) {
 	}
 
 };
-
-export { UVsDebug };

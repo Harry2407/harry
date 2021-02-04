@@ -1,12 +1,6 @@
-import {
-	Matrix4,
-	Object3D,
-	Vector3
-} from '../../../build/three.module.js';
+THREE.CSS2DObject = function ( element ) {
 
-var CSS2DObject = function ( element ) {
-
-	Object3D.call( this );
+	THREE.Object3D.call( this );
 
 	this.element = element || document.createElement( 'div' );
 
@@ -28,13 +22,13 @@ var CSS2DObject = function ( element ) {
 
 };
 
-CSS2DObject.prototype = Object.assign( Object.create( Object3D.prototype ), {
+THREE.CSS2DObject.prototype = Object.assign( Object.create( THREE.Object3D.prototype ), {
 
-	constructor: CSS2DObject,
+	constructor: THREE.CSS2DObject,
 
 	copy: function ( source, recursive ) {
 
-		Object3D.prototype.copy.call( this, source, recursive );
+		THREE.Object3D.prototype.copy.call( this, source, recursive );
 
 		this.element = source.element.cloneNode( true );
 
@@ -46,16 +40,16 @@ CSS2DObject.prototype = Object.assign( Object.create( Object3D.prototype ), {
 
 //
 
-var CSS2DRenderer = function () {
+THREE.CSS2DRenderer = function () {
 
 	var _this = this;
 
 	var _width, _height;
 	var _widthHalf, _heightHalf;
 
-	var vector = new Vector3();
-	var viewMatrix = new Matrix4();
-	var viewProjectionMatrix = new Matrix4();
+	var vector = new THREE.Vector3();
+	var viewMatrix = new THREE.Matrix4();
+	var viewProjectionMatrix = new THREE.Matrix4();
 
 	var cache = {
 		objects: new WeakMap()
@@ -90,7 +84,7 @@ var CSS2DRenderer = function () {
 
 	var renderObject = function ( object, scene, camera ) {
 
-		if ( object instanceof CSS2DObject ) {
+		if ( object instanceof THREE.CSS2DObject ) {
 
 			object.onBeforeRender( _this, scene, camera );
 
@@ -133,8 +127,8 @@ var CSS2DRenderer = function () {
 
 	var getDistanceToSquared = function () {
 
-		var a = new Vector3();
-		var b = new Vector3();
+		var a = new THREE.Vector3();
+		var b = new THREE.Vector3();
 
 		return function ( object1, object2 ) {
 
@@ -153,7 +147,7 @@ var CSS2DRenderer = function () {
 
 		scene.traverse( function ( object ) {
 
-			if ( object instanceof CSS2DObject ) result.push( object );
+			if ( object instanceof THREE.CSS2DObject ) result.push( object );
 
 		} );
 
@@ -196,5 +190,3 @@ var CSS2DRenderer = function () {
 	};
 
 };
-
-export { CSS2DObject, CSS2DRenderer };

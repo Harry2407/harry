@@ -1,18 +1,10 @@
-import {
-	MathUtils,
-	Mesh,
-	MeshBasicMaterial,
-	Object3D
-} from '../../../build/three.module.js';
-import { LightningStrike } from '../geometries/LightningStrike.js';
-
 /**
  * @fileoverview Lightning strike object generator
  *
  *
  * Usage
  *
- * var myStorm = new LightningStorm( paramsObject );
+ * var myStorm = new THREE.LightningStorm( paramsObject );
  * myStorm.position.set( ... );
  * scene.add( myStorm );
  * ...
@@ -41,7 +33,7 @@ import { LightningStrike } from '../geometries/LightningStrike.js';
  *
  * @param {double} lightningMaxDuration The maximum time a ray can last.
  *
- * @param {Object} lightningParameters The parameters for created rays. See LightningStrike (geometry)
+ * @param {Object} lightningParameters The parameters for created rays. See THREE.LightningStrike (geometry)
  *
  * @param {Material} lightningMaterial The THREE.Material used for the created rays.
  *
@@ -52,9 +44,9 @@ import { LightningStrike } from '../geometries/LightningStrike.js';
  *
 */
 
-var LightningStorm = function ( stormParams ) {
+THREE.LightningStorm = function ( stormParams ) {
 
-	Object3D.call( this );
+	THREE.Object3D.call( this );
 
 	// Parameters
 
@@ -74,11 +66,11 @@ var LightningStorm = function ( stormParams ) {
 	stormParams.lightningMinDuration = stormParams.lightningMinDuration !== undefined ? stormParams.lightningMinDuration : 1.0;
 	stormParams.lightningMaxDuration = stormParams.lightningMaxDuration !== undefined ? stormParams.lightningMaxDuration : 2.5;
 
-	this.lightningParameters = LightningStrike.copyParameters( stormParams.lightningParameters, stormParams.lightningParameters );
+	this.lightningParameters = THREE.LightningStrike.copyParameters( stormParams.lightningParameters, stormParams.lightningParameters );
 
 	this.lightningParameters.isEternal = false;
 
-	this.lightningMaterial = stormParams.lightningMaterial !== undefined ? stormParams.lightningMaterial : new MeshBasicMaterial( { color: 0xB0FFFF } );
+	this.lightningMaterial = stormParams.lightningMaterial !== undefined ? stormParams.lightningMaterial : new THREE.MeshBasicMaterial( { color: 0xB0FFFF } );
 
 	if ( stormParams.onRayPosition !== undefined ) {
 
@@ -90,7 +82,7 @@ var LightningStorm = function ( stormParams ) {
 
 			dest.set( ( Math.random() - 0.5 ) * stormParams.size, 0, ( Math.random() - 0.5 ) * stormParams.size );
 
-			var height = MathUtils.lerp( stormParams.minHeight, stormParams.maxHeight, Math.random() );
+			var height = THREE.MathUtils.lerp( stormParams.minHeight, stormParams.maxHeight, Math.random() );
 
 			source.set( stormParams.maxSlope * ( 2 * Math.random() - 1 ), 1, stormParams.maxSlope * ( 2 * Math.random() - 1 ) ).multiplyScalar( height ).add( dest );
 
@@ -109,21 +101,21 @@ var LightningStorm = function ( stormParams ) {
 
 	for ( var i = 0; i < this.stormParams.maxLightnings; i ++ ) {
 
-		var lightning = new LightningStrike( LightningStrike.copyParameters( {}, this.lightningParameters ) );
-		var mesh = new Mesh( lightning, this.lightningMaterial );
+		var lightning = new THREE.LightningStrike( THREE.LightningStrike.copyParameters( {}, this.lightningParameters ) );
+		var mesh = new THREE.Mesh( lightning, this.lightningMaterial );
 		this.deadLightningsMeshes.push( mesh );
 
 	}
 
 };
 
-LightningStorm.prototype = Object.create( Object3D.prototype );
+THREE.LightningStorm.prototype = Object.create( THREE.Object3D.prototype );
 
-LightningStorm.prototype.constructor = LightningStorm;
+THREE.LightningStorm.prototype.constructor = THREE.LightningStorm;
 
-LightningStorm.prototype.isLightningStorm = true;
+THREE.LightningStorm.prototype.isLightningStorm = true;
 
-LightningStorm.prototype.update = function ( time ) {
+THREE.LightningStorm.prototype.update = function ( time ) {
 
 	if ( ! this.inited ) {
 
@@ -140,10 +132,10 @@ LightningStorm.prototype.update = function ( time ) {
 
 		if ( lightningMesh ) {
 
-			var lightningParams1 = LightningStrike.copyParameters( lightningMesh.geometry.rayParameters, this.lightningParameters );
+			var lightningParams1 = THREE.LightningStrike.copyParameters( lightningMesh.geometry.rayParameters, this.lightningParameters );
 
 			lightningParams1.birthTime = time;
-			lightningParams1.deathTime = time + MathUtils.lerp( this.stormParams.lightningMinDuration, this.stormParams.lightningMaxDuration, Math.random() );
+			lightningParams1.deathTime = time + THREE.MathUtils.lerp( this.stormParams.lightningMinDuration, this.stormParams.lightningMaxDuration, Math.random() );
 
 			this.onRayPosition( lightningParams1.sourceOffset, lightningParams1.destOffset );
 
@@ -172,7 +164,7 @@ LightningStorm.prototype.update = function ( time ) {
 
 		lightning.update( time );
 
-		if ( prevState === LightningStrike.RAY_PROPAGATING && lightning.state > prevState ) {
+		if ( prevState === THREE.LightningStrike.RAY_PROPAGATING && lightning.state > prevState ) {
 
 			if ( this.onLightningDown ) {
 
@@ -182,7 +174,7 @@ LightningStorm.prototype.update = function ( time ) {
 
 		}
 
-		if ( lightning.state === LightningStrike.RAY_EXTINGUISHED ) {
+		if ( lightning.state === THREE.LightningStrike.RAY_EXTINGUISHED ) {
 
 			// Lightning is to be destroyed
 
@@ -204,15 +196,15 @@ LightningStorm.prototype.update = function ( time ) {
 
 };
 
-LightningStorm.prototype.getNextLightningTime = function ( currentTime ) {
+THREE.LightningStorm.prototype.getNextLightningTime = function ( currentTime ) {
 
-	return currentTime + MathUtils.lerp( this.stormParams.lightningMinPeriod, this.stormParams.lightningMaxPeriod, Math.random() ) / ( this.stormParams.maxLightnings + 1 );
+	return currentTime + THREE.MathUtils.lerp( this.stormParams.lightningMinPeriod, this.stormParams.lightningMaxPeriod, Math.random() ) / ( this.stormParams.maxLightnings + 1 );
 
 };
 
-LightningStorm.prototype.copy = function ( source ) {
+THREE.LightningStorm.prototype.copy = function ( source ) {
 
-	Object3D.prototype.copy.call( this, source );
+	THREE.Object3D.prototype.copy.call( this, source );
 
 	this.stormParams.size = source.stormParams.size;
 	this.stormParams.minHeight = source.stormParams.minHeight;
@@ -227,7 +219,7 @@ LightningStorm.prototype.copy = function ( source ) {
 	this.stormParams.lightningMinDuration = source.stormParams.lightningMinDuration;
 	this.stormParams.lightningMaxDuration = source.stormParams.lightningMaxDuration;
 
-	this.lightningParameters = LightningStrike.copyParameters( {}, source.lightningParameters );
+	this.lightningParameters = THREE.LightningStrike.copyParameters( {}, source.lightningParameters );
 
 	this.lightningMaterial = source.stormParams.lightningMaterial;
 
@@ -237,10 +229,8 @@ LightningStorm.prototype.copy = function ( source ) {
 
 };
 
-LightningStrike.prototype.clone = function () {
+THREE.LightningStrike.prototype.clone = function () {
 
 	return new this.constructor( this.stormParams ).copy( this );
 
 };
-
-export { LightningStorm };

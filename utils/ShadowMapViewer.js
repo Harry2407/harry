@@ -1,17 +1,3 @@
-import {
-	DoubleSide,
-	LinearFilter,
-	Mesh,
-	MeshBasicMaterial,
-	OrthographicCamera,
-	PlaneGeometry,
-	Scene,
-	ShaderMaterial,
-	Texture,
-	UniformsUtils
-} from '../../../build/three.module.js';
-import { UnpackDepthRGBAShader } from '../shaders/UnpackDepthRGBAShader.js';
-
 /**
  * This is a helper for visualising a given light's shadow map.
  * It works for shadow casting lights: DirectionalLight and SpotLight.
@@ -39,7 +25,7 @@ import { UnpackDepthRGBAShader } from '../shaders/UnpackDepthRGBAShader.js';
  *	6) If you set the position or size members directly, you need to call shadowMapViewer.update();
  */
 
-var ShadowMapViewer = function ( light ) {
+THREE.ShadowMapViewer = function ( light ) {
 
 	//- Internals
 	var scope = this;
@@ -54,21 +40,21 @@ var ShadowMapViewer = function ( light ) {
 		height: 256
 	};
 
-	var camera = new OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 10 );
+	var camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 10 );
 	camera.position.set( 0, 0, 2 );
-	var scene = new Scene();
+	var scene = new THREE.Scene();
 
 	//HUD for shadow map
-	var shader = UnpackDepthRGBAShader;
+	var shader = THREE.UnpackDepthRGBAShader;
 
-	var uniforms = UniformsUtils.clone( shader.uniforms );
-	var material = new ShaderMaterial( {
+	var uniforms = THREE.UniformsUtils.clone( shader.uniforms );
+	var material = new THREE.ShaderMaterial( {
 		uniforms: uniforms,
 		vertexShader: shader.vertexShader,
 		fragmentShader: shader.fragmentShader
 	} );
-	var plane = new PlaneGeometry( frame.width, frame.height );
-	var mesh = new Mesh( plane, material );
+	var plane = new THREE.PlaneGeometry( frame.width, frame.height );
+	var mesh = new THREE.Mesh( plane, material );
 
 	scene.add( mesh );
 
@@ -91,16 +77,16 @@ var ShadowMapViewer = function ( light ) {
 		context.fillStyle = 'rgba( 255, 0, 0, 1 )';
 		context.fillText( light.name, 0, 20 );
 
-		var labelTexture = new Texture( labelCanvas );
-		labelTexture.magFilter = LinearFilter;
-		labelTexture.minFilter = LinearFilter;
+		var labelTexture = new THREE.Texture( labelCanvas );
+		labelTexture.magFilter = THREE.LinearFilter;
+		labelTexture.minFilter = THREE.LinearFilter;
 		labelTexture.needsUpdate = true;
 
-		var labelMaterial = new MeshBasicMaterial( { map: labelTexture, side: DoubleSide } );
+		var labelMaterial = new THREE.MeshBasicMaterial( { map: labelTexture, side: THREE.DoubleSide } );
 		labelMaterial.transparent = true;
 
-		var labelPlane = new PlaneGeometry( labelCanvas.width, labelCanvas.height );
-		labelMesh = new Mesh( labelPlane, labelMaterial );
+		var labelPlane = new THREE.PlaneGeometry( labelCanvas.width, labelCanvas.height );
+		labelMesh = new THREE.Mesh( labelPlane, labelMaterial );
 
 		scene.add( labelMesh );
 
@@ -202,6 +188,4 @@ var ShadowMapViewer = function ( light ) {
 
 };
 
-ShadowMapViewer.prototype.constructor = ShadowMapViewer;
-
-export { ShadowMapViewer };
+THREE.ShadowMapViewer.prototype.constructor = THREE.ShadowMapViewer;

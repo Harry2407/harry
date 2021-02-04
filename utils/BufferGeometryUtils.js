@@ -1,16 +1,4 @@
-import {
-	BufferAttribute,
-	BufferGeometry,
-	Float32BufferAttribute,
-	InterleavedBuffer,
-	InterleavedBufferAttribute,
-	TriangleFanDrawMode,
-	TriangleStripDrawMode,
-	TrianglesDrawMode,
-	Vector3
-} from '../../../build/three.module.js';
-
-var BufferGeometryUtils = {
+THREE.BufferGeometryUtils = {
 
 	computeTangents: function ( geometry ) {
 
@@ -20,9 +8,9 @@ var BufferGeometryUtils = {
 	},
 
 	/**
-	 * @param  {Array<BufferGeometry>} geometries
+	 * @param  {Array<THREE.BufferGeometry>} geometries
 	 * @param  {Boolean} useGroups
-	 * @return {BufferGeometry}
+	 * @return {THREE.BufferGeometry}
 	 */
 	mergeBufferGeometries: function ( geometries, useGroups ) {
 
@@ -36,7 +24,7 @@ var BufferGeometryUtils = {
 
 		var morphTargetsRelative = geometries[ 0 ].morphTargetsRelative;
 
-		var mergedGeometry = new BufferGeometry();
+		var mergedGeometry = new THREE.BufferGeometry();
 
 		var offset = 0;
 
@@ -221,8 +209,8 @@ var BufferGeometryUtils = {
 	},
 
 	/**
-	 * @param {Array<BufferAttribute>} attributes
-	 * @return {BufferAttribute}
+	 * @param {Array<THREE.BufferAttribute>} attributes
+	 * @return {THREE.BufferAttribute}
 	 */
 	mergeBufferAttributes: function ( attributes ) {
 
@@ -281,13 +269,13 @@ var BufferGeometryUtils = {
 
 		}
 
-		return new BufferAttribute( array, itemSize, normalized );
+		return new THREE.BufferAttribute( array, itemSize, normalized );
 
 	},
 
 	/**
-	 * @param {Array<BufferAttribute>} attributes
-	 * @return {Array<InterleavedBufferAttribute>}
+	 * @param {Array<THREE.BufferAttribute>} attributes
+	 * @return {Array<THREE.InterleavedBufferAttribute>}
 	 */
 	interleaveAttributes: function ( attributes ) {
 
@@ -316,7 +304,7 @@ var BufferGeometryUtils = {
 		}
 
 		// Create the set of buffer attributes
-		var interleavedBuffer = new InterleavedBuffer( new TypedArray( arrayLength ), stride );
+		var interleavedBuffer = new THREE.InterleavedBuffer( new TypedArray( arrayLength ), stride );
 		var offset = 0;
 		var res = [];
 		var getters = [ 'getX', 'getY', 'getZ', 'getW' ];
@@ -327,7 +315,7 @@ var BufferGeometryUtils = {
 			var attribute = attributes[ j ];
 			var itemSize = attribute.itemSize;
 			var count = attribute.count;
-			var iba = new InterleavedBufferAttribute( interleavedBuffer, itemSize, offset, attribute.normalized );
+			var iba = new THREE.InterleavedBufferAttribute( interleavedBuffer, itemSize, offset, attribute.normalized );
 			res.push( iba );
 
 			offset += itemSize;
@@ -351,7 +339,7 @@ var BufferGeometryUtils = {
 	},
 
 	/**
-	 * @param {Array<BufferGeometry>} geometry
+	 * @param {Array<THREE.BufferGeometry>} geometry
 	 * @return {number}
 	 */
 	estimateBytesUsed: function ( geometry ) {
@@ -374,9 +362,9 @@ var BufferGeometryUtils = {
 	},
 
 	/**
-	 * @param {BufferGeometry} geometry
+	 * @param {THREE.BufferGeometry} geometry
 	 * @param {number} tolerance
-	 * @return {BufferGeometry>}
+	 * @return {THREE.BufferGeometry>}
 	 */
 	mergeVertices: function ( geometry, tolerance = 1e-4 ) {
 
@@ -493,7 +481,7 @@ var BufferGeometryUtils = {
 			var oldAttribute = geometry.getAttribute( name );
 
 			var buffer = new oldAttribute.array.constructor( attrArrays[ name ] );
-			var attribute = new BufferAttribute( buffer, oldAttribute.itemSize, oldAttribute.normalized );
+			var attribute = new THREE.BufferAttribute( buffer, oldAttribute.itemSize, oldAttribute.normalized );
 
 			result.setAttribute( name, attribute );
 
@@ -505,7 +493,7 @@ var BufferGeometryUtils = {
 					var oldMorphAttribute = geometry.morphAttributes[ name ][ j ];
 
 					var buffer = new oldMorphAttribute.array.constructor( morphAttrsArrays[ name ][ j ] );
-					var morphAttribute = new BufferAttribute( buffer, oldMorphAttribute.itemSize, oldMorphAttribute.normalized );
+					var morphAttribute = new THREE.BufferAttribute( buffer, oldMorphAttribute.itemSize, oldMorphAttribute.normalized );
 					result.morphAttributes[ name ][ j ] = morphAttribute;
 
 				}
@@ -523,20 +511,20 @@ var BufferGeometryUtils = {
 	},
 
 	/**
-	 * @param {BufferGeometry} geometry
+	 * @param {THREE.BufferGeometry} geometry
 	 * @param {number} drawMode
-	 * @return {BufferGeometry>}
+	 * @return {THREE.BufferGeometry>}
 	 */
 	toTrianglesDrawMode: function ( geometry, drawMode ) {
 
-		if ( drawMode === TrianglesDrawMode ) {
+		if ( drawMode === THREE.TrianglesDrawMode ) {
 
 			console.warn( 'THREE.BufferGeometryUtils.toTrianglesDrawMode(): Geometry already defined as triangles.' );
 			return geometry;
 
 		}
 
-		if ( drawMode === TriangleFanDrawMode || drawMode === TriangleStripDrawMode ) {
+		if ( drawMode === THREE.TriangleFanDrawMode || drawMode === THREE.TriangleStripDrawMode ) {
 
 			var index = geometry.getIndex();
 
@@ -573,7 +561,7 @@ var BufferGeometryUtils = {
 			var numberOfTriangles = index.count - 2;
 			var newIndices = [];
 
-			if ( drawMode === TriangleFanDrawMode ) {
+			if ( drawMode === THREE.TriangleFanDrawMode ) {
 
 				// gl.TRIANGLE_FAN
 
@@ -642,22 +630,22 @@ var BufferGeometryUtils = {
 
 		if ( object.geometry.isBufferGeometry !== true ) {
 
-			console.error( 'THREE.BufferGeometryUtils: Geometry is not of type BufferGeometry.' );
+			console.error( 'THREE.BufferGeometryUtils: Geometry is not of type THREE.BufferGeometry.' );
 			return null;
 
 		}
 
-		var _vA = new Vector3();
-		var _vB = new Vector3();
-		var _vC = new Vector3();
+		var _vA = new THREE.Vector3();
+		var _vB = new THREE.Vector3();
+		var _vC = new THREE.Vector3();
 
-		var _tempA = new Vector3();
-		var _tempB = new Vector3();
-		var _tempC = new Vector3();
+		var _tempA = new THREE.Vector3();
+		var _tempB = new THREE.Vector3();
+		var _tempC = new THREE.Vector3();
 
-		var _morphA = new Vector3();
-		var _morphB = new Vector3();
-		var _morphC = new Vector3();
+		var _morphA = new THREE.Vector3();
+		var _morphB = new THREE.Vector3();
+		var _morphC = new THREE.Vector3();
 
 		function _calculateMorphedAttributeData(
 			object,
@@ -916,8 +904,8 @@ var BufferGeometryUtils = {
 
 		}
 
-		var morphedPositionAttribute = new Float32BufferAttribute( modifiedPosition, 3 );
-		var morphedNormalAttribute = new Float32BufferAttribute( modifiedNormal, 3 );
+		var morphedPositionAttribute = new THREE.Float32BufferAttribute( modifiedPosition, 3 );
+		var morphedNormalAttribute = new THREE.Float32BufferAttribute( modifiedNormal, 3 );
 
 		return {
 
@@ -931,5 +919,3 @@ var BufferGeometryUtils = {
 	}
 
 };
-
-export { BufferGeometryUtils };

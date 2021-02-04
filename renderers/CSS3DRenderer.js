@@ -1,16 +1,10 @@
-import {
-	Matrix4,
-	Object3D,
-	Vector3
-} from '../../../build/three.module.js';
-
 /**
  * Based on http://www.emagix.net/academic/mscs-project/item/camera-sync-with-css3-and-webgl-threejs
  */
 
-var CSS3DObject = function ( element ) {
+THREE.CSS3DObject = function ( element ) {
 
-	Object3D.call( this );
+	THREE.Object3D.call( this );
 
 	this.element = element || document.createElement( 'div' );
 	this.element.style.position = 'absolute';
@@ -32,13 +26,13 @@ var CSS3DObject = function ( element ) {
 
 };
 
-CSS3DObject.prototype = Object.assign( Object.create( Object3D.prototype ), {
+THREE.CSS3DObject.prototype = Object.assign( Object.create( THREE.Object3D.prototype ), {
 
-	constructor: CSS3DObject,
+	constructor: THREE.CSS3DObject,
 
 	copy: function ( source, recursive ) {
 
-		Object3D.prototype.copy.call( this, source, recursive );
+		THREE.Object3D.prototype.copy.call( this, source, recursive );
 
 		this.element = source.element.cloneNode( true );
 
@@ -48,25 +42,25 @@ CSS3DObject.prototype = Object.assign( Object.create( Object3D.prototype ), {
 
 } );
 
-var CSS3DSprite = function ( element ) {
+THREE.CSS3DSprite = function ( element ) {
 
-	CSS3DObject.call( this, element );
+	THREE.CSS3DObject.call( this, element );
 
 };
 
-CSS3DSprite.prototype = Object.create( CSS3DObject.prototype );
-CSS3DSprite.prototype.constructor = CSS3DSprite;
+THREE.CSS3DSprite.prototype = Object.create( THREE.CSS3DObject.prototype );
+THREE.CSS3DSprite.prototype.constructor = THREE.CSS3DSprite;
 
 //
 
-var CSS3DRenderer = function () {
+THREE.CSS3DRenderer = function () {
 
 	var _this = this;
 
 	var _width, _height;
 	var _widthHalf, _heightHalf;
 
-	var matrix = new Matrix4();
+	var matrix = new THREE.Matrix4();
 
 	var cache = {
 		camera: { fov: 0, style: '' },
@@ -180,13 +174,13 @@ var CSS3DRenderer = function () {
 
 	function renderObject( object, scene, camera, cameraCSSMatrix ) {
 
-		if ( object instanceof CSS3DObject ) {
+		if ( object instanceof THREE.CSS3DObject ) {
 
 			object.onBeforeRender( _this, scene, camera );
 
 			var style;
 
-			if ( object instanceof CSS3DSprite ) {
+			if ( object instanceof THREE.CSS3DSprite ) {
 
 				// http://swiftcoder.wordpress.com/2008/11/25/constructing-a-billboard-matrix/
 
@@ -250,8 +244,8 @@ var CSS3DRenderer = function () {
 
 	var getDistanceToSquared = function () {
 
-		var a = new Vector3();
-		var b = new Vector3();
+		var a = new THREE.Vector3();
+		var b = new THREE.Vector3();
 
 		return function ( object1, object2 ) {
 
@@ -270,7 +264,7 @@ var CSS3DRenderer = function () {
 
 		scene.traverse( function ( object ) {
 
-			if ( object instanceof CSS3DObject ) result.push( object );
+			if ( object instanceof THREE.CSS3DObject ) result.push( object );
 
 		} );
 
@@ -362,5 +356,3 @@ var CSS3DRenderer = function () {
 	};
 
 };
-
-export { CSS3DObject, CSS3DSprite, CSS3DRenderer };

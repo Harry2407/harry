@@ -1,8 +1,6 @@
-import { Pass } from '../postprocessing/Pass.js';
+THREE.MaskPass = function ( scene, camera ) {
 
-var MaskPass = function ( scene, camera ) {
-
-	Pass.call( this );
+	THREE.Pass.call( this );
 
 	this.scene = scene;
 	this.camera = camera;
@@ -14,9 +12,9 @@ var MaskPass = function ( scene, camera ) {
 
 };
 
-MaskPass.prototype = Object.assign( Object.create( Pass.prototype ), {
+THREE.MaskPass.prototype = Object.assign( Object.create( THREE.Pass.prototype ), {
 
-	constructor: MaskPass,
+	constructor: THREE.MaskPass,
 
 	render: function ( renderer, writeBuffer, readBuffer /*, deltaTime, maskActive */ ) {
 
@@ -82,17 +80,17 @@ MaskPass.prototype = Object.assign( Object.create( Pass.prototype ), {
 } );
 
 
-var ClearMaskPass = function () {
+THREE.ClearMaskPass = function () {
 
-	Pass.call( this );
+	THREE.Pass.call( this );
 
 	this.needsSwap = false;
 
 };
 
-ClearMaskPass.prototype = Object.create( Pass.prototype );
+THREE.ClearMaskPass.prototype = Object.create( THREE.Pass.prototype );
 
-Object.assign( ClearMaskPass.prototype, {
+Object.assign( THREE.ClearMaskPass.prototype, {
 
 	render: function ( renderer /*, writeBuffer, readBuffer, deltaTime, maskActive */ ) {
 
@@ -102,5 +100,3 @@ Object.assign( ClearMaskPass.prototype, {
 	}
 
 } );
-
-export { MaskPass, ClearMaskPass };

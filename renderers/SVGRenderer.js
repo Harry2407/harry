@@ -1,55 +1,41 @@
-import {
-	Box2,
-	Camera,
-	Color,
-	Matrix3,
-	Matrix4,
-	Object3D,
-	Vector3
-} from '../../../build/three.module.js';
-import { Projector } from '../renderers/Projector.js';
-import { RenderableFace } from '../renderers/Projector.js';
-import { RenderableLine } from '../renderers/Projector.js';
-import { RenderableSprite } from '../renderers/Projector.js';
+THREE.SVGObject = function ( node ) {
 
-var SVGObject = function ( node ) {
-
-	Object3D.call( this );
+	THREE.Object3D.call( this );
 
 	this.node = node;
 
 };
 
-SVGObject.prototype = Object.create( Object3D.prototype );
-SVGObject.prototype.constructor = SVGObject;
+THREE.SVGObject.prototype = Object.create( THREE.Object3D.prototype );
+THREE.SVGObject.prototype.constructor = THREE.SVGObject;
 
-var SVGRenderer = function () {
+THREE.SVGRenderer = function () {
 
 	var _this = this,
 		_renderData, _elements, _lights,
-		_projector = new Projector(),
+		_projector = new THREE.Projector(),
 		_svg = document.createElementNS( 'http://www.w3.org/2000/svg', 'svg' ),
 		_svgWidth, _svgHeight, _svgWidthHalf, _svgHeightHalf,
 
 		_v1, _v2, _v3,
 
-		_clipBox = new Box2(),
-		_elemBox = new Box2(),
+		_clipBox = new THREE.Box2(),
+		_elemBox = new THREE.Box2(),
 
-		_color = new Color(),
-		_diffuseColor = new Color(),
-		_ambientLight = new Color(),
-		_directionalLights = new Color(),
-		_pointLights = new Color(),
-		_clearColor = new Color(),
+		_color = new THREE.Color(),
+		_diffuseColor = new THREE.Color(),
+		_ambientLight = new THREE.Color(),
+		_directionalLights = new THREE.Color(),
+		_pointLights = new THREE.Color(),
+		_clearColor = new THREE.Color(),
 
-		_vector3 = new Vector3(), // Needed for PointLight
-		_centroid = new Vector3(),
-		_normal = new Vector3(),
-		_normalViewMatrix = new Matrix3(),
+		_vector3 = new THREE.Vector3(), // Needed for PointLight
+		_centroid = new THREE.Vector3(),
+		_normal = new THREE.Vector3(),
+		_normalViewMatrix = new THREE.Matrix3(),
 
-		_viewMatrix = new Matrix4(),
-		_viewProjectionMatrix = new Matrix4(),
+		_viewMatrix = new THREE.Matrix4(),
+		_viewProjectionMatrix = new THREE.Matrix4(),
 
 		_svgPathPool = [],
 		_svgNode, _pathCount = 0,
@@ -152,9 +138,9 @@ var SVGRenderer = function () {
 
 	this.render = function ( scene, camera ) {
 
-		if ( camera instanceof Camera === false ) {
+		if ( camera instanceof THREE.Camera === false ) {
 
-			console.error( 'THREE.SVGRenderer.render: camera is not an instance of Camera.' );
+			console.error( 'THREE.SVGRenderer.render: camera is not an instance of THREE.Camera.' );
 			return;
 
 		}
@@ -200,14 +186,14 @@ var SVGRenderer = function () {
 
 			_elemBox.makeEmpty();
 
-			if ( element instanceof RenderableSprite ) {
+			if ( element instanceof THREE.RenderableSprite ) {
 
 				_v1 = element;
 				_v1.x *= _svgWidthHalf; _v1.y *= - _svgHeightHalf;
 
 				renderSprite( _v1, element, material );
 
-			} else if ( element instanceof RenderableLine ) {
+			} else if ( element instanceof THREE.RenderableLine ) {
 
 				_v1 = element.v1; _v2 = element.v2;
 
@@ -222,7 +208,7 @@ var SVGRenderer = function () {
 
 				}
 
-			} else if ( element instanceof RenderableFace ) {
+			} else if ( element instanceof THREE.RenderableFace ) {
 
 				_v1 = element.v1; _v2 = element.v2; _v3 = element.v3;
 
@@ -262,7 +248,7 @@ var SVGRenderer = function () {
 
 		scene.traverseVisible( function ( object ) {
 
-			 if ( object instanceof SVGObject ) {
+			 if ( object instanceof THREE.SVGObject ) {
 
 				_vector3.setFromMatrixPosition( object.matrixWorld );
 				_vector3.applyMatrix4( _viewProjectionMatrix );
@@ -538,5 +524,3 @@ var SVGRenderer = function () {
 	}
 
 };
-
-export { SVGObject, SVGRenderer };
