@@ -1,4 +1,8 @@
-THREE.SelectionHelper = ( function () {
+import {
+	Vector2
+} from '../../../build/three.module.js';
+
+var SelectionHelper = ( function () {
 
 	function SelectionHelper( selectionBox, renderer, cssClassName ) {
 
@@ -8,9 +12,9 @@ THREE.SelectionHelper = ( function () {
 
 		this.renderer = renderer;
 
-		this.startPoint = new THREE.Vector2();
-		this.pointTopLeft = new THREE.Vector2();
-		this.pointBottomRight = new THREE.Vector2();
+		this.startPoint = new Vector2();
+		this.pointTopLeft = new Vector2();
+		this.pointBottomRight = new Vector2();
 
 		this.isDown = false;
 
@@ -77,3 +81,5 @@ THREE.SelectionHelper = ( function () {
 	return SelectionHelper;
 
 } )();
+
+export { SelectionHelper };

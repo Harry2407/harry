@@ -1,24 +1,33 @@
-THREE.Wireframe = function ( geometry, material ) {
+import {
+	InstancedInterleavedBuffer,
+	InterleavedBufferAttribute,
+	Mesh,
+	Vector3
+} from '../../../build/three.module.js';
+import { LineSegmentsGeometry } from '../lines/LineSegmentsGeometry.js';
+import { LineMaterial } from '../lines/LineMaterial.js';
 
-	THREE.Mesh.call( this );
+var Wireframe = function ( geometry, material ) {
+
+	Mesh.call( this );
 
 	this.type = 'Wireframe';
 
-	this.geometry = geometry !== undefined ? geometry : new THREE.LineSegmentsGeometry();
-	this.material = material !== undefined ? material : new THREE.LineMaterial( { color: Math.random() * 0xffffff } );
+	this.geometry = geometry !== undefined ? geometry : new LineSegmentsGeometry();
+	this.material = material !== undefined ? material : new LineMaterial( { color: Math.random() * 0xffffff } );
 
 };
 
-THREE.Wireframe.prototype = Object.assign( Object.create( THREE.Mesh.prototype ), {
+Wireframe.prototype = Object.assign( Object.create( Mesh.prototype ), {
 
-	constructor: THREE.Wireframe,
+	constructor: Wireframe,
 
 	isWireframe: true,
 
 	computeLineDistances: ( function () { // for backwards-compatability, but could be a method of LineSegmentsGeometry...
 
-		var start = new THREE.Vector3();
-		var end = new THREE.Vector3();
+		var start = new Vector3();
+		var end = new Vector3();
 
 		return function computeLineDistances() {
 
@@ -38,10 +47,10 @@ THREE.Wireframe.prototype = Object.assign( Object.create( THREE.Mesh.prototype )
 
 			}
 
-			var instanceDistanceBuffer = new THREE.InstancedInterleavedBuffer( lineDistances, 2, 1 ); // d0, d1
+			var instanceDistanceBuffer = new InstancedInterleavedBuffer( lineDistances, 2, 1 ); // d0, d1
 
-			geometry.setAttribute( 'instanceDistanceStart', new THREE.InterleavedBufferAttribute( instanceDistanceBuffer, 1, 0 ) ); // d0
-			geometry.setAttribute( 'instanceDistanceEnd', new THREE.InterleavedBufferAttribute( instanceDistanceBuffer, 1, 1 ) ); // d1
+			geometry.setAttribute( 'instanceDistanceStart', new InterleavedBufferAttribute( instanceDistanceBuffer, 1, 0 ) ); // d0
+			geometry.setAttribute( 'instanceDistanceEnd', new InterleavedBufferAttribute( instanceDistanceBuffer, 1, 1 ) ); // d1
 
 			return this;
 
@@ -50,3 +59,5 @@ THREE.Wireframe.prototype = Object.assign( Object.create( THREE.Mesh.prototype )
 	}() )
 
 } );
+
+export { Wireframe };

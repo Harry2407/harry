@@ -1,3 +1,11 @@
+import {
+	ShaderLib,
+	ShaderMaterial,
+	UniformsLib,
+	UniformsUtils,
+	Vector2
+} from '../../../build/three.module.js';
+
 /**
  * parameters = {
  *  color: <hex>,
@@ -11,10 +19,10 @@
  * }
  */
 
-THREE.UniformsLib.line = {
+UniformsLib.line = {
 
 	linewidth: { value: 1 },
-	resolution: { value: new THREE.Vector2( 1, 1 ) },
+	resolution: { value: new Vector2( 1, 1 ) },
 	dashScale: { value: 1 },
 	dashSize: { value: 1 },
 	dashOffset: { value: 0 },
@@ -23,12 +31,12 @@ THREE.UniformsLib.line = {
 
 };
 
-THREE.ShaderLib[ 'line' ] = {
+ShaderLib[ 'line' ] = {
 
-	uniforms: THREE.UniformsUtils.merge( [
-		THREE.UniformsLib.common,
-		THREE.UniformsLib.fog,
-		THREE.UniformsLib.line
+	uniforms: UniformsUtils.merge( [
+		UniformsLib.common,
+		UniformsLib.fog,
+		UniformsLib.line
 	] ),
 
 	vertexShader:
@@ -239,16 +247,16 @@ THREE.ShaderLib[ 'line' ] = {
 		`
 };
 
-THREE.LineMaterial = function ( parameters ) {
+var LineMaterial = function ( parameters ) {
 
-	THREE.ShaderMaterial.call( this, {
+	ShaderMaterial.call( this, {
 
 		type: 'LineMaterial',
 
-		uniforms: THREE.UniformsUtils.clone( THREE.ShaderLib[ 'line' ].uniforms ),
+		uniforms: UniformsUtils.clone( ShaderLib[ 'line' ].uniforms ),
 
-		vertexShader: THREE.ShaderLib[ 'line' ].vertexShader,
-		fragmentShader: THREE.ShaderLib[ 'line' ].fragmentShader,
+		vertexShader: ShaderLib[ 'line' ].vertexShader,
+		fragmentShader: ShaderLib[ 'line' ].fragmentShader,
 
 		clipping: true // required for clipping support
 
@@ -408,7 +416,9 @@ THREE.LineMaterial = function ( parameters ) {
 
 };
 
-THREE.LineMaterial.prototype = Object.create( THREE.ShaderMaterial.prototype );
-THREE.LineMaterial.prototype.constructor = THREE.LineMaterial;
+LineMaterial.prototype = Object.create( ShaderMaterial.prototype );
+LineMaterial.prototype.constructor = LineMaterial;
 
-THREE.LineMaterial.prototype.isLineMaterial = true;
+LineMaterial.prototype.isLineMaterial = true;
+
+export { LineMaterial };
